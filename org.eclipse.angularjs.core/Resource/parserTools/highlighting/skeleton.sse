@@ -1,0 +1,351 @@
+
+  /** this character denotes the end of file */
+  final public static int YYEOF = -1;
+
+  /** lexical states */
+---  lexical states, charmap
+
+  /* error codes */
+  final private static int YY_UNKNOWN_ERROR = 0;
+  // final private static int YY_ILLEGAL_STATE = 1;
+  final private static int YY_NO_MATCH = 2;
+  final private static int YY_PUSHBACK_2BIG = 3;
+
+  /* error messages for the codes above */
+  final private static String YY_ERROR_MSG[] = {
+    "Unkown internal scanner error",		//$NON-NLS-1$
+    "Internal error: unknown state",		//$NON-NLS-1$
+    "Error: could not match input",		//$NON-NLS-1$
+    "Error: pushback value was too large"	//$NON-NLS-1$
+  };
+
+--- isFinal list
+  /** the input device */
+  private java.io.Reader yy_reader;
+
+  /** the current state of the DFA */
+  private int yy_state;
+
+  /** the current lexical state */
+  private int yy_lexical_state = YYINITIAL;
+
+  /** this buffer contains the current text to be matched and is
+      the source of the yytext() string */
+  private char yy_buffer[] = new char[16384];
+
+  /** the textposition at the last accepting state */
+  private int yy_markedPos;
+
+  /** the textposition at the last state to be included in yytext */
+  private int yy_pushbackPos;
+
+  /** the current text position in the buffer */
+  private int yy_currentPos;
+
+  /** startRead marks the beginning of the yytext() string in the buffer */
+  private int yy_startRead;
+
+  /** endRead marks the last character in the buffer, that has been read
+      from input */
+  private int yy_endRead;
+
+  /** number of newlines encountered up to the start of the matched text */
+  private int yyline;
+
+  /** the number of characters up to the start of the matched text */
+  private int yychar;
+
+  /**
+   * the number of characters from the last newline up to the start of the 
+   * matched text
+   */
+  // private int yycolumn; 
+
+  /** 
+   * yy_atBOL == true <=> the scanner is currently at the beginning of a line
+   */
+  // private boolean yy_atBOL;
+
+  /** yy_atEOF == true <=> the scanner has returned a value for EOF */
+  private boolean yy_atEOF;
+
+--- user class code
+
+  /**
+   * Creates a new scanner
+   * There is also a java.io.InputStream version of this constructor.
+   *
+   * @param   in  the java.io.Reader to read input from.
+   */
+--- constructor declaration
+
+
+  /**
+   * Gets the next input character.
+   *
+   * @return      the next character of the input stream, EOF if the
+   *              end of the stream is reached.
+   * @exception   IOException  if any I/O-Error occurs
+   */
+  private int yy_advance() throws java.io.IOException {
+
+    /* standard case */
+    if (yy_currentPos < yy_endRead) return yy_buffer[yy_currentPos++];
+
+    /* if the eof is reached, we don't need to work hard */ 
+    if (yy_atEOF) return YYEOF;
+
+    /* otherwise: need to refill the buffer */
+
+    /* first: make room (if you can) */
+    if (yy_startRead > 0) {
+      System.arraycopy(yy_buffer, yy_startRead, 
+                       yy_buffer, 0, 
+                       yy_endRead-yy_startRead);
+
+      /* translate stored positions */
+      yy_endRead-= yy_startRead;
+      yy_currentPos-= yy_startRead;
+      yy_markedPos-= yy_startRead;
+      yy_pushbackPos-= yy_startRead;
+      yy_startRead = 0;
+    }
+
+    /* is the buffer big enough? */
+    if (yy_currentPos >= yy_buffer.length) {
+      /* if not: blow it up */
+      char newBuffer[] = new char[yy_currentPos*2];
+      System.arraycopy(yy_buffer, 0, newBuffer, 0, yy_buffer.length);
+      yy_buffer = newBuffer;
+    }
+
+    /* finally: fill the buffer with new input */
+    int numRead = yy_reader.read(yy_buffer, yy_endRead, 
+                                            yy_buffer.length-yy_endRead);
+
+    if ( numRead == -1 ) return YYEOF;
+
+    yy_endRead+= numRead;
+
+    return yy_buffer[yy_currentPos++];
+  }
+
+    
+  /**
+   * Closes the input stream.
+   */
+  final public void yyclose() throws java.io.IOException {
+    yy_atEOF = true;            /* indicate end of file */
+    yy_endRead = yy_startRead;  /* invalidate buffer    */
+    yy_reader.close();
+  }
+
+
+  /**
+   * Returns the current lexical state.
+   */
+  final public int yystate() {
+    return yy_lexical_state;
+  }
+
+  /**
+   * Enters a new lexical state
+   *
+   * @param newState the new lexical state
+   */
+  final public void yybegin(int newState) {
+    yy_lexical_state = newState;
+  }
+
+
+  /**
+   * Returns the text matched by the current regular expression.
+   */
+  final public String yytext() {
+    return new String( yy_buffer, yy_startRead, yy_markedPos-yy_startRead );
+  }
+
+  /**
+   * Returns the length of the matched text region.
+   */
+  final public int yylength() {
+    return yy_markedPos-yy_startRead;
+  }
+
+
+  /**
+   * Reports an error that occured while scanning - from the SED JFlex skeleton
+   *
+   * @param   errorCode  the code of the errormessage to display
+   */
+  private void yy_ScanError(int errorCode) {
+    try {
+      Logger.log(Logger.ERROR, YY_ERROR_MSG[errorCode]);
+    }
+    catch (ArrayIndexOutOfBoundsException e) {
+      Logger.log(Logger.ERROR, YY_ERROR_MSG[YY_UNKNOWN_ERROR]);
+    }
+    // DO NOT EXIT the VM on an error
+    // System.exit(1);
+  } 
+
+
+  /**
+   * Pushes the specified amount of characters back into the input stream.
+   *
+   * They will be read again by then next call of the scanning method
+   *
+   * @param number  the number of characters to be read again.
+   *                This number must not be greater than yylength()!
+   */
+  void yypushback(int number) {
+    if ( number > yylength() )
+      yy_ScanError(YY_PUSHBACK_2BIG);
+
+    yy_markedPos -= number;
+  }
+
+	/**
+	 * user method - skeleton.sed
+	 */
+	protected final boolean containsTagName(char[] markerTagName, int offset, int tagnameLength) {
+		for(int j = 0; j < fBlockMarkers.size(); j++) {
+			BlockMarker marker = (BlockMarker)fBlockMarkers.get(j);
+			if(marker.getTagName().length() == tagnameLength) {
+				boolean matchesSoFar = true;
+				for(int i = 0; i < tagnameLength && matchesSoFar; i++) {
+					if(marker.isCaseSensitive()) {
+						if(marker.getTagName().charAt(i) != markerTagName[i + offset])
+							matchesSoFar = false;
+					}
+					else {
+						if(Character.toLowerCase(marker.getTagName().charAt(i)) != Character.toLowerCase(markerTagName[i + offset]))
+							matchesSoFar = false;
+					}
+				}
+				if(matchesSoFar)
+					return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * user method - skeleton.sed
+	 *
+	 * Return ALL of the regions scannable within the remaining text
+	 * Note: for verification use
+	 */
+	public final List getRegions() {
+		List tokens = new ArrayList();
+		ITextRegion region = null;
+		try {
+			region = getNextToken();
+			while(region != null) {
+				if (region != null) {
+					tokens.add(region);
+				}
+				region = getNextToken();
+			}
+		}
+		catch (StackOverflowError e) {
+			Logger.logException(getClass().getName()+": input could not be tokenized correctly at position " + getOffset(), e);//$NON-NLS-1$
+			throw e;
+		}
+		catch (Exception e) {
+			// Since this is convenience method and NOT the recommended 
+			// way of getting tokens, many errors are simply hidden
+			Logger.logException("Exception not handled retrieving regions: " + e.getLocalizedMessage(), e);//$NON-NLS-1$
+		}
+		return tokens;
+	}
+	/**
+	 * user method - skeleton.sed
+	 */
+	private final void dump(String s) {
+		if (Debug.debugTokenizer) {
+			System.out.println(s + " (" + yychar + "-" + //$NON-NLS-2$//$NON-NLS-1$
+				(yylength() + yychar) + "):\'" +//$NON-NLS-1$
+					StringUtils.escape(yytext()) + "\'");//$NON-NLS-1$
+		}
+	}
+	/* user method  - skeleton.sed */
+	public final boolean isEOF() {
+		return yy_atEOF;
+	}
+/* user method - skeleton.sed */
+protected final boolean containsTagName(String markerTagName) {
+	Iterator blocks = fBlockMarkers.iterator();
+	while(blocks.hasNext()) {
+		BlockMarker marker = (BlockMarker)blocks.next();
+		if(marker.isCaseSensitive()) {
+			if(marker.getTagName().equals(markerTagName))
+				return true;
+		}
+		else {
+			if(marker.getTagName().equalsIgnoreCase(markerTagName))
+				return true;
+		}
+	}
+	return false;
+}
+
+--- yy_doEof
+  /**
+   * Resumes scanning until the next regular expression is matched,
+   * the end of input is encountered or an I/O-Error occurs.
+   *
+   * @return      the next token
+   * @exception   IOException  if any I/O-Error occurs
+   */
+--- yylex declaration
+    int yy_input;
+    int yy_action;
+
+--- local declarations
+
+    while (true) {
+
+--- start admin (line, char, col count)
+      yy_action = -1;
+
+      yy_currentPos = yy_startRead = yy_markedPos;
+
+--- start admin (lexstate etc)
+
+      yy_forAction: {
+        while (true) {
+    
+          yy_input = yy_advance();
+
+          if ( yy_input == YYEOF ) break yy_forAction;
+
+--- line, col, char count, next transition, isFinal action
+            yy_action = yy_state; 
+            yy_markedPos = yy_currentPos; 
+--- line count update
+          }
+
+        }
+      }
+
+--- char count update
+
+      switch (yy_action) {    
+
+--- actions
+        default: 
+          if (yy_input == YYEOF && yy_startRead == yy_currentPos) {
+            yy_atEOF = true;
+--- eofvalue
+          } 
+          else {
+--- no match
+          }
+      }
+    }
+  }    
+
+--- main
+
+}

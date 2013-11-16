@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+###############################################################################
+# Copyright (c) 2013 Angelo Zerr and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     Angelo Zerr <angelo.zerr@gmail.com> - Initial API and implementation 
+###############################################################################
+ -->
+<plugin>
+	
+	<!--Freemarker Editor:-->
+    <extension point="org.eclipse.ui.editors">
+    	<editor class="org.eclipse.angularjs.internal.ui.editor.AngularStructuredEditor"
+    	        contributorClass="org.eclipse.angularjs.internal.ui.editor.ActionContributorForAngular"
+                default="true" 
+                icon="icons/full/obj16/angular.gif" 
+                id="org.eclipse.angularjs.editor"
+                name="%angularjsEditor" 
+                symbolicFontName="org.eclipse.wst.sse.ui.textfont">
+                <contentTypeBinding contentTypeId="org.eclipse.angularjs.core.angularsource" />
+                </editor>
+     </extension>
+     
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<sourceViewerConfiguration
+			class="org.eclipse.angularjs.internal.ui.editor.configuration.AngularStructuredTextViewerConfiguration"
+			target="org.eclipse.angularjs.core.angularsource" />
+		<contentOutlineConfiguration
+			class="org.eclipse.angularjs.internal.ui.outline.AngularContentOutlineConfiguration"
+			target="org.eclipse.angularjs.core.angularsource" />
+		<propertySheetConfiguration
+			class="org.eclipse.wst.xml.ui.views.properties.XMLPropertySheetConfiguration"
+			target="org.eclipse.angularjs.core.angularsource" />
+		<provisionalConfiguration type="sourceeditingtexttools"
+			class="org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools"
+			target="org.eclipse.angularjs.core.angularsource" />
+		<!--<provisionalConfiguration type="characterpairmatcher"
+			class="org.eclipse.angularjs.internal.ui.text.AngularDocumentRegionEdgeMatcher"
+			target="org.eclipse.angularjs.core.angularsource" />-->
+		<!-- <provisionalConfiguration type="structuredtextfoldingprovider"
+			class="org.eclipse.angularjs.internal.ui.folding.AngularFoldingStructureProviderProxy"
+			target="org.eclipse.angularjs.core.angularsource" /> -->
+		<provisionalDefinition type="spellingregions"
+			value="XML_COMMENT_TEXT, ANGULAR_EXPRESSION_CONTENT, XML_CONTENT" target="org.eclipse.angularjs.core.angularsource" />
+		<provisionalDefinition type="activecontexts"
+			value="org.eclipse.angularjs.core.angularsource" target="org.eclipse.angularjs.core.angularsource" />
+		
+		<!--<provisionalConfiguration
+			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"	
+            class="org.eclipse.angularjs.internal.ui.text.correction.AngularCorrectionProcessor"
+            target="org.eclipse.angularjs.Angular_DEFAULT" />-->
+	</extension>
+	    
+	<!--Commands:-->
+	<extension point="org.eclipse.ui.contexts">
+		<context name="%context.editingAngularSource.name" description="%context.editingPhpSource.description"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope" id="org.eclipse.angularjs.ui.angularjsEditorScope" />
+		<context name="%context.editingAngularSource.name"
+			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
+			description="%context.editingAngularSource.description" id="org.eclipse.angularjs.core.angularsource">
+		</context>
+	</extension>
+		     
+	<!--Preferences:-->		     
+	<extension point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.angularjs.internal.ui.preferences.AngularUIPreferenceInitializer" />
+	</extension>		     
+	
+	<!-- Angular UI Adapter factories					   						  				  -->
+	<!--
+		======================================================================================
+	-->
+	<extension point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
+		<adapterFactoryDescription
+			class="org.eclipse.angularjs.internal.ui.editor.adapter.AdapterFactoryProviderForAngular">
+			<contentType id="org.eclipse.angularjs.core.angularsource" />
+		</adapterFactoryDescription>
+	</extension>
+	
+</plugin>        

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+###############################################################################
+# Copyright (c) 2013 Angelo Zerr and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     Angelo Zerr <angelo.zerr@gmail.com> - Initial API and implementation 
+###############################################################################
+ -->
+<plugin>
+	
+ 	<!-- Freemarker Content Type declaration -->
+	<extension
+         point="org.eclipse.core.contenttype.contentTypes">
+     <content-type
+           base-type="org.eclipse.core.runtime.text"
+           default-charset="UTF-8"
+           file-extensions="html,htm,a"
+           name="%angularContentType"
+           id="angularsource">       
+     </content-type>     
+   </extension>        
+
+	<!-- Angular Model Handler -->
+	<extension
+		point="org.eclipse.wst.sse.core.modelHandler">
+		<modelHandler
+			default="yes"
+			class="org.eclipse.angularjs.internal.core.documentModel.handler.AngularModelHandler"
+			associatedContentTypeId="org.eclipse.angularjs.core.angularsource"
+			id="org.eclipse.angularjs.core.documentModel.handler">
+		</modelHandler>
+	</extension>
+	
+	<!--
+            DocumentFactory extension for Freemarker: This is needed in order to
+            bootstrap the lookup of the ModelHandler
+    -->
+    <extension
+            point="org.eclipse.core.filebuffers.documentCreation"
+            id="org.eclipse.angularjs.core.documentfactories"
+            name="AngularJS Document Creation Factory">
+            <!-- This is a base factory class included in WST -->
+            <factory
+                    contentTypeId="org.eclipse.angularjs.core.angularsource"
+                    class="org.eclipse.wst.sse.core.internal.filebuffers.BasicStructuredDocumentFactory" />
+    </extension>
+    
+	<extension
+		id="AngularDocumentSetupParticipant"
+		name="AngularDocumentSetupParticipant"
+		point="org.eclipse.core.filebuffers.documentSetup">
+		<participant
+			contentTypeId="org.eclipse.angularjs.core.angularsource"
+			class="org.eclipse.angularjs.internal.core.documentModel.AngularDocumentSetupParticipant">
+		</participant>
+	</extension>    
+</plugin>        
