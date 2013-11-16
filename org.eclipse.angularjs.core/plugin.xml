@@ -18,9 +18,9 @@
 	<extension
          point="org.eclipse.core.contenttype.contentTypes">
      <content-type
-           base-type="org.eclipse.core.runtime.text"
+           base-type="org.eclipse.wst.html.core.htmlsource"
            default-charset="UTF-8"
-           file-extensions="html,htm,a"
+           file-extensions="html,htm"
            name="%angularContentType"
            id="angularsource">       
      </content-type>     
@@ -30,7 +30,6 @@
 	<extension
 		point="org.eclipse.wst.sse.core.modelHandler">
 		<modelHandler
-			default="yes"
 			class="org.eclipse.angularjs.internal.core.documentModel.handler.AngularModelHandler"
 			associatedContentTypeId="org.eclipse.angularjs.core.angularsource"
 			id="org.eclipse.angularjs.core.documentModel.handler">
@@ -60,4 +59,18 @@
 			class="org.eclipse.angularjs.internal.core.documentModel.AngularDocumentSetupParticipant">
 		</participant>
 	</extension>    
+	
+	<extension
+		id="angularnature"
+		name="Angular Properties"
+		point="org.eclipse.core.resources.natures">
+		<runtime>
+			<run
+				class="org.eclipse.angularjs.internal.core.project.AngularNature">
+			</run>
+		</runtime>
+		<content-type
+        id="org.eclipse.angularjs.core.angularsource">
+		</content-type>
+	</extension>	
 </plugin>        

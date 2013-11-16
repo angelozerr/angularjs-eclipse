@@ -16,7 +16,7 @@
 	
 	<!--Freemarker Editor:-->
     <extension point="org.eclipse.ui.editors">
-    	<editor class="org.eclipse.angularjs.internal.ui.editor.AngularStructuredEditor"
+    	<editor class="org.eclipse.angularjs.internal.ui.editor.AngularStructuredEditor"    	
     	        contributorClass="org.eclipse.angularjs.internal.ui.editor.ActionContributorForAngular"
                 default="true" 
                 icon="icons/full/obj16/angular.gif" 
