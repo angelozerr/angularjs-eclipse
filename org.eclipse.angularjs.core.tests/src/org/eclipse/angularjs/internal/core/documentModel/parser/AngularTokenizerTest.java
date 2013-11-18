@@ -15,4 +15,10 @@ public class AngularTokenizerTest {
 		System.err.println(toker.getRegions());
 	}
 
+	@Test
+	public void testAttrValue() throws Exception {
+		AngularTokenizer toker = new AngularTokenizer();
+		toker.reset(new java.io.StringReader("<p a=\"att-{{a}}\"></p>"));
+		System.err.println(toker.getRegions());
+	}
 }

@@ -446,7 +446,7 @@ private final String doScan(String searchString, boolean requireTailSeparator, b
 				// Ensure that we've not encountered a complete block ({{>) that was *shorter* than the closeTagString and
 				// thus found twice at current-targetLength [since the first scan would have come out this far anyway].
 				if(checkANGULARs && yy_currentPos > searchStringLength && yy_currentPos - searchStringLength != fLastInternalBlockStart && yy_currentPos - searchStringLength > yy_startRead &&
-					yy_buffer[yy_currentPos - searchStringLength] == '<' && yy_buffer[yy_currentPos - searchStringLength + 1] == '#') {
+					yy_buffer[yy_currentPos - searchStringLength] == '{' && yy_buffer[yy_currentPos - searchStringLength + 1] == '{') {
 					fLastInternalBlockStart = yy_markedPos = yy_currentPos - searchStringLength;
 					yy_currentPos = yy_markedPos + 1;
 					int resumeState = yystate();
@@ -981,10 +981,9 @@ EntityValue = (\" ([^%&\"] | {PEReference} | {Reference})* \" |  \' ([^%&\'] | {
 
 // \x24 = '$', \x7b = '{', \x23 = '#'
 // [10] AttValue ::= '"' ([^<&"] | Reference)* '"' |  "'" ([^<&'] | Reference)* "'"
-AttValue = ( \" ([^<\"] | {Reference})* \" | \' ([^<\'] | {Reference})* \'  | ([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* )
-
+AttValue = ( \"([^"\x7b] | [\x7b][^\x7b"] | {Reference})* [\x7b]*\" | \'([^'\x7b] | [\x7b][^\x7b'] | {Reference})*[\x7b]*\'  | ([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )*)             
 // As Attvalue, but accepts escaped versions of the lead-in quote also
-QuotedAttValue = ( \" ([^<\"] | {Reference})* \" | \' ([^<\'] | {Reference})* \'  | ([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )* )
+QuotedAttValue = ( \"([^"\x7b] | [\x7b][^\x7b"] | \\\" | {Reference})*[\x7b]*\" | \'([^'\x7b] | [\x7b][^\x7b'] | \\\' | {Reference})*[\x7b]*\'  | ([^\'\"\040\011\012\015<>/]|\/+[^\'\"\040\011\012\015<>/] )*)
 
 // [11] SystemLiteral ::= ('"' [^"]* '"') | ("'" [^']* "'") 
 SystemLiteral = ((\" [^\"]* \") | (\' [^\']* \')) 
@@ -1407,11 +1406,11 @@ jspScriptletEnd          = "}}"
 	return PROXY_CONTEXT;
 }
 
-<ST_XML_ATTRIBUTE_VALUE_DQUOTED> ([^<"\x24\x23]+|[\x24\x23]{S}*)
+<ST_XML_ATTRIBUTE_VALUE_DQUOTED> ([^"\x7b]+|[\x7b]{S}*)
 {
 	return XML_TAG_ATTRIBUTE_VALUE;
 }
-<ST_XML_ATTRIBUTE_VALUE_SQUOTED> ([^<'\x24\x23]+|[\x24\x23]{S}*)
+<ST_XML_ATTRIBUTE_VALUE_SQUOTED> ([^'\x7b]+|[\x7b]{S}*)
 {
 	return XML_TAG_ATTRIBUTE_VALUE;
 }
@@ -1613,7 +1612,7 @@ jspScriptletEnd          = "}}"
 	yybegin(ST_XML_EQUALS);
 	return PROXY_CONTEXT;
 }
-<ST_XML_ATTRIBUTE_VALUE, ST_ANGULAR_ATTRIBUTE_VALUE> <{Name} {
+<ST_XML_ATTRIBUTE_VALUE, ST_ANGULAR_ATTRIBUTE_VALUE> \{{Name} {
 	String tagName = yytext().substring(1);
 	// pushback to just after the opening bracket
 	yypushback(yylength() - 1);
@@ -1676,7 +1675,7 @@ jspScriptletEnd          = "}}"
 <ST_ANGULAR_EXPRESSION_CONTENT> .|\n|\r {
 	if(Debug.debugTokenizer)
 		dump("ANGULAR code content");//$NON-NLS-1$
-	return doScan("}", false, false, false, ANGULAR_EXPRESSION_CONTENT, ST_ANGULAR_EXPRESSION_CONTENT, ST_ANGULAR_EXPRESSION_CONTENT);
+	return doScan("}}", false, false, false, ANGULAR_EXPRESSION_CONTENT, ST_ANGULAR_EXPRESSION_CONTENT, ST_ANGULAR_EXPRESSION_CONTENT);
 }
 
 {jspScriptletStart} {
