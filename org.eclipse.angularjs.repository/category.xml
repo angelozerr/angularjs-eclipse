@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <bundle id="org.eclipse.angularjs.core" version="1.0.0.qualifier">
+      <category name="AngularJS"/>
+   </bundle>
+   <bundle id="org.eclipse.angularjs.ui" version="1.0.0.qualifier">
+      <category name="AngularJS"/>
+   </bundle>
+   <category-def name="AngularJS" label="AngularJS  Eclipse Tooling"/>
+</site>

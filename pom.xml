@@ -13,6 +13,7 @@
 		<module>org.eclipse.angularjs.core</module>
 		<module>org.eclipse.angularjs.core.tests</module>
 		<module>org.eclipse.angularjs.ui</module>
+		<module>org.eclipse.angularjs.repository</module>
 	</modules>
 	<build>
 		<defaultGoal>clean install</defaultGoal>
