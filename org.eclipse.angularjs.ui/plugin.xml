@@ -14,7 +14,7 @@
  -->
 <plugin>
 	
-	<!--Freemarker Editor:-->
+	<!-- AngularJS Editor:-->
     <extension point="org.eclipse.ui.editors">
     	<editor class="org.eclipse.angularjs.internal.ui.editor.AngularStructuredEditor"    	
     	        contributorClass="org.eclipse.angularjs.internal.ui.editor.ActionContributorForAngular"
@@ -58,6 +58,16 @@
 	</extension>
 	    
 	<!--Commands:-->
+	
+	<extension
+		point="org.eclipse.ui.commands">
+		<command
+			id="org.eclipse.angularjs.ui.convertProjectToAngular"
+			name="%convertProjectToAngularCommandName"
+			categoryId="org.eclipse.ui.category.file">
+		</command>
+	</extension>
+	
 	<extension point="org.eclipse.ui.contexts">
 		<context name="%context.editingAngularSource.name" description="%context.editingPhpSource.description"
 			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope" id="org.eclipse.angularjs.ui.angularjsEditorScope" />
@@ -65,8 +75,50 @@
 			parentId="org.eclipse.wst.sse.ui.structuredTextEditorScope"
 			description="%context.editingAngularSource.description" id="org.eclipse.angularjs.core.angularsource">
 		</context>
+	</extension>		
+			
+	<!--Handlers:-->
+
+	<extension
+		point="org.eclipse.ui.handlers">
+
+		<handler
+			commandId="org.eclipse.angularjs.ui.convertProjectToAngular"
+			class="org.eclipse.angularjs.internal.ui.handlers.ConvertProjectToAngularCommandHandler">		
+			<activeWhen>
+				<with variable="selection">
+					<count value="1"/>
+					<iterate>
+						<adapt type="org.eclipse.core.resources.IProject">
+							<and>
+								<not>
+									<test property="org.eclipse.core.resources.projectNature"
+										  value="org.eclipse.angularjs.core.angularnature"/>
+								</not>
+							</and>
+						</adapt>
+					</iterate>
+				</with>
+			</activeWhen>
+		</handler>
+		
+	</extension>		
+				
+	<!--Menus:-->
+ 	<extension
+		point="org.eclipse.ui.menus">
+ 
+		<!-- contributions to the project configure menu -->
+		<menuContribution locationURI="popup:org.eclipse.ui.projectConfigure?after=additions">
+			<command commandId="org.eclipse.angularjs.ui.convertProjectToAngular">
+				<visibleWhen
+          			checkEnabled="true">
+				</visibleWhen>
+			</command>
+		</menuContribution>
+		
 	</extension>
-		     
+					     
 	<!--Preferences:-->		     
 	<extension point="org.eclipse.core.runtime.preferences">
 		<initializer

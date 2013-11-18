@@ -1,10 +1,13 @@
 package org.eclipse.angularjs.internal.core.project;
 
+import org.eclipse.angularjs.internal.core.AngularCorePlugin;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
 public class AngularNature implements IProjectNature {
+
+	public static final String ID = AngularCorePlugin.ID + ".angularnature"; //$NON-NLS-1$
 
 	private IProject project;
 
