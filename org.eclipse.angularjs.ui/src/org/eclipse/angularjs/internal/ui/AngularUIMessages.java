@@ -17,10 +17,17 @@ import java.util.ResourceBundle;
 import org.eclipse.osgi.util.NLS;
 
 public final class AngularUIMessages extends NLS {
-	
+
 	private static final String BUNDLE_NAME = "org.eclipse.angularjs.internal.ui.AngularUIMessages"; //$NON-NLS-1$
 
 	private static ResourceBundle fResourceBundle;
+
+	public static String ConvertProjectToAngular_converting_project_job_title;
+
+	public static String AngularGlobalPreferencesPage_desc;
+	public static String AngularEditorPreferencesPage_desc;
+
+	public static String Sample_HTMLAngular_doc;
 
 	private AngularUIMessages() {
 	}
@@ -34,8 +41,6 @@ public final class AngularUIMessages extends NLS {
 		}
 		return fResourceBundle;
 	}
-
-	public static String ConvertProjectToAngular_converting_project_job_title;
 
 	static {
 		NLS.initializeMessages(BUNDLE_NAME, AngularUIMessages.class);

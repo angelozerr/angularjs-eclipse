@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.preferences.PreferenceConstants;
+import org.eclipse.angularjs.internal.ui.style.IStyleConstantsForAngular;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -14,8 +15,8 @@ import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
 /**
  * Coloring mechanism for Freemarker partitions
  */
-public class LineStyleProviderForAngular extends AbstractLineStyleProvider implements
-		LineStyleProvider {
+public class LineStyleProviderForAngular extends AbstractLineStyleProvider
+		implements LineStyleProvider {
 
 	private IPreferenceStore fColorPreferences;
 
@@ -24,14 +25,16 @@ public class LineStyleProviderForAngular extends AbstractLineStyleProvider imple
 
 	static {
 		// Normal text:
-		/*fColorTypes.put(PHPRegionTypes.PHP_STRING,
-				PreferenceConstants.EDITOR_NORMAL_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_TOKEN,
-				PreferenceConstants.EDITOR_NORMAL_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_SEMICOLON,
-				PreferenceConstants.EDITOR_NORMAL_COLOR);
-		fColorTypes.put(PHPRegionTypes.PHP_OPERATOR,
-				PreferenceConstants.EDITOR_NORMAL_COLOR);*/
+		/*
+		 * fColorTypes.put(PHPRegionTypes.PHP_STRING,
+		 * PreferenceConstants.EDITOR_NORMAL_COLOR);
+		 * fColorTypes.put(PHPRegionTypes.PHP_TOKEN,
+		 * PreferenceConstants.EDITOR_NORMAL_COLOR);
+		 * fColorTypes.put(PHPRegionTypes.PHP_SEMICOLON,
+		 * PreferenceConstants.EDITOR_NORMAL_COLOR);
+		 * fColorTypes.put(PHPRegionTypes.PHP_OPERATOR,
+		 * PreferenceConstants.EDITOR_NORMAL_COLOR);
+		 */
 	}
 
 	/**
@@ -48,28 +51,32 @@ public class LineStyleProviderForAngular extends AbstractLineStyleProvider imple
 		if (region != null) {
 			final String type = region.getType();
 			if (type == AngularRegionContext.ANGULAR_EXPRESSION_OPEN) {
-				result = (TextAttribute) getTextAttributes().get(PreferenceConstants.EDITOR_NUMBER_COLOR);
+				result = (TextAttribute) getTextAttributes().get(
+						IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
 			} else if (type == AngularRegionContext.ANGULAR_EXPRESSION_CLOSE) {
-				result = (TextAttribute) getTextAttributes().get(PreferenceConstants.EDITOR_NUMBER_COLOR);
-			} 
+				result = (TextAttribute) getTextAttributes().get(
+						IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
+			}
 			if (type == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
-				result = (TextAttribute) getTextAttributes().get(PreferenceConstants.EDITOR_NUMBER_COLOR);
-			} 
-		/*	else if (type == PHPRegionContext.PHP_CLOSE) {
-				result = getAttributeFor(PHPRegionTypes.PHP_CLOSETAG);
-			} else {
-				result = getAttributeFor(region.getType());
-			}*/
+				result = (TextAttribute) getTextAttributes().get(
+						IStyleConstantsForAngular.ANGULAR_EXPRESSION);
+			}
+			/*
+			 * else if (type == PHPRegionContext.PHP_CLOSE) { result =
+			 * getAttributeFor(PHPRegionTypes.PHP_CLOSETAG); } else { result =
+			 * getAttributeFor(region.getType()); }
+			 */
 		}
 
 		// return the defalt attributes if there is not highlight color for the
 		// region
 		if (result == null) {
-			//result = (TextAttribute) getTextAttributes().get(
-			//		PreferenceConstants.EDITOR_NORMAL_COLOR);
+			// result = (TextAttribute) getTextAttributes().get(
+			// PreferenceConstants.EDITOR_NORMAL_COLOR);
 		}
 		return result;
 	}
+
 	/**
 	 * Look up the TextAttribute for the given region context. Might return null
 	 * for unusual text.
@@ -80,7 +87,7 @@ public class LineStyleProviderForAngular extends AbstractLineStyleProvider imple
 	protected TextAttribute getAttributeFor(String type) {
 		return (TextAttribute) getTextAttributes().get(fColorTypes.get(type));
 	}
-	
+
 	public void setColorPreferences(IPreferenceStore preferenceStore) {
 		fColorPreferences = preferenceStore;
 	}
@@ -95,6 +102,7 @@ public class LineStyleProviderForAngular extends AbstractLineStyleProvider imple
 
 	@Override
 	protected void loadColors() {
-		addTextAttribute(PreferenceConstants.EDITOR_NUMBER_COLOR);
+		addTextAttribute(IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
+		addTextAttribute(IStyleConstantsForAngular.ANGULAR_EXPRESSION);
 	}
 }
