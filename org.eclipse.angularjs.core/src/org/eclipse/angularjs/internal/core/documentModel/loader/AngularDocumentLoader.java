@@ -17,10 +17,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
 
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularSourceParser;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularStructuredDocumentReParser;
 import org.eclipse.angularjs.internal.core.documentModel.partitioner.AngularStructuredTextPartitioner;
+import org.eclipse.angularjs.internal.core.modelquery.ModelQueryAdapterFactoryForAngular;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -68,6 +70,13 @@ public class AngularDocumentLoader extends HTMLDocumentLoader {
 		return new AngularDocumentLoader();
 	}
 
+	/*@Override
+	public List getAdapterFactories() {
+		List factories = super.getAdapterFactories();
+		factories.add(new ModelQueryAdapterFactoryForAngular());
+		return factories;
+	}*/
+
 	public IDocumentPartitioner getDefaultDocumentPartitioner() {
 		return new AngularStructuredTextPartitioner();
 	}
@@ -87,12 +96,11 @@ public class AngularDocumentLoader extends HTMLDocumentLoader {
 
 		private IFile fIFile;
 
-
 		private InputStream fInputStream;
-		
-		private static final String CHARSET_UTF_16= "UTF-16"; //$NON-NLS-1$
-		
-		private static final String CHARSET_UTF_16LE= "UTF-16LE"; //$NON-NLS-1$
+
+		private static final String CHARSET_UTF_16 = "UTF-16"; //$NON-NLS-1$
+
+		private static final String CHARSET_UTF_16LE = "UTF-16LE"; //$NON-NLS-1$
 
 		public void set(IFile iFile) throws CoreException, IOException {
 			super.set(iFile);
@@ -142,14 +150,14 @@ public class AngularDocumentLoader extends HTMLDocumentLoader {
 				if (DEBUG) {
 					if (appropriateDefault != null
 							&& !appropriateDefault.equals(detectedCharset)) {
-						Logger
-								.log(Logger.INFO_DEBUG,
-										"appropriate did not equal detected, as expected for invalid charset case"); //$NON-NLS-1$
+						Logger.log(Logger.INFO_DEBUG,
+								"appropriate did not equal detected, as expected for invalid charset case"); //$NON-NLS-1$
 					}
 				}
 			}
 			return result;
 		}
+
 		@Override
 		public Reader getCodedReader() throws CoreException, IOException {
 			Reader reader = super.getCodedReader();
@@ -160,7 +168,7 @@ public class AngularDocumentLoader extends HTMLDocumentLoader {
 				return reader;
 			} catch (Exception e) {
 			}
-			
+
 			InputStream is = getResettableStream();
 			EncodingMemento encodingMemento = getEncodingMemento();
 			String charsetName = encodingMemento.getJavaCharsetName();
@@ -174,22 +182,28 @@ public class AngularDocumentLoader extends HTMLDocumentLoader {
 			if (fEncodingRule == EncodingRule.FORCE_DEFAULT) {
 				charsetName = encodingMemento.getAppropriateDefault();
 			}
-			
-			// [228366] For files that have a unicode BOM, and a charset name of UTF-16, the charset decoder needs "UTF-16LE"
-			if(CHARSET_UTF_16.equals(charsetName) && encodingMemento.getUnicodeBOM() == IContentDescription.BOM_UTF_16LE)
+
+			// [228366] For files that have a unicode BOM, and a charset name of
+			// UTF-16, the charset decoder needs "UTF-16LE"
+			if (CHARSET_UTF_16.equals(charsetName)
+					&& encodingMemento.getUnicodeBOM() == IContentDescription.BOM_UTF_16LE)
 				charsetName = CHARSET_UTF_16LE;
-			reader = new BufferedReader(new InputStreamReader(is, charsetName), CodedIO.MAX_BUF_SIZE);
+			reader = new BufferedReader(new InputStreamReader(is, charsetName),
+					CodedIO.MAX_BUF_SIZE);
 			return reader;
 		}
 
 		private boolean forceDefault() {
 
 			boolean result = false;
-			if (fEncodingRule != null && fEncodingRule == EncodingRule.FORCE_DEFAULT)
+			if (fEncodingRule != null
+					&& fEncodingRule == EncodingRule.FORCE_DEFAULT)
 				result = true;
 			return result;
 		}
-		private InputStream getResettableStream() throws CoreException, IOException {
+
+		private InputStream getResettableStream() throws CoreException,
+				IOException {
 
 			InputStream resettableStream = null;
 
@@ -198,8 +212,7 @@ public class AngularDocumentLoader extends HTMLDocumentLoader {
 				try {
 					// note we always get contents, even if out of synch
 					inputStream = fIFile.getContents(true);
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					// SHOULD actually check for existence of
 					// fIStorage, but
 					// for now will just assume core exception
@@ -209,9 +222,9 @@ public class AngularDocumentLoader extends HTMLDocumentLoader {
 					Logger.logException(e);
 					inputStream = new NullInputStream();
 				}
-				resettableStream = new BufferedInputStream(inputStream, CodedIO.MAX_BUF_SIZE);
-			}
-			else {
+				resettableStream = new BufferedInputStream(inputStream,
+						CodedIO.MAX_BUF_SIZE);
+			} else {
 				if (fInputStream != null) {
 					if (fInputStream.markSupported()) {
 						resettableStream = fInputStream;
@@ -221,9 +234,9 @@ public class AngularDocumentLoader extends HTMLDocumentLoader {
 						// catch (IOException e) {
 						// // assumed just hasn't been marked yet, so ignore
 						// }
-					}
-					else {
-						resettableStream = new BufferedInputStream(fInputStream, CodedIO.MAX_BUF_SIZE);
+					} else {
+						resettableStream = new BufferedInputStream(
+								fInputStream, CodedIO.MAX_BUF_SIZE);
 					}
 				}
 			}

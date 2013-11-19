@@ -10,11 +10,13 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.filebuffers,
  org.eclipse.wst.html.core,
  org.eclipse.wst.xml.core,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ org.eclipse.wst.common.uriresolver
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.angularjs.internal.core.AngularCorePlugin
-Export-Package: org.eclipse.angularjs.internal.core.documentModel.handler,
+Export-Package: org.eclipse.angularjs.core.modules,
+ org.eclipse.angularjs.internal.core.documentModel.handler,
  org.eclipse.angularjs.internal.core.documentModel.parser;x-friends:="org.eclipse.angularjs.core.tests",
  org.eclipse.angularjs.internal.core.documentModel.partitioner,
  org.eclipse.angularjs.internal.core.documentModel.provisional.contenttype,

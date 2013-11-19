@@ -170,4 +170,20 @@
 		</adapterFactoryDescription>
 	</extension>
 	
+   <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">	
+	    <proposalComputer
+	          activate="false"
+	          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTags"
+	          class="org.eclipse.angularjs.internal.ui.contentassist.HTMLAngularTagsCompletionProposalComputer"
+	          id="org.eclipse.angularjs.proposalComputer.htmlAngularTags">
+	       <contentType
+	             id="org.eclipse.angularjs.core.angularsource">
+	          <partitionType
+	                id="org.eclipse.wst.html.HTML_DEFAULT">
+	          </partitionType>
+	       </contentType>
+	    </proposalComputer>
+	</extension>
+	  	
 </plugin>        

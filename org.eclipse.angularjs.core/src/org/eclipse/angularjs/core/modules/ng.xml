@@ -1,0 +1,38 @@
+<module name="ng">
+
+	<!-- See http://docs.angularjs.org/api/ng -->
+	
+	<directive name="ngApp"
+		url="http://docs.angularjs.org/api/ng.directive:ngApp">
+		<description>
+			Use this directive to auto-bootstrap an AngularJS
+			application. The
+			ngApp directive designates the root element of the
+			application and is
+			typically placed near the root element of the page
+			- e.g. on the
+			&lt;body>
+			or
+			&lt;html&gt; tags.
+		</description>
+	</directive>
+
+	<directive name="ngBlur"
+		url="http://docs.angularjs.org/api/ng.directive:ngBlur" tags="window, input, select, textarea">
+		<description>
+			Specify custom behavior on blur event.
+		</description>
+	</directive>
+
+	<directive name="ngChange"
+		url="http://docs.angularjs.org/api/ng.directive:ngChange" tags="input">
+		<description>
+			Evaluate given expression when user changes the input.
+			The expression is not evaluated when the value change is coming from
+			the model.
+
+			Note, this directive requires ngModel to be present.
+		</description>
+	</directive>
+
+</module>
