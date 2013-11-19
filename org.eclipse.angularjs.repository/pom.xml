@@ -8,6 +8,16 @@
 	</parent>
 	<artifactId>org.eclipse.angularjs.category</artifactId>
 	<packaging>eclipse-repository</packaging>
+	<build>
+		<extensions>
+			<!-- Enabling the use of FTP -->
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>1.0-beta-6</version>
+			</extension>
+		</extensions>
+	</build>
 	<profiles>
 		<!-- This profile is used to upload the repo -->
 		<profile>
