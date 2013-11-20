@@ -1,11 +1,11 @@
 package org.eclipse.angularjs.internal.ui.contentassist;
 
-import org.eclipse.angularjs.core.modules.AngulaModulesManager;
+import org.eclipse.angularjs.core.modules.AngularModulesManager;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.angularjs.core.modules.IDirectiveCollector;
-import org.eclipse.angularjs.internal.core.documentModel.handler.AngularModelHandler;
-import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImageHelper;
-import org.eclipse.wst.html.ui.internal.editor.HTMLEditorPluginImages;
+import org.eclipse.angularjs.internal.ui.ImageResource;
+import org.eclipse.jface.text.contentassist.IContextInformation;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
@@ -28,27 +28,32 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 		String tagName = node.getNodeName();
 		String directiveName = contentAssistRequest.getMatchString();
-		AngulaModulesManager.getInstance().collectDirectives(tagName,
+		AngularModulesManager.getInstance().collectDirectives(tagName,
 				directiveName, false, new IDirectiveCollector() {
 
 					@Override
 					public boolean add(Directive directive, String name) {
-						String proposedText = name;
-						int cursorAdjustment = getCursorPositionForProposedText(proposedText);
 
-						String requiredName = name;
+						String replacementString = name + "=\"\"";
+						int replacementOffset = contentAssistRequest
+								.getReplacementBeginPosition();
+						int replacementLength = contentAssistRequest
+								.getReplacementLength();
+						int cursorPosition = getCursorPositionForProposedText(replacementString);
+
+						Image image = ImageResource
+								.getImage(ImageResource.IMG_ANGULARJS);
+						String displayString = name;
+						IContextInformation contextInformation = null;
+						String additionalProposalInfo = directive
+								.getDescription();
+						int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME;
+
 						CustomCompletionProposal proposal = new CustomCompletionProposal(
-								proposedText,
-								contentAssistRequest
-										.getReplacementBeginPosition(),
-								contentAssistRequest.getReplacementLength(),
-								cursorAdjustment,
-								HTMLEditorPluginImageHelper
-										.getInstance()
-										.getImage(
-												HTMLEditorPluginImages.IMG_OBJ_TAG_GENERIC),
-								requiredName, null, null,
-								XMLRelevanceConstants.R_TAG_NAME);
+								replacementString, replacementOffset,
+								replacementLength, cursorPosition, image,
+								displayString, contextInformation,
+								additionalProposalInfo, relevance);
 						contentAssistRequest.addProposal(proposal);
 
 						return true;

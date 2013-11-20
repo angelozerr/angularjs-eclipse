@@ -16,6 +16,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.angularjs.internal.core.AngularCorePlugin
 Export-Package: org.eclipse.angularjs.core.modules,
+ org.eclipse.angularjs.core.utils,
  org.eclipse.angularjs.internal.core.documentModel.handler,
  org.eclipse.angularjs.internal.core.documentModel.parser;x-friends:="org.eclipse.angularjs.core.tests",
  org.eclipse.angularjs.internal.core.documentModel.partitioner,

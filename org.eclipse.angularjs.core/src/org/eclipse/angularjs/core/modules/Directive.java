@@ -9,11 +9,14 @@ public class Directive {
 	private final String name;
 	private final Module module;
 	private final Collection<String> tagNames;
+	private final String description;
 
-	public Directive(String name, Collection<String> tagNames, Module module) {
+	public Directive(String name, Collection<String> tagNames,
+			String description, Module module) {
 		this.name = name;
 		this.module = module;
 		this.tagNames = tagNames;
+		this.description = description;
 		module.addDirective(this);
 	}
 
@@ -62,4 +65,7 @@ public class Directive {
 		return module;
 	}
 
+	public String getDescription() {
+		return description;
+	}
 }

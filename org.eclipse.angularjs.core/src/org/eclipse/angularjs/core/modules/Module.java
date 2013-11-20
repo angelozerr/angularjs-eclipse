@@ -9,13 +9,13 @@ public class Module {
 
 	private final String name;
 
-	private final DirectivesByTagName directivesForAny;
+	private final DirectivesByTagName allDirectives;
 	private final Map<String, DirectivesByTagName> directivesByTagName;
 
 	public Module(String name) {
 		this.name = name;
 		this.directivesByTagName = new HashMap<String, DirectivesByTagName>();
-		this.directivesForAny = new DirectivesByTagName();
+		this.allDirectives = new DirectivesByTagName();
 	}
 
 	public String getName() {
@@ -29,8 +29,9 @@ public class Module {
 				addDirective(tagName, directive);
 			}
 		} else {
-			addDirective(null, directive);
+			addDirective(DirectiveHelper.ANY_TAG, directive);
 		}
+		allDirectives.addDirective(directive);
 	}
 
 	private void addDirective(String tagName, Directive directive) {
@@ -41,7 +42,7 @@ public class Module {
 	private DirectivesByTagName getDirectivesByTagName(String tagName,
 			boolean createIfNotExists) {
 		if (tagName == null) {
-			return directivesForAny;
+			return allDirectives;
 		}
 		DirectivesByTagName result = directivesByTagName.get(tagName);
 		if (result == null && createIfNotExists) {
@@ -53,10 +54,14 @@ public class Module {
 
 	public Directive getDirective(String tagName, String name) {
 		DirectivesByTagName result = getDirectivesByTagName(tagName, false);
-		if (result != null) {
-			result.get(name);
+		Directive directive = null;
+		if (result != null) {			
+			directive = result.get(name);
 		}
-		return null;
+		if (directive == null) {
+			return getDirectivesByTagName(DirectiveHelper.ANY_TAG, false).get(name);
+		}
+		return directive;
 	}
 
 	public void collectDirectives(String tagName, String directiveName,
@@ -67,23 +72,30 @@ public class Module {
 				collector.add(directive, directiveName);
 			}
 		} else {
+			// collect directives from tag names.
 			DirectivesByTagName container = getDirectivesByTagName(tagName,
 					false);
-			if (container == null) {
-				container = getDirectivesByTagName(null, false);
-			}
+			collectDirectives(directiveName, collector, container);
+			// collect directives from 'any' tag names.
+			container = getDirectivesByTagName(DirectiveHelper.ANY_TAG, false);
+			collectDirectives(directiveName, collector, container);
+		}
+	}
+
+	private void collectDirectives(String directiveName,
+			IDirectiveCollector collector, DirectivesByTagName container) {
+		if (container != null) {
 			Set<String> names = container.keySet();
 			for (String name : names) {
 				if (name.startsWith(directiveName)) {
 					collector.add(container.get(name), name);
 				}
 			}
-			/*
-			 * for (Directive directive : directives.values()) { String
-			 * nameWhichMatch = directive.match(directiveName); if
-			 * (nameWhichMatch != null) { collector.add(directive,
-			 * nameWhichMatch); } }
-			 */
 		}
+	}
+
+	public boolean isDirective(String directiveName) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -855,6 +855,7 @@ public final class AngularEditorSyntaxColoringPreferencePage extends
 			List styles = new ArrayList();
 			styles.add(IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
 			styles.add(IStyleConstantsForAngular.ANGULAR_EXPRESSION);
+			styles.add(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
 			fStylePreferenceKeys = styles;
 		}
 		return fStylePreferenceKeys;
@@ -865,6 +866,7 @@ public final class AngularEditorSyntaxColoringPreferencePage extends
 			List styles = new ArrayList();
 			styles.add(IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
 			styles.add(IStyleConstantsForAngular.ANGULAR_EXPRESSION);
+			styles.add(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
 			styles.add(IStyleConstantsXML.TAG_BORDER);
 			styles.add(IStyleConstantsXML.TAG_NAME);
 			styles.add(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);

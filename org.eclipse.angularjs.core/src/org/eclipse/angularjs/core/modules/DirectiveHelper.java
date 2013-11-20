@@ -5,6 +5,8 @@ import java.util.List;
 
 public class DirectiveHelper {
 
+	public static final String ANY_TAG = "any";
+	
 	public static final List<String> STARTS_WITH;
 	public static final List<Character> DELIMITERS;
 

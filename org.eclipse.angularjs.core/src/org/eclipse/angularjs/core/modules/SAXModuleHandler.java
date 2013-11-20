@@ -18,6 +18,7 @@ class SAXModuleHandler extends DefaultHandler {
 
 	private String directiveName;
 	private Collection<String> tagsName;
+	private StringBuilder description = null;
 
 	public Module load(InputStream in) throws IOException, SAXException {
 		XMLReader xmlReader = XMLReaderFactory.createXMLReader();
@@ -34,7 +35,6 @@ class SAXModuleHandler extends DefaultHandler {
 			module = new Module(moduleName);
 		} else if ("directive".equals(name)) {
 			this.directiveName = attributes.getValue("name");
-
 			this.tagsName = new ArrayList<String>();
 
 			String tags = attributes.getValue("tags");
@@ -49,6 +49,8 @@ class SAXModuleHandler extends DefaultHandler {
 					}
 				}
 			}
+		} else if ("description".equals(name)) {
+			this.description = new StringBuilder();
 		}
 		super.startElement(uri, localName, name, attributes);
 	}
@@ -57,14 +59,25 @@ class SAXModuleHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
 		if ("directive".equals(name)) {
-			new Directive(directiveName, tagsName, module);
+			new Directive(directiveName, tagsName,
+					description != null ? description.toString() : null, module);
 			this.directiveName = null;
 			this.tagsName = null;
+			this.description = null;
 		}
 		super.endElement(uri, localName, name);
 	}
 
 	public Module getModule() {
 		return module;
+	}
+
+	@Override
+	public void characters(char ch[], int start, int length)
+			throws SAXException {
+		if (description != null) {
+			description.append(String.valueOf(ch, start, length));
+		}
+		super.characters(ch, start, length);
 	}
 }

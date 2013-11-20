@@ -185,5 +185,25 @@
 	       </contentType>
 	    </proposalComputer>
 	</extension>
-	  	
+
+	<!--======================================================================================-->
+	<!-- As you type validation                                      						  -->
+	<!--======================================================================================-->
+
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="total"
+			class="org.eclipse.angularjs.internal.ui.validation.HTMLAngularSourceValidator"
+			id="org.eclipse.angularjs.internal.ui.validation.htmlsyntaxvalidator">
+			<contentTypeIdentifier
+				id="org.eclipse.angularjs.core.angularsource">
+				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.html.HTML_DECLARATION"/>
+				<partitionType id="org.eclipse.wst.html.HTML_COMMENT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+		  	
 </plugin>        

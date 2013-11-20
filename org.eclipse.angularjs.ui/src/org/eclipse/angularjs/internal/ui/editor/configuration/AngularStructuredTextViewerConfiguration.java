@@ -5,10 +5,15 @@ import org.eclipse.angularjs.internal.core.documentModel.partitioner.AngularStru
 import org.eclipse.angularjs.internal.ui.editor.highlighter.LineStyleProviderForAngular;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
+import org.eclipse.wst.html.core.text.IHTMLPartitions;
 import org.eclipse.wst.html.ui.StructuredTextViewerConfigurationHTML;
+import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.text.IStructuredPartitions;
+import org.eclipse.wst.sse.ui.internal.StructuredTextViewer;
 import org.eclipse.wst.sse.ui.internal.provisional.style.LineStyleProvider;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
+import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
 public class AngularStructuredTextViewerConfiguration extends
 		StructuredTextViewerConfigurationHTML {
@@ -47,10 +52,14 @@ public class AngularStructuredTextViewerConfiguration extends
 
 		return configuredContentTypes;
 	}
-	
-	public LineStyleProvider getLineStyleProvider() {
+
+	public LineStyleProvider getLineStyleProvider(ISourceViewer sourceViewer) {
 		if (fLineStyleProvider == null) {
-			fLineStyleProvider = new LineStyleProviderForAngular();
+			IDOMModel model = (IDOMModel) StructuredModelManager
+					.getModelManager()
+					.getExistingModelForRead(
+							((StructuredTextViewer) sourceViewer).getDocument());
+			fLineStyleProvider = new LineStyleProviderForAngular(model);
 		}
 		return fLineStyleProvider;
 	}
@@ -58,8 +67,12 @@ public class AngularStructuredTextViewerConfiguration extends
 	@Override
 	public LineStyleProvider[] getLineStyleProviders(
 			ISourceViewer sourceViewer, String partitionType) {
-		if (partitionType == AngularPartitionTypes.ANGULAR_DEFAULT) {
-			return new LineStyleProvider[] { getLineStyleProvider() };
+		if (partitionType == IHTMLPartitions.HTML_DEFAULT
+				|| partitionType == IHTMLPartitions.HTML_COMMENT
+				|| partitionType == IHTMLPartitions.HTML_DECLARATION
+				|| partitionType == IXMLPartitions.XML_PI
+				|| partitionType == AngularPartitionTypes.ANGULAR_DEFAULT) {
+			return new LineStyleProvider[] { getLineStyleProvider(sourceViewer) };
 		}
 		return super.getLineStyleProviders(sourceViewer, partitionType);
 	}

@@ -32,11 +32,18 @@ public class PreferenceConstants {
 				+ JUSTBOLD;
 		store.setDefault(IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER,
 				styleValue);
+
 		styleValue = " null|"
 				+ ColorHelper.findRGBString(registry,
 						IStyleConstantsForAngular.ANGULAR_EXPRESSION, 232, 235,
 						255) + " | false | false";
 		store.setDefault(IStyleConstantsForAngular.ANGULAR_EXPRESSION,
+				styleValue);
+		
+		styleValue = ColorHelper.findRGBString(registry,
+				IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME, 0, 0, 128)
+				+ JUSTBOLD;
+		store.setDefault(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME,
 				styleValue);
 
 	}

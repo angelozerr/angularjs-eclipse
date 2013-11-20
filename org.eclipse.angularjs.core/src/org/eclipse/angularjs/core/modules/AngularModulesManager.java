@@ -8,20 +8,21 @@ import java.util.Map;
 
 import org.xml.sax.SAXException;
 
-public class AngulaModulesManager {
+public class AngularModulesManager {
 
-	private static final AngulaModulesManager INSTANCE = new AngulaModulesManager();
+	private static final AngularModulesManager INSTANCE = new AngularModulesManager();
 
-	public static AngulaModulesManager getInstance() {
+	public static AngularModulesManager getInstance() {
 		return INSTANCE;
 	}
 
 	private final Map<String, Module> modules;
 
-	private AngulaModulesManager() {
+	private AngularModulesManager() {
 		this.modules = new HashMap<String, Module>();
 		try {
-			loadModule(AngulaModulesManager.class.getResourceAsStream("ng.xml"));
+			loadModule(AngularModulesManager.class
+					.getResourceAsStream("ng.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -47,4 +48,16 @@ public class AngulaModulesManager {
 					collector);
 		}
 	}
+
+	public Directive getDirective(String tagName, String name) {
+		Collection<Module> modules = getModules();
+		for (Module module : modules) {
+			Directive directive = module.getDirective(tagName, name);
+			if (directive != null) {
+				return directive;
+			}
+		}
+		return null;
+	}
+
 }
