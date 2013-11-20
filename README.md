@@ -18,9 +18,9 @@ After that, you can open your HTML with AngularJS Editor :
 
 ![Open With AngularJS Editor](https://github.com/angelozerr/angularjs-eclipse/wiki/images/OpenWithAngularEditor.png)
 
-You will see that AngularJS EL is highlighted : 
+You will see that AngularJS directive + EL are highlighted, completion is available for directive name : 
 
-![AngulerJS Editor Syntax Coloring](https://github.com/angelozerr/angularjs-eclipse/wiki/images/AngulerEditorSyntaxColoring.png)
+![AngulerJS Editor Ovreview](https://github.com/angelozerr/angularjs-eclipse/wiki/images/AngulerEditorOverview.png)
 
 # Javascript Editor
 
