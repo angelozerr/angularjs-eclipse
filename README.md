@@ -25,3 +25,12 @@ You will see that AngularJS directive + EL are highlighted, completion is availa
 # Javascript Editor
 
 TODO
+
+# Installation
+
+If you wish to test the snapshot version of AngularJS Eclipse, you can install it with the Eclipse Update site 
+http://oss.opensagres.fr/angularjs-eclipse/1.0.0-SNAPSHOT/ but it's not an official release.
+
+# Build
+
+See cloudbees job: https://opensagres.ci.cloudbees.com/job/angularjs-eclipse/
