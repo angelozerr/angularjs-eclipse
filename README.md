@@ -20,7 +20,7 @@ After that, you can open your HTML with AngularJS Editor :
 
 You will see that AngularJS directive + EL are highlighted, completion is available for directive name : 
 
-![AngulerJS Editor Ovreview](https://github.com/angelozerr/angularjs-eclipse/wiki/images/AngulerEditorOverview.png)
+![AngulerJS Editor Overview](https://github.com/angelozerr/angularjs-eclipse/wiki/images/HTMLAngulerEditorOverview.png)
 
 # Javascript Editor
 
