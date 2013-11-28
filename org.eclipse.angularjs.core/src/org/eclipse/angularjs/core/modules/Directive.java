@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.angularjs.core.utils.StringUtils;
+
 public class Directive {
 
 	private final String name;
@@ -67,5 +69,22 @@ public class Directive {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public String getHTMLDescription() {
+		StringBuilder info = new StringBuilder("");
+		info.append("<b>");
+		info.append(getName());
+		info.append("</b>");
+		info.append(" directive in module ");
+		info.append("<b>");
+		info.append(getModule().getName());
+		info.append("</b>");
+		if (!StringUtils.isEmpty(description)) {
+			info.append("<br/>");
+			info.append("<br/>");
+			info.append(description);
+		}
+		return info.toString();
 	}
 }

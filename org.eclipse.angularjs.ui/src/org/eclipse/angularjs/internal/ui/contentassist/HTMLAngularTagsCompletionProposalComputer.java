@@ -46,7 +46,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						String displayString = name;
 						IContextInformation contextInformation = null;
 						String additionalProposalInfo = directive
-								.getDescription();
+								.getHTMLDescription();
 						int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME;
 
 						CustomCompletionProposal proposal = new CustomCompletionProposal(

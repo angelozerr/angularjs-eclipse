@@ -40,6 +40,10 @@
 		<provisionalConfiguration type="sourceeditingtexttools"
 			class="org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools"
 			target="org.eclipse.angularjs.core.angularsource" />
+  		<documentationTextHover
+        	class="org.eclipse.angularjs.internal.ui.taginfo.HTMLAngularTagInfoHoverProcessor"
+        	target="org.eclipse.wst.html.HTML_DEFAULT">
+  		</documentationTextHover>			
 		<!--<provisionalConfiguration type="characterpairmatcher"
 			class="org.eclipse.angularjs.internal.ui.text.AngularDocumentRegionEdgeMatcher"
 			target="org.eclipse.angularjs.core.angularsource" />-->
