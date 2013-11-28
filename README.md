@@ -3,7 +3,7 @@ angularjs-eclipse
 
 AngularJS Eclipse Plugin extends Eclipse WTP to : 
 
- * provides an HTML editor which supports AngularJS expression and directive.
+ * provides an HTML editor which supports AngularJS expression and directive. See [HTML features](https://github.com/angelozerr/angularjs-eclipse/wiki/HTML-Features).
  * provides a Javascript editor which supports AngularJS features (modules, etc).
 
 # AngularJS Configuration
