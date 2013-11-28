@@ -5,6 +5,7 @@ import org.eclipse.angularjs.internal.ui.style.IStyleConstantsForAngular;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 
 public class PreferenceConstants {
@@ -39,12 +40,15 @@ public class PreferenceConstants {
 						255) + " | false | false";
 		store.setDefault(IStyleConstantsForAngular.ANGULAR_EXPRESSION,
 				styleValue);
-		
+
 		styleValue = ColorHelper.findRGBString(registry,
 				IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME, 0, 0, 128)
 				+ JUSTBOLD;
 		store.setDefault(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME,
 				styleValue);
+
+		// Defaults for the Typing preference page
+		store.setDefault(AngularUIPreferenceNames.TYPING_COMPLETE_END_EL, true);
 
 	}
 }

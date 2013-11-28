@@ -8,6 +8,7 @@ public class AngularUIPreferenceInitializer extends AbstractPreferenceInitialize
 
 	@Override
 	public void initializeDefaultPreferences() {
+
 		IPreferenceStore store = PreferenceConstants.getPreferenceStore();
 		EditorsUI.useAnnotationsPreferencePage(store);
 		EditorsUI.useQuickDiffPreferencePage(store);

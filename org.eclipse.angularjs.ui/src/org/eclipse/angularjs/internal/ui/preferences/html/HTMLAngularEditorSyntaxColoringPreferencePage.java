@@ -9,7 +9,7 @@
  *     IBM Corporation - initial API and implementation
  *     
  *******************************************************************************/
-package org.eclipse.angularjs.internal.ui.preferences;
+package org.eclipse.angularjs.internal.ui.preferences.html;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -97,7 +97,7 @@ import com.ibm.icu.text.Collator;
  * CDT pages far more than our original color page while retaining the extra
  * "click-to-find" functionality.
  */
-public final class AngularEditorSyntaxColoringPreferencePage extends
+public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 		AbstractSyntaxColoringPage implements IWorkbenchPreferencePage {
 
 	static class MyChainedPreferenceStore extends ChainedPreferenceStore {

@@ -10,7 +10,7 @@
  *     Jens Lukowski/Innoopract - initial renaming/restructuring
  *
  *******************************************************************************/
-package org.eclipse.angularjs.internal.ui.preferences;
+package org.eclipse.angularjs.internal.ui.preferences.html;
 
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.jface.preference.PreferencePage;
@@ -26,7 +26,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 
-public class AngularEditorPreferencesPage extends PreferencePage implements IWorkbenchPreferencePage {
+public class HTMLAngularEditorPreferencesPage extends PreferencePage implements IWorkbenchPreferencePage {
 
 	private Composite createComposite(Composite parent, int numColumns) {
 		noDefaultAndApplyButton();
@@ -51,7 +51,7 @@ public class AngularEditorPreferencesPage extends PreferencePage implements IWor
 	protected Control createContents(Composite parent) {
 		Composite composite = createScrolledComposite(parent);
 
-		String description = AngularUIMessages.AngularEditorPreferencesPage_desc; 
+		String description = AngularUIMessages.HTMLAngularEditorPreferencesPage_desc; 
 		Text text = new Text(composite, SWT.READ_ONLY);
 		// some themes on GTK have different background colors for Text and Labels
 		text.setBackground(composite.getBackground());

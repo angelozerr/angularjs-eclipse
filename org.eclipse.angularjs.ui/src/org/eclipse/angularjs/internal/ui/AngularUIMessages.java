@@ -25,9 +25,13 @@ public final class AngularUIMessages extends NLS {
 	public static String ConvertProjectToAngular_converting_project_job_title;
 
 	public static String AngularGlobalPreferencesPage_desc;
-	public static String AngularEditorPreferencesPage_desc;
+	public static String HTMLAngularGlobalPreferencesPage_desc;
+	public static String HTMLAngularEditorPreferencesPage_desc;
 
 	public static String Sample_HTMLAngular_doc;
+
+	public static String AngularTyping_Auto_Complete;
+	public static String AngularTyping_Close_EL;
 
 	private AngularUIMessages() {
 	}

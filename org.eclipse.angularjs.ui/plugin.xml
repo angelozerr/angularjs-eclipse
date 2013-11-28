@@ -55,6 +55,10 @@
 			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"	
             class="org.eclipse.angularjs.internal.ui.text.correction.AngularCorrectionProcessor"
             target="org.eclipse.angularjs.Angular_DEFAULT" />-->
+		<provisionalConfiguration
+			type="autoeditstrategy"
+			class="org.eclipse.angularjs.internal.ui.autoedit.StructuredAutoEditStrategyAngular"
+			target="org.eclipse.wst.html.HTML_DEFAULT, org.eclipse.wst.html.HTML_DECLARATION" />            
 	</extension>
 	    
 	<!--Commands:-->
@@ -127,18 +131,31 @@
 	          class="org.eclipse.angularjs.internal.ui.preferences.AngularGlobalPreferencesPage"
 	          id="org.eclipse.angularjs.preferences"
 	          name="%AngularPreferencePage.name"/>
+       <!-- Angular HTML Files preferences page -->  
+       <page
+              category="org.eclipse.angularjs.preferences"
+	          class="org.eclipse.angularjs.internal.ui.preferences.html.HTMLAngularGlobalPreferencesPage"
+	          id="org.eclipse.angularjs.html.preferences"
+	          name="%HTMLAngularGlobalPreferencesPag.name"/>	          
 	    <!-- Angular Editor preferences page -->
 		<page
-	          category="org.eclipse.angularjs.preferences"
-	          class="org.eclipse.angularjs.internal.ui.preferences.AngularEditorPreferencesPage"
-	          id="org.eclipse.angularjs.preferences.editor"
-	          name="%AngularEditorPreferencePage.name"/>
+	          category="org.eclipse.angularjs.html.preferences"
+	          class="org.eclipse.angularjs.internal.ui.preferences.html.HTMLAngularEditorPreferencesPage"
+	          id="org.eclipse.angularjs.html.preferences.editor"
+	          name="%HTMLAngularEditorPreferencePage.name"/>
 	    <!-- Angular Syntax Coloring preferences page -->
 		<page
-	          category="org.eclipse.angularjs.preferences.editor"
-	          class="org.eclipse.angularjs.internal.ui.preferences.AngularEditorSyntaxColoringPreferencePage"
-	          id="org.eclipse.angularjs.preferences.editor.syntaxcoloring"
-	          name="%AngularEditorSyntaxColoringPreferencePage.name"/>
+	          category="org.eclipse.angularjs.html.preferences.editor"
+	          class="org.eclipse.angularjs.internal.ui.preferences.html.HTMLAngularEditorSyntaxColoringPreferencePage"
+	          id="org.eclipse.angularjs.html.preferences.editor.syntaxcoloring"
+	          name="%HTMLAngularEditorSyntaxColoringPreferencePage.name"/>
+	    <!-- Angular Typing preferences page -->
+		<page
+	          category="org.eclipse.angularjs.html.preferences.editor"
+	          class="org.eclipse.angularjs.internal.ui.preferences.html.HTMLAngularTypingPreferencePage"
+	          id="org.eclipse.angularjs.html.preferences.editor.typing"
+	          name="%HTMLAngularTypingPreferencePage.name"/>	          
+	          
 	    <!-- Angular Folding preferences page -->	
 	    <!--<page
           category="org.eclipse.angularjs.preferences.editor"
