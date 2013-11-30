@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.CoreException;
 
 public class AngularNature implements IProjectNature {
 
-	public static final String ID = AngularCorePlugin.ID + ".angularnature"; //$NON-NLS-1$
+	public static final String ID = AngularCorePlugin.PLUGIN_ID + ".angularnature"; //$NON-NLS-1$
 
 	private IProject project;
 

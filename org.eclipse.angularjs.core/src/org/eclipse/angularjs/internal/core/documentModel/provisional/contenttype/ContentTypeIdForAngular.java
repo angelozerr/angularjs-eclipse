@@ -18,6 +18,6 @@ public class ContentTypeIdForAngular {
 	}
 
 	static String getConstantString() {
-		return AngularCorePlugin.ID + ".angularsource"; //$NON-NLS-1$
+		return AngularCorePlugin.PLUGIN_ID + ".angularsource"; //$NON-NLS-1$
 	}
 }

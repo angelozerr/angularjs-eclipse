@@ -11,7 +11,10 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.html.core,
  org.eclipse.wst.xml.core,
  org.eclipse.core.resources,
- org.eclipse.wst.common.uriresolver
+ org.eclipse.wst.common.uriresolver,
+ tern.core;bundle-version="1.0.0",
+ tern.eclipse;bundle-version="1.0.0",
+ tern.server.nodejs;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.angularjs.internal.core.AngularCorePlugin

@@ -1,7 +1,11 @@
 package tern.server.nodejs.protocol.angular;
 
-import org.json.simple.JSONObject;
+import tern.server.nodejs.protocol.TernQuery;
 
-public class AngularQuery extends JSONObject {
+public class AngularQuery extends TernQuery {
+
+	public AngularQuery() {
+		super("angular-el");
+	}
 
 }
