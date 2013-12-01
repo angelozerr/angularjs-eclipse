@@ -41,5 +41,10 @@
 			<layout>p2</layout>
 			<url>http://download.eclipse.org/releases/kepler</url>
 		</repository>
+		<repository>
+			<id>tern.java</id>
+			<layout>p2</layout>
+			<url>http://oss.opensagres.fr/tern.repository/1.0.0-SNAPSHOT/</url>
+		</repository>
 	</repositories>
 </project>
