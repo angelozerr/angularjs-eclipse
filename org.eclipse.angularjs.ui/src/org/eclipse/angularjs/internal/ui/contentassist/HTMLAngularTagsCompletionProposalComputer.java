@@ -3,7 +3,10 @@ package org.eclipse.angularjs.internal.ui.contentassist;
 import org.eclipse.angularjs.core.modules.AngularModulesManager;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.angularjs.core.modules.IDirectiveCollector;
+import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.ui.ImageResource;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -13,6 +16,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
+
+import tern.eclipse.ide.core.EclipseTernProject;
 
 public class HTMLAngularTagsCompletionProposalComputer extends
 		DefaultXMLCompletionProposalComputer {
@@ -60,5 +65,24 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					}
 				});
 		super.addAttributeNameProposals(contentAssistRequest, context);
+	}
+
+	@Override
+	protected void addAttributeValueProposals(
+			ContentAssistRequest contentAssistRequest,
+			CompletionProposalInvocationContext context) {
+		super.addAttributeValueProposals(contentAssistRequest, context);
+
+		IProject eclipseProject = DOMUtils.getFile(
+				(IDOMNode) contentAssistRequest.getNode()).getProject();
+		try {
+			EclipseTernProject ternProject = EclipseTernProject
+					.getTernProject(eclipseProject);
+			ternProject.getTernServer();
+		} catch (CoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }

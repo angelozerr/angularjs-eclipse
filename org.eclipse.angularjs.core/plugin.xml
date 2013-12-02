@@ -14,7 +14,7 @@
  -->
 <plugin>
 	
- 	<!-- Freemarker Content Type declaration -->
+ 	<!-- Angular Content Type declaration -->
 	<extension
          point="org.eclipse.core.contenttype.contentTypes">
      <content-type
@@ -37,7 +37,7 @@
 	</extension>
 	
 	<!--
-            DocumentFactory extension for Freemarker: This is needed in order to
+            DocumentFactory extension for Angular: This is needed in order to
             bootstrap the lookup of the ModelHandler
     -->
     <extension
@@ -62,11 +62,11 @@
 	
 	<extension
 		id="angularnature"
-		name="Angular Properties"
+		name="%angularNature"
 		point="org.eclipse.core.resources.natures">
 		<runtime>
 			<run
-				class="org.eclipse.angularjs.internal.core.project.AngularNature">
+				class="org.eclipse.angularjs.core.AngularNature">
 			</run>
 		</runtime>
 		<content-type

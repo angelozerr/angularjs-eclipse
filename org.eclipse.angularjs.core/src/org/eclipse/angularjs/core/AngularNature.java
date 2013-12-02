@@ -1,4 +1,4 @@
-package org.eclipse.angularjs.internal.core.project;
+package org.eclipse.angularjs.core;
 
 import org.eclipse.angularjs.internal.core.AngularCorePlugin;
 import org.eclipse.core.resources.IProject;

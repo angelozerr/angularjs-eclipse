@@ -1,14 +1,23 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Angelo ZERR.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:      
+ *     Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.handlers;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.angularjs.internal.core.project.AngularNature;
+import org.eclipse.angularjs.core.AngularNature;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -22,8 +31,11 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import tern.eclipse.ide.core.TernNature;
+
 /**
- * See org.eclipse.jpt.jpa.ui/plugin.xml
+ * Convert selected project to Angular project.
+ * 
  */
 public class ConvertProjectToAngularCommandHandler extends AbstractHandler {
 
@@ -66,9 +78,13 @@ public class ConvertProjectToAngularCommandHandler extends AbstractHandler {
 				for (int c = 0; c < natures.length; ++c) {
 					if (!natures[c].equals(AngularNature.ID)) {
 						newNatures.add(natures[c]);
+					} else if (!natures[c].equals(TernNature.ID)) {
+						newNatures.add(natures[c]);
 					}
 				}
 				newNatures.add(AngularNature.ID);
+				newNatures.add(TernNature.ID);
+
 				projectDescription.setNatureIds((String[]) newNatures
 						.toArray(new String[newNatures.size()]));
 
