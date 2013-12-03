@@ -6,5 +6,27 @@
    <bundle id="org.eclipse.angularjs.ui" version="1.0.0.qualifier">
       <category name="AngularJS"/>
    </bundle>
+   <bundle id="tern.core" version="1.0.0.201312032108">
+      <category name="Tern Java"/>
+   </bundle>
+   <bundle id="tern.eclipse" version="1.0.0.201312032108">
+      <category name="Tern Java"/>
+   </bundle>
+   <bundle id="tern.eclipse.ide.core" version="1.0.0.201312032108">
+      <category name="Tern Java"/>
+   </bundle>
+   <bundle id="tern.eclipse.ide.ui" version="1.0.0.201312032108">
+      <category name="Tern Java"/>
+   </bundle>
+   <bundle id="tern.server.nodejs" version="1.0.0.201312032108">
+      <category name="Tern Java"/>
+   </bundle>
+   <bundle id="com.googlecode.json-simple" version="1.1.1">
+      <category name="Tern Java"/>
+   </bundle>
+   <bundle id="tern.server.rhino" version="1.0.0.201312032108">
+      <category name="Tern Java"/>
+   </bundle>
    <category-def name="AngularJS" label="AngularJS  Eclipse Tooling"/>
+   <category-def name="Tern Java" label="Tern Java"/>
 </site>
