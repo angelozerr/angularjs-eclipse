@@ -24,8 +24,11 @@ public class AngularProject {
 	private static final QualifiedName ANGULAR_PROJECT = new QualifiedName(
 			AngularCorePlugin.PLUGIN_ID + ".sessionprops", "AngularProject");
 
+	private final IProject project;
+
 	AngularProject(IProject project) throws CoreException {
-		project.setSessionProperty(ANGULAR_PROJECT, project);
+		this.project = project;
+		project.setSessionProperty(ANGULAR_PROJECT, this);
 	}
 
 	public static AngularProject getAngularProject(IProject project)
@@ -38,4 +41,7 @@ public class AngularProject {
 		return angularProject;
 	}
 
+	public IProject getProject() {
+		return project;
+	}
 }

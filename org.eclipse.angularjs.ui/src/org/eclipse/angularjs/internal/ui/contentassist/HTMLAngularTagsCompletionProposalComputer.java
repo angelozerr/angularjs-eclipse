@@ -18,6 +18,9 @@ import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposa
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 
 import tern.eclipse.ide.core.EclipseTernProject;
+import tern.server.DefaultResponseHandler;
+import tern.server.ITernServer;
+import tern.server.protocol.TernDoc;
 
 public class HTMLAngularTagsCompletionProposalComputer extends
 		DefaultXMLCompletionProposalComputer {
@@ -78,7 +81,9 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		try {
 			EclipseTernProject ternProject = EclipseTernProject
 					.getTernProject(eclipseProject);
-			ternProject.getTernServer();
+			ITernServer ternServer = ternProject.getTernServer();
+			TernDoc doc = new TernDoc();
+			ternServer.request(doc, new DefaultResponseHandler(), "test", false);
 		} catch (CoreException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
