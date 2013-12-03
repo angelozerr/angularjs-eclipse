@@ -3,7 +3,8 @@
 	<!-- See http://docs.angularjs.org/api/ng -->
 
 	<directive name="ngApp"
-		url="http://docs.angularjs.org/api/ng.directive:ngApp">
+		url="http://docs.angularjs.org/api/ng.directive:ngApp"
+		type="module" >
 		<description>
 		<![CDATA[
 			Use this directive to auto-bootstrap an AngularJS
@@ -20,7 +21,8 @@
 	</directive>
 
 	<directive name="ngBlur"
-		url="http://docs.angularjs.org/api/ng.directive:ngBlur" tags="window, input, select, textarea">
+		url="http://docs.angularjs.org/api/ng.directive:ngBlur" 
+		tags="window, input, select, textarea">
 		<description>
 		<![CDATA[
 			Specify custom behavior on blur event.
@@ -29,7 +31,8 @@
 	</directive>
 
 	<directive name="ngChange"
-		url="http://docs.angularjs.org/api/ng.directive:ngChange" tags="input">
+		url="http://docs.angularjs.org/api/ng.directive:ngChange" 
+		tags="input">
 		<description>
 				<![CDATA[
 			Evaluate given expression when user changes the input.
@@ -50,7 +53,8 @@ The ngClick directive allows you to specify custom behavior when an element is c
 	</directive>
 
 	<directive name="ngController"
-		url="http://docs.angularjs.org/api/ng.directive:ngController">
+		url="http://docs.angularjs.org/api/ng.directive:ngController"
+		type="controller"  >
 		<description>
 		<![CDATA[
 			<p>The <code>ngController</code> directive attaches a controller class to the view. This is a key aspect of how angular

@@ -10,10 +10,15 @@
  *******************************************************************************/
 package org.eclipse.angularjs.core;
 
+import java.io.IOException;
+
 import org.eclipse.angularjs.internal.core.AngularCorePlugin;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
+
+import tern.eclipse.ide.core.EclipseTernProject;
+import tern.server.TernPlugin;
 
 /**
  * Angular project.
@@ -43,5 +48,20 @@ public class AngularProject {
 
 	public IProject getProject() {
 		return project;
+	}
+
+	public static EclipseTernProject getTernProject(IProject project)
+			throws CoreException {
+		EclipseTernProject ternProject = EclipseTernProject
+				.getTernProject(project);
+		try {
+			// TODO : manage add plugin with UI
+			ternProject.addPlugin(TernPlugin.angular);
+			ternProject.save();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ternProject;
 	}
 }

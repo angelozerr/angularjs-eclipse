@@ -9,13 +9,15 @@ import org.eclipse.angularjs.core.utils.StringUtils;
 public class Directive {
 
 	private final String name;
+	private final DirectiveType type;
 	private final Module module;
 	private final Collection<String> tagNames;
 	private final String description;
 
-	public Directive(String name, Collection<String> tagNames,
-			String description, Module module) {
+	public Directive(String name, DirectiveType type,
+			Collection<String> tagNames, String description, Module module) {
 		this.name = name;
+		this.type = type;
 		this.module = module;
 		this.tagNames = tagNames;
 		this.description = description;
@@ -24,6 +26,10 @@ public class Directive {
 
 	public String getName() {
 		return name;
+	}
+
+	public DirectiveType getType() {
+		return type;
 	}
 
 	public Collection<String> getTagNames() {

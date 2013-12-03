@@ -17,6 +17,7 @@ class SAXModuleHandler extends DefaultHandler {
 	private Module module;
 
 	private String directiveName;
+	private DirectiveType directiveType;
 	private Collection<String> tagsName;
 	private StringBuilder description = null;
 
@@ -35,6 +36,7 @@ class SAXModuleHandler extends DefaultHandler {
 			module = new Module(moduleName);
 		} else if ("directive".equals(name)) {
 			this.directiveName = attributes.getValue("name");
+			this.directiveType = DirectiveType.get(attributes.getValue("type"));
 			this.tagsName = new ArrayList<String>();
 
 			String tags = attributes.getValue("tags");
@@ -59,9 +61,10 @@ class SAXModuleHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
 		if ("directive".equals(name)) {
-			new Directive(directiveName, tagsName,
+			new Directive(directiveName, directiveType, tagsName,
 					description != null ? description.toString() : null, module);
 			this.directiveName = null;
+			this.directiveType = null;
 			this.tagsName = null;
 			this.description = null;
 		}
