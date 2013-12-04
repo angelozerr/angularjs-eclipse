@@ -1,14 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2008 IBM Corporation and others.
+ * Copyright (c) 2013 Angelo ZERR.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Jens Lukowski/Innoopract - initial renaming/restructuring
- *
+ * 
+ * Contributors:      
+ *     Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.preferences;
 
@@ -24,9 +22,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 
-public class AngularGlobalPreferencesPage extends PreferencePage implements IWorkbenchPreferencePage {
+/**
+ * Angular Global preferences page.
+ * 
+ */
+public class AngularGlobalPreferencesPage extends PreferencePage implements
+		IWorkbenchPreferencePage {
 
 	private Composite createComposite(Composite parent, int numColumns) {
 		noDefaultAndApplyButton();
@@ -51,9 +53,10 @@ public class AngularGlobalPreferencesPage extends PreferencePage implements IWor
 	protected Control createContents(Composite parent) {
 		Composite composite = createScrolledComposite(parent);
 
-		String description = AngularUIMessages.AngularGlobalPreferencesPage_desc; 
+		String description = AngularUIMessages.AngularGlobalPreferencesPage_desc;
 		Text text = new Text(composite, SWT.READ_ONLY);
-		// some themes on GTK have different background colors for Text and Labels
+		// some themes on GTK have different background colors for Text and
+		// Labels
 		text.setBackground(composite.getBackground());
 		text.setText(description);
 
@@ -63,7 +66,8 @@ public class AngularGlobalPreferencesPage extends PreferencePage implements IWor
 
 	private Composite createScrolledComposite(Composite parent) {
 		// create scrollbars for this parent when needed
-		final ScrolledComposite sc1 = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+		final ScrolledComposite sc1 = new ScrolledComposite(parent,
+				SWT.H_SCROLL | SWT.V_SCROLL);
 		sc1.setLayoutData(new GridData(GridData.FILL_BOTH));
 		Composite composite = createComposite(sc1, 1);
 		sc1.setContent(composite);
@@ -82,16 +86,18 @@ public class AngularGlobalPreferencesPage extends PreferencePage implements IWor
 
 	private void setSize(Composite composite) {
 		if (composite != null) {
-			// Note: The font is set here in anticipation that the class inheriting
-			//       this base class may add widgets to the dialog.   setSize
-			//       is assumed to be called just before we go live.
+			// Note: The font is set here in anticipation that the class
+			// inheriting
+			// this base class may add widgets to the dialog. setSize
+			// is assumed to be called just before we go live.
 			applyDialogFont(composite);
 			Point minSize = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			composite.setSize(minSize);
 			// set scrollbar composite's min size so page is expandable but
 			// has scrollbars when needed
 			if (composite.getParent() instanceof ScrolledComposite) {
-				ScrolledComposite sc1 = (ScrolledComposite) composite.getParent();
+				ScrolledComposite sc1 = (ScrolledComposite) composite
+						.getParent();
 				sc1.setMinSize(minSize);
 				sc1.setExpandHorizontal(true);
 				sc1.setExpandVertical(true);

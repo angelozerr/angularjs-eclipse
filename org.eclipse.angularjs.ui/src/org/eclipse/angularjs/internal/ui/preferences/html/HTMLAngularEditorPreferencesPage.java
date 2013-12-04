@@ -24,9 +24,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 
-public class HTMLAngularEditorPreferencesPage extends PreferencePage implements IWorkbenchPreferencePage {
+/**
+ * HTML Angular Editor preferences page.
+ * 
+ */
+public class HTMLAngularEditorPreferencesPage extends PreferencePage implements
+		IWorkbenchPreferencePage {
 
 	private Composite createComposite(Composite parent, int numColumns) {
 		noDefaultAndApplyButton();
@@ -51,9 +55,10 @@ public class HTMLAngularEditorPreferencesPage extends PreferencePage implements 
 	protected Control createContents(Composite parent) {
 		Composite composite = createScrolledComposite(parent);
 
-		String description = AngularUIMessages.HTMLAngularEditorPreferencesPage_desc; 
+		String description = AngularUIMessages.HTMLAngularEditorPreferencesPage_desc;
 		Text text = new Text(composite, SWT.READ_ONLY);
-		// some themes on GTK have different background colors for Text and Labels
+		// some themes on GTK have different background colors for Text and
+		// Labels
 		text.setBackground(composite.getBackground());
 		text.setText(description);
 
@@ -63,7 +68,8 @@ public class HTMLAngularEditorPreferencesPage extends PreferencePage implements 
 
 	private Composite createScrolledComposite(Composite parent) {
 		// create scrollbars for this parent when needed
-		final ScrolledComposite sc1 = new ScrolledComposite(parent, SWT.H_SCROLL | SWT.V_SCROLL);
+		final ScrolledComposite sc1 = new ScrolledComposite(parent,
+				SWT.H_SCROLL | SWT.V_SCROLL);
 		sc1.setLayoutData(new GridData(GridData.FILL_BOTH));
 		Composite composite = createComposite(sc1, 1);
 		sc1.setContent(composite);
@@ -82,16 +88,18 @@ public class HTMLAngularEditorPreferencesPage extends PreferencePage implements 
 
 	private void setSize(Composite composite) {
 		if (composite != null) {
-			// Note: The font is set here in anticipation that the class inheriting
-			//       this base class may add widgets to the dialog.   setSize
-			//       is assumed to be called just before we go live.
+			// Note: The font is set here in anticipation that the class
+			// inheriting
+			// this base class may add widgets to the dialog. setSize
+			// is assumed to be called just before we go live.
 			applyDialogFont(composite);
 			Point minSize = composite.computeSize(SWT.DEFAULT, SWT.DEFAULT);
 			composite.setSize(minSize);
 			// set scrollbar composite's min size so page is expandable but
 			// has scrollbars when needed
 			if (composite.getParent() instanceof ScrolledComposite) {
-				ScrolledComposite sc1 = (ScrolledComposite) composite.getParent();
+				ScrolledComposite sc1 = (ScrolledComposite) composite
+						.getParent();
 				sc1.setMinSize(minSize);
 				sc1.setExpandHorizontal(true);
 				sc1.setExpandVertical(true);

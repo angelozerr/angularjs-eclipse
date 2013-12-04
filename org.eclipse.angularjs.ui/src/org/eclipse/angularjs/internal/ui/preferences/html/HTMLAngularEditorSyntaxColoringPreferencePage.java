@@ -888,7 +888,7 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 		}
 		return fStylePreferenceKeysWithHTML;
 	}
-	
+
 	private KeyListener getTextKeyListener() {
 		return new KeyListener() {
 			public void keyPressed(KeyEvent e) {

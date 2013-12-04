@@ -23,6 +23,10 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
+/**
+ * HTML Angular Typing preferences page.
+ * 
+ */
 public class HTMLAngularTypingPreferencePage extends AbstractPreferencePage {
 
 	private Button fCloseEndEL;
@@ -48,6 +52,7 @@ public class HTMLAngularTypingPreferencePage extends AbstractPreferencePage {
 		((GridData) fCloseEndEL.getLayoutData()).horizontalSpan = 2;
 	}
 
+	@Override
 	public boolean performOk() {
 		boolean result = super.performOk();
 
@@ -56,22 +61,26 @@ public class HTMLAngularTypingPreferencePage extends AbstractPreferencePage {
 		return result;
 	}
 
+	@Override
 	protected void initializeValues() {
 		initCheckbox(fCloseEndEL,
 				AngularUIPreferenceNames.TYPING_COMPLETE_END_EL);
 	}
 
+	@Override
 	protected void performDefaults() {
 		defaultCheckbox(fCloseEndEL,
 				AngularUIPreferenceNames.TYPING_COMPLETE_END_EL);
 	}
 
+	@Override
 	protected void storeValues() {
 		getPreferenceStore().setValue(
 				AngularUIPreferenceNames.TYPING_COMPLETE_END_EL,
 				(fCloseEndEL != null) ? fCloseEndEL.getSelection() : false);
 	}
 
+	@Override
 	protected IPreferenceStore doGetPreferenceStore() {
 		return AngularUIPlugin.getDefault().getPreferenceStore();
 	}
