@@ -1,4 +1,4 @@
-AngularJs Eclipse Plugin
+AngularJS Eclipse Plugin
 =================
 
 AngularJS Eclipse Plugin extends Eclipse WTP to : 
