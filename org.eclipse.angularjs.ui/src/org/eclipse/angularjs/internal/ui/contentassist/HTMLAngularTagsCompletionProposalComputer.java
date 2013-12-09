@@ -21,6 +21,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
+import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -149,7 +150,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				public void addProposal(String name, String type, Object doc,
 						int pos) {
 
-					String replacementString = name;
+					String replacementString = "\"" + name + "\"";
 					int replacementOffset = contentAssistRequest
 							.getReplacementBeginPosition();
 					int replacementLength = contentAssistRequest
@@ -163,7 +164,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					String additionalProposalInfo = null;
 					int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
 
-					CustomCompletionProposal proposal = new CustomCompletionProposal(
+					CustomCompletionProposal proposal = new MarkupCompletionProposal(
 							replacementString, replacementOffset,
 							replacementLength, cursorPosition, image,
 							displayString, contextInformation,
