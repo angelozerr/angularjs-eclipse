@@ -28,11 +28,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import tern.eclipse.ide.core.EclipseTernProject;
-import tern.server.ITernCompletionCollector;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.angular.TernAngularQuery;
 import tern.server.protocol.angular.TernAngularQuery.AngularType;
+import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.utils.IOUtils;
 
 public class HTMLAngularTagsCompletionProposalComputer extends
@@ -111,7 +111,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			if (startsWith.startsWith("\"")) {
 				startsWith = startsWith.substring(1, startsWith.length());
 			}
-			query.setStartsWith(startsWith);
+			query.setExpression(startsWith);
 
 			TernDoc doc = new TernDoc();
 			doc.setQuery(query);
