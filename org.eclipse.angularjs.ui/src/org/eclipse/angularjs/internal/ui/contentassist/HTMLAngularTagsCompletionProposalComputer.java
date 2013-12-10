@@ -8,6 +8,7 @@ import org.eclipse.angularjs.core.modules.IDirectiveCollector;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.core.utils.StringUtils;
 import org.eclipse.angularjs.internal.ui.ImageResource;
+import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -177,8 +178,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			ternServer.request(doc, collector);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Trace.trace(Trace.SEVERE, "Error while tern completion.", e);
 		}
 		super.addAttributeValueProposals(contentAssistRequest, context);
 	}
