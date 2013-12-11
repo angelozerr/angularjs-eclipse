@@ -8,6 +8,7 @@ import org.eclipse.angularjs.core.modules.IDirectiveCollector;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.core.utils.StringUtils;
 import org.eclipse.angularjs.internal.ui.ImageResource;
+import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -21,16 +22,17 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
+import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import tern.eclipse.ide.core.EclipseTernProject;
-import tern.server.ITernCompletionCollector;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.angular.TernAngularQuery;
 import tern.server.protocol.angular.TernAngularQuery.AngularType;
+import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.utils.IOUtils;
 
 public class HTMLAngularTagsCompletionProposalComputer extends
@@ -109,7 +111,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			if (startsWith.startsWith("\"")) {
 				startsWith = startsWith.substring(1, startsWith.length());
 			}
-			query.setStartsWith(startsWith);
+			query.setExpression(startsWith);
 
 			TernDoc doc = new TernDoc();
 			doc.setQuery(query);
@@ -149,7 +151,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				public void addProposal(String name, String type, Object doc,
 						int pos) {
 
-					String replacementString = name;
+					String replacementString = "\"" + name + "\"";
 					int replacementOffset = contentAssistRequest
 							.getReplacementBeginPosition();
 					int replacementLength = contentAssistRequest
@@ -163,7 +165,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					String additionalProposalInfo = null;
 					int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
 
-					CustomCompletionProposal proposal = new CustomCompletionProposal(
+					CustomCompletionProposal proposal = new MarkupCompletionProposal(
 							replacementString, replacementOffset,
 							replacementLength, cursorPosition, image,
 							displayString, contextInformation,
@@ -176,8 +178,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			ternServer.request(doc, collector);
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Trace.trace(Trace.SEVERE, "Error while tern completion.", e);
 		}
 		super.addAttributeValueProposals(contentAssistRequest, context);
 	}

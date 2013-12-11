@@ -6,6 +6,8 @@ AngularJS Eclipse Plugin extends Eclipse WTP to :
  * provides an HTML editor which supports AngularJS expression and directive. See [HTML features](https://github.com/angelozerr/angularjs-eclipse/wiki/HTML-Features).
  * provides a Javascript editor which supports AngularJS features (modules, etc).
 
+AngularJS Eclipse is based on [tern.java](https://github.com/angelozerr/tern.java) to manage powerfull completion on HTML files (AngularsJE Expression, directive, modules) and Javascripts files (see [Tern Eclipse IDE](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE))
+
 # AngularJS Configuration
 
 Before opening your HTML files (to see AngulaJS synt), you must  convert your project to AngularJS Project : 
@@ -24,7 +26,7 @@ You will see that AngularJS directive + EL are highlighted, completion is availa
 
 # Javascript Editor
 
-TODO
+See [Tern Eclipse IDE](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE))
 
 # Installation
 
