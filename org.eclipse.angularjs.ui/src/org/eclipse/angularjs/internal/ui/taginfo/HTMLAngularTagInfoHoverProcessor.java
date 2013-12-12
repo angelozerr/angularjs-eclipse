@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.taginfo;
 
-import org.eclipse.angularjs.core.modules.AngularModulesManager;
 import org.eclipse.angularjs.core.modules.Directive;
-import org.eclipse.angularjs.core.utils.StringUtils;
+import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 /**
@@ -31,18 +31,15 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeTagAttNameHelp(IDOMNode xmlnode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
 			ITextRegion region) {
-		String result = super.computeTagAttNameHelp(xmlnode, parentNode,
-				flatNode, region);
-		if (!StringUtils.isEmpty(result)) {
-			return result;
-		}
-		String attrName = flatNode.getText(region);
-		Directive directive = AngularModulesManager.getInstance().getDirective(
-				null, attrName);
+		// Display Help of Angular Directive if it's an angular directive
+		// attribute
+		Directive directive = DOMUtils.getAngularDirective(xmlnode, region);
 		if (directive != null) {
 			return directive.getHTMLDescription();
 		}
-		return null;
+		// Here the attribute is not a directive, display classic Help.
+		return super.computeTagAttNameHelp(xmlnode, parentNode, flatNode,
+				region);
 	}
 
 }

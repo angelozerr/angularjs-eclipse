@@ -16,6 +16,10 @@ import java.util.ResourceBundle;
 
 import org.eclipse.osgi.util.NLS;
 
+/**
+ * Angular UI Messages.
+ *
+ */
 public final class AngularUIMessages extends NLS {
 
 	private static final String BUNDLE_NAME = "org.eclipse.angularjs.internal.ui.AngularUIMessages"; //$NON-NLS-1$

@@ -1,4 +1,17 @@
+/*******************************************************************************
+ * Copyright (c) 2009 IBM Corporation and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *     Zend Technologies
+ *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.contentassist;
+
+import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.modules.AngularModulesManager;
@@ -15,10 +28,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
@@ -35,6 +46,14 @@ import tern.server.protocol.angular.TernAngularQuery.AngularType;
 import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.utils.IOUtils;
 
+/**
+ * Completion in HTML editor for :
+ * 
+ * <ul>
+ * <li>attribute name with angular directive (ex : ng-app).</li>
+ * </ul>
+ * 
+ */
 public class HTMLAngularTagsCompletionProposalComputer extends
 		DefaultXMLCompletionProposalComputer {
 
@@ -43,18 +62,29 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			final ContentAssistRequest contentAssistRequest,
 			CompletionProposalInvocationContext context) {
 
-		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
-		IStructuredDocumentRegion sdRegion = contentAssistRequest
-				.getDocumentRegion();
-
-		String tagName = node.getNodeName();
+		// completion for attribute name with angular directive (ex : ng-app)
+		IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
+		String tagName = element.getNodeName();
 		String directiveName = contentAssistRequest.getMatchString();
+		// get angular attribute name of the element
+		final List<String> existingDirectiveNames = DOMUtils
+				.getAngularDirectiveNames(element instanceof Element ? (Element) element
+						: null);
+
+		// Starts directives completion.
 		AngularModulesManager.getInstance().collectDirectives(tagName,
 				directiveName, false, new IDirectiveCollector() {
 
 					@Override
-					public boolean add(Directive directive, String name) {
+					public void add(Directive directive, String name) {
 
+						if (existingDirectiveNames.contains(directive.getName())) {
+							// The directive already exists in the element,
+							// completion should not show it.
+							return;
+						}
+
+						// Add the directive in the completion.
 						String replacementString = name + "=\"\"";
 						int replacementOffset = contentAssistRequest
 								.getReplacementBeginPosition();
@@ -77,7 +107,6 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 								additionalProposalInfo, relevance);
 						contentAssistRequest.addProposal(proposal);
 
-						return true;
 					}
 				});
 		super.addAttributeNameProposals(contentAssistRequest, context);
@@ -90,10 +119,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 		IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
 		// is Angular directive attribute?
-		IDOMAttr attr = DOMUtils.getAttrByRegion(element,
+		Directive directive = DOMUtils.getAngularDirective(element,
 				contentAssistRequest.getRegion());
-		Directive directive = AngularModulesManager.getInstance().getDirective(
-				element.getNodeName(), attr.getName());
 		AngularType angularType = getAngularType(directive);
 		if (angularType == null) {
 			return;

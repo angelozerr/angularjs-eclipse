@@ -21,7 +21,9 @@ public class Directive {
 		this.module = module;
 		this.tagNames = tagNames;
 		this.description = description;
-		module.addDirective(this);
+		if (module != null) {
+			module.addDirective(this);
+		}
 	}
 
 	public String getName() {

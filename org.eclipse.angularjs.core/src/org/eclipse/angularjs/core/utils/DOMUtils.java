@@ -14,7 +14,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
+import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
+import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -460,7 +463,7 @@ public class DOMUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Returns true if content type id of the SSE DOM Node match a
 	 * contentTypeId.
@@ -565,4 +568,95 @@ public class DOMUtils {
 		}
 		return null;
 	}
+
+	/**
+	 * Returns true if the given attribute is an angular directive (ex : ng-app)
+	 * and false otherwise.
+	 * 
+	 * @param attr
+	 *            DOM attribute.
+	 * @return true if the given attribute is an angular directive (ex : ng-app)
+	 *         and false otherwise.
+	 */
+	public static boolean isAngularDirective(Attr attr) {
+		if (attr == null) {
+			return false;
+		}
+		if (!(attr instanceof IAngularDOMAttr)) {
+			return false;
+		}
+		return ((IAngularDOMAttr) attr).isAngularDirective();
+	}
+
+	/**
+	 * Returns the angular {@link Directive} of the given attribute and null
+	 * otherwise.
+	 * 
+	 * @param attr
+	 *            DOM attribute.
+	 * @return the angular {@link Directive} of the given attribute and null
+	 *         otherwise.
+	 */
+	public static Directive getAngularDirective(Attr attr) {
+		if (attr == null) {
+			return null;
+		}
+		if (!(attr instanceof IAngularDOMAttr)) {
+			return null;
+		}
+		return ((IAngularDOMAttr) attr).getAngularDirective();
+	}
+
+	/**
+	 * Returns the {@link Directive} by the attribute region from the SSE DOM
+	 * element {@link IDOMElement} anf null otherwise.
+	 * 
+	 * @param element
+	 *            the SSE DOM element {@link IDOMElement}.
+	 * @param region
+	 *            the region.
+	 * 
+	 * @return the {@link Directive} by the attribute region from the SSE DOM
+	 *         element {@link IDOMElement} anf null otherwise.
+	 */
+	public static Directive getAngularDirective(IDOMNode element,
+			ITextRegion region) {
+		IDOMAttr attr = DOMUtils.getAttrByRegion(element, region);
+		return DOMUtils.getAngularDirective(attr);
+	}
+
+	/**
+	 * Returns the list of the angular attributes names of the given DOM
+	 * element.
+	 * 
+	 * <p>
+	 * <div id="xxx" ng-model="MyModel" />
+	 * 
+	 * will return the array ['MyModel']
+	 * </p>
+	 * 
+	 * @param element
+	 * @return
+	 */
+	public static List<String> getAngularDirectiveNames(Element element) {
+		if (element == null) {
+			return Collections.emptyList();
+		}
+		List<String> names = null;
+		NamedNodeMap attributes = element.getAttributes();
+		int length = attributes.getLength();
+		Attr attr = null;
+		for (int i = 0; i < length; i++) {
+			attr = (Attr) attributes.item(i);
+			Directive directive = getAngularDirective(attr);
+			if (directive != null) {
+				if (names == null) {
+					names = new ArrayList<String>();
+				}
+				names.add(directive.getName());
+			}
+		}
+		return (List<String>) (names != null ? names : Collections.emptyList());
+	}
+
 }

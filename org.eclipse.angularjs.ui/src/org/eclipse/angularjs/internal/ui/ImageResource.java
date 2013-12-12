@@ -123,11 +123,6 @@ public class ImageResource {
 		// load general object images
 		registerImage(IMG_ANGULARJS, URL_OBJ + IMG_ANGULARJS + ".png");
 
-		// PlatformUI
-		// .getWorkbench()
-		// .getProgressService()
-		// .registerIconForFamily(getImageDescriptor(IMG_SERVER),
-		// GeneratorUtil.SERVER_JOB_FAMILY);
 	}
 
 	/**
