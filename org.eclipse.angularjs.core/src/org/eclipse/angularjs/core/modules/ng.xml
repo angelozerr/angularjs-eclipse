@@ -76,7 +76,8 @@ and executed twice.</p>
 	</directive>
 
 	<directive name="ngModel"
-		url="http://docs.angularjs.org/api/ng.directive:ngModel" tags="input, select, textarea">
+		url="http://docs.angularjs.org/api/ng.directive:ngModel" tags="input, select, textarea"
+		type="model" >
 		<description>
 			The ngModel directive binds an input,select, textarea (or
 			custom form control) to a property on the scope using

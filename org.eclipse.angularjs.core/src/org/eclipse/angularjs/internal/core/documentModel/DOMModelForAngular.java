@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.core.documentModel;
 
-import org.eclipse.angularjs.internal.core.documentModel.dom.DOMDocumentForAngular;
 import org.eclipse.angularjs.internal.core.documentModel.dom.AngularDOMModelParser;
 import org.eclipse.angularjs.internal.core.documentModel.dom.AngularDOMModelUpdater;
+import org.eclipse.angularjs.internal.core.documentModel.dom.DOMDocumentForAngular;
 import org.eclipse.wst.html.core.internal.document.DOMStyleModelImpl;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;

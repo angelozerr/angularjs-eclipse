@@ -14,9 +14,9 @@ package org.eclipse.angularjs.internal.ui.contentassist;
 import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.angularjs.core.modules.AngularModulesManager;
 import org.eclipse.angularjs.core.modules.Directive;
-import org.eclipse.angularjs.core.modules.DirectiveType;
 import org.eclipse.angularjs.core.modules.IDirectiveCollector;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.core.utils.StringUtils;
@@ -35,14 +35,18 @@ import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import tern.eclipse.ide.core.EclipseTernProject;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
+import tern.server.protocol.angular.AngularType;
 import tern.server.protocol.angular.TernAngularQuery;
-import tern.server.protocol.angular.TernAngularQuery.AngularType;
+import tern.server.protocol.angular.TernAngularScope;
 import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.utils.IOUtils;
 
@@ -121,7 +125,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		// is Angular directive attribute?
 		Directive directive = DOMUtils.getAngularDirective(element,
 				contentAssistRequest.getRegion());
-		AngularType angularType = getAngularType(directive);
+		AngularType angularType = directive != null ? directive.getType()
+				: null;
 		if (angularType == null) {
 			return;
 		}
@@ -134,6 +139,9 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			ITernServer ternServer = ternProject.getTernServer();
 
 			TernAngularQuery query = new TernAngularQuery(angularType);
+			TernAngularScope scope = query.getScope();
+			populateScope(scope, angularType, element);
+
 			String startsWith = contentAssistRequest.getMatchString();
 			if (startsWith.startsWith("\"")) {
 				startsWith = startsWith.substring(1, startsWith.length());
@@ -210,20 +218,53 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		super.addAttributeValueProposals(contentAssistRequest, context);
 	}
 
-	private AngularType getAngularType(Directive directive) {
-		if (directive == null) {
-			return null;
-		}
-		DirectiveType type = directive.getType();
-		if (type == null) {
-			return null;
-		}
-		switch (type) {
+	private void populateScope(TernAngularScope scope, AngularType angularType,
+			Node element) {
+		switch (angularType) {
 		case module:
-			return AngularType.module;
+			// do nothing;
+			break;
 		case controller:
-			return AngularType.controller;
+			// find module
+			populateScope(scope, element, false);
+			break;
+		case model:
+			// find module
+			populateScope(scope, element, true);
+			break;
 		}
-		return null;
+
+	}
+
+	private void populateScope(TernAngularScope scope, Node element,
+			boolean populateController) {
+		if (element == null || element.getNodeType() == Node.DOCUMENT_NODE) {
+			return;
+		}
+		NamedNodeMap attributes = element.getAttributes();
+		Node node = null;
+		for (int i = 0; i < attributes.getLength(); i++) {
+			node = attributes.item(i);
+			if (node instanceof IAngularDOMAttr) {
+				Directive directive = ((IAngularDOMAttr) node)
+						.getAngularDirective();
+				if (directive != null) {
+					switch (directive.getType()) {
+					case module:
+						String module = ((Attr) node).getValue();
+						scope.setModule(module);
+						return;
+					case controller:
+						if (populateController) {
+							String controller = ((Attr) node).getValue();
+							scope.setController(controller);
+						}
+					default:
+						break;
+					}
+				}
+			}
+		}
+		populateScope(scope, element.getParentNode(), populateController);
 	}
 }

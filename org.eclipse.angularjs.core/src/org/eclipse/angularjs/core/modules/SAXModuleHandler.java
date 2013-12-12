@@ -12,12 +12,14 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import tern.server.protocol.angular.AngularType;
+
 class SAXModuleHandler extends DefaultHandler {
 
 	private Module module;
 
 	private String directiveName;
-	private DirectiveType directiveType;
+	private AngularType directiveType;
 	private Collection<String> tagsName;
 	private StringBuilder description = null;
 
@@ -36,7 +38,7 @@ class SAXModuleHandler extends DefaultHandler {
 			module = new Module(moduleName);
 		} else if ("directive".equals(name)) {
 			this.directiveName = attributes.getValue("name");
-			this.directiveType = DirectiveType.get(attributes.getValue("type"));
+			this.directiveType = AngularType.get(attributes.getValue("type"));
 			this.tagsName = new ArrayList<String>();
 
 			String tags = attributes.getValue("tags");

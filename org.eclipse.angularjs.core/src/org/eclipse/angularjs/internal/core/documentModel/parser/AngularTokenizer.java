@@ -21,8 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.angularjs.internal.core.Logger;
-import org.eclipse.angularjs.internal.core.documentModel.parser.IntStack;
-import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockMarker;
 import org.eclipse.wst.sse.core.internal.ltk.parser.BlockTokenizer;
 import org.eclipse.wst.sse.core.internal.ltk.parser.TagMarker;

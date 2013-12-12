@@ -1,9 +1,6 @@
 package org.eclipse.angularjs.internal.core.documentModel.loader;
 
-import java.util.List;
-
 import org.eclipse.angularjs.internal.core.documentModel.DOMModelForAngular;
-import org.eclipse.angularjs.internal.core.modelquery.ModelQueryAdapterFactoryForAngular;
 import org.eclipse.wst.html.core.internal.encoding.HTMLModelLoader;
 import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;

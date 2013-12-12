@@ -6,15 +6,17 @@ import java.util.List;
 
 import org.eclipse.angularjs.core.utils.StringUtils;
 
+import tern.server.protocol.angular.AngularType;
+
 public class Directive {
 
 	private final String name;
-	private final DirectiveType type;
+	private final AngularType type;
 	private final Module module;
 	private final Collection<String> tagNames;
 	private final String description;
 
-	public Directive(String name, DirectiveType type,
+	public Directive(String name, AngularType type,
 			Collection<String> tagNames, String description, Module module) {
 		this.name = name;
 		this.type = type;
@@ -30,7 +32,7 @@ public class Directive {
 		return name;
 	}
 
-	public DirectiveType getType() {
+	public AngularType getType() {
 		return type;
 	}
 
@@ -95,4 +97,5 @@ public class Directive {
 		}
 		return info.toString();
 	}
+
 }
