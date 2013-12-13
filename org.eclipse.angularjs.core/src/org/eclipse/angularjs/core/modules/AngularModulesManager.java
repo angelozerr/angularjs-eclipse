@@ -23,6 +23,8 @@ public class AngularModulesManager {
 		try {
 			loadModule(AngularModulesManager.class
 					.getResourceAsStream("ng.xml"));
+			loadModule(AngularModulesManager.class
+					.getResourceAsStream("ngRoute.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -191,7 +191,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 									scriptFile.getContents(),
 									scriptFile.getCharset());
 							doc.addFile(name, text, null);
-							query.setFile("#0");
+
+							if (StringUtils.isEmpty(scope.getModule())) {
+								query.addFile(name);
+							}
 						}
 					}
 				}
@@ -303,7 +306,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						scope.setModule(module);
 						return;
 					case controller:
-						if (populateController) {
+						if (populateController && scope.getController() == null) {
 							String controller = ((Attr) node).getValue();
 							scope.setController(controller);
 						}

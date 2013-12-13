@@ -22,7 +22,7 @@
 
 	<directive name="ngBlur"
 		url="http://docs.angularjs.org/api/ng.directive:ngBlur" 
-		tags="window, input, select, textarea">
+		tags="window, input, select, textarea, a">
 		<description>
 		<![CDATA[
 			Specify custom behavior on blur event.
@@ -44,6 +44,20 @@
 		</description>
 	</directive>
 
+	<directive name="ngClass"
+		url="http://docs.angularjs.org/api/ng.directive:ngClass"
+		use-as="attr class"  >
+		<description>
+		<![CDATA[
+			The ngClass directive allows you to dynamically set CSS classes on an HTML element by databinding an expression that represents all classes to be added.
+
+			The directive won't add duplicate classes if a particular class was already set.
+
+			When the expression changes, the previously added classes are removed and only then the new classes are added.
+			]]>
+		</description>
+	</directive>
+	
 	<directive name="ngClick"
 		url="http://docs.angularjs.org/api/ng.directive:ngClick">
 		<description>
@@ -52,6 +66,19 @@ The ngClick directive allows you to specify custom behavior when an element is c
 		</description>
 	</directive>
 
+	<directive name="ngCloak"
+		url="http://docs.angularjs.org/api/ng.directive:ngCloak"
+		use-as="attr class">
+		<description>
+				<![CDATA[
+The ngCloak directive is used to prevent the Angular html template from being briefly displayed by the browser in its raw (uncompiled) form while your application is loading. Use this directive to avoid the undesirable flicker effect caused by the html template display.
+
+The directive can be applied to the <body> element, but the preferred usage is to apply multiple ngCloak directives to small portions of the page to permit progressive rendering of the browser view.
+
+ngCloak works in cooperation with the following css rule embedded within angular.js and angular.min.js. For CSP mode please add angular-csp.css to your html file (see ngCsp).]]>
+		</description>
+	</directive>
+	
 	<directive name="ngController"
 		url="http://docs.angularjs.org/api/ng.directive:ngController"
 		type="controller"  >
@@ -94,6 +121,27 @@ and executed twice.</p>
 		</description>
 	</directive>
 
+	<directive name="ngSrc"
+		url="http://docs.angularjs.org/api/ng.directive:ngSrc"
+		tags="img" >
+		<description>
+		<![CDATA[
+			Using Angular markup like {{hash}} in a src attribute doesn't work right: The browser will fetch from the URL with the literal text {{hash}} until Angular replaces the expression inside {{hash}}. 
+			The ngSrc directive solves this problem.
+			]]>
+		</description>
+	</directive>
+	
+	<directive name="ngStyle"
+		url="http://docs.angularjs.org/api/ng.directive:ngStyle"
+		use-as="attr class" >
+		<description>
+		<![CDATA[
+			The ngStyle directive allows you to set CSS style on an HTML element conditionally.
+			]]>
+		</description>
+	</directive>
+	
 	<directive name="ngSubmit"
 		url="http://docs.angularjs.org/api/ng.directive:ngSubmit" tags="form">
 		<description>

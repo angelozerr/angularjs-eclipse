@@ -1,0 +1,80 @@
+<!doctype html>
+<html ng-app="Demo">
+<head>
+	<meta charset="utf-8" />
+
+	<title>Using Controllers In Directives In AngularJS</title>
+
+	<link rel="stylesheet" type="text/css" href="app/css/demo.css"></link>
+</head>
+<body>
+
+	<h1>
+		Using Controllers In Directives In AngularJS
+	</h1>
+
+
+	<!-- BEGIN: Master Canvas. -->
+	<div 
+		ng-controller="MasterController" 
+		bn-master
+		class="master">
+
+
+		<!-- BEGIN: Slave Handles. -->
+		<ol class="handles">
+			<li 
+				ng-repeat="slave in slaves"
+				ng-controller="SlaveController"
+				bn-slave 
+				class="slave"
+				ng-style="{ left: ( slave.x + 'px' ), top: ( slave.y + 'px' ) }">
+
+				{{ slave.id }}
+
+			</li>
+		</ol>
+		<!-- END: Slave Handles. -->
+
+
+		<!-- BEGIN: Slave Leaderboard. -->
+		<ol class="leaderboard">
+			<li ng-repeat="slave in slaves">
+
+				<div class="label">
+					{{ slave.id }}
+				</div>
+
+				<div class="position">
+					<span class="coordinate">{{ slave.x }}px</span>
+					<span class="coordinate">{{ slave.y }}px</span>
+				</div>
+
+			</li>
+		</ol>
+		<!-- END: Slave Leaderboard. -->
+
+
+	</div>
+	<!-- END: Master Canvas. -->
+
+
+	<!-- Load jQuery and AngularJS from the CDN. -->
+	<script
+		type="text/javascript"
+		src="//code.jquery.com/jquery-1.9.0.min.js">
+	</script>
+	<script
+		type="text/javascript"
+		src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js">
+	</script>
+
+	<!-- Load the app module and its classes. -->
+	<script type="text/javascript" src="app/main.js"></script>
+	<script type="text/javascript" src="app/controllers/master-controller.js"></script>
+	<script type="text/javascript" src="app/controllers/slave-controller.js"></script>
+	<script type="text/javascript" src="app/directives/master.js"></script>
+	<script type="text/javascript" src="app/directives/slave.js"></script>
+
+</body>
+</html>

@@ -1,1 +1,1 @@
-{"plugins":{"angular":"..\/"}}
+{"plugins":{"angular":"..\/"},"libs":["browser","ecma5"]}
