@@ -20,6 +20,7 @@ import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.angularjs.core.modules.IDirectiveCollector;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.core.utils.StringUtils;
+import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IContainer;
@@ -28,9 +29,13 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
+import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
@@ -131,6 +136,14 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			return;
 		}
 
+		populateAngularProposals(contentAssistRequest, element, angularType,
+				false);
+		super.addAttributeValueProposals(contentAssistRequest, context);
+	}
+
+	private void populateAngularProposals(
+			final ContentAssistRequest contentAssistRequest, IDOMNode element,
+			AngularType angularType, final boolean insideExpression) {
 		IFile file = DOMUtils.getFile(element);
 		IProject eclipseProject = file.getProject();
 		try {
@@ -143,8 +156,12 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			populateScope(scope, angularType, element);
 
 			String startsWith = contentAssistRequest.getMatchString();
-			if (startsWith.startsWith("\"")) {
-				startsWith = startsWith.substring(1, startsWith.length());
+			if (insideExpression) {
+
+			} else {
+				if (startsWith.startsWith("\"")) {
+					startsWith = startsWith.substring(1, startsWith.length());
+				}
 			}
 			query.setExpression(startsWith);
 
@@ -186,7 +203,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				public void addProposal(String name, String type, Object doc,
 						int pos) {
 
-					String replacementString = "\"" + name + "\"";
+					String replacementString = insideExpression ? name : "\""
+							+ name + "\"";
 					int replacementOffset = contentAssistRequest
 							.getReplacementBeginPosition();
 					int replacementLength = contentAssistRequest
@@ -198,7 +216,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					String displayString = name;
 					IContextInformation contextInformation = null;
 					String additionalProposalInfo = null;
-					int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
+					int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
+							: XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
 
 					CustomCompletionProposal proposal = new MarkupCompletionProposal(
 							replacementString, replacementOffset,
@@ -215,7 +234,36 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error while tern completion.", e);
 		}
-		super.addAttributeValueProposals(contentAssistRequest, context);
+	}
+
+	@Override
+	protected ContentAssistRequest computeCompletionProposals(
+			String matchString, ITextRegion completionRegion,
+			IDOMNode treeNode, IDOMNode xmlnode,
+			CompletionProposalInvocationContext context) {
+		String regionType = completionRegion.getType();
+		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_OPEN
+				|| regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
+
+			int documentPosition = context.getInvocationOffset();
+			IStructuredDocumentRegion documentRegion = ContentAssistUtils
+					.getStructuredDocumentRegion(context.getViewer(),
+							documentPosition);
+
+			int length = documentPosition - documentRegion.getStartOffset();
+			String match = documentRegion.getText().substring(2, length);
+
+			ContentAssistRequest contentAssistRequest = new ContentAssistRequest(
+					xmlnode, xmlnode.getParentNode(), documentRegion,
+					completionRegion, documentPosition, 0, match);
+
+			populateAngularProposals(contentAssistRequest, xmlnode,
+					AngularType.model, true);
+
+			return contentAssistRequest;
+		}
+		return super.computeCompletionProposals(matchString, completionRegion,
+				treeNode, xmlnode, context);
 	}
 
 	private void populateScope(TernAngularScope scope, AngularType angularType,
@@ -225,11 +273,11 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			// do nothing;
 			break;
 		case controller:
-			// find module
+			// find controller
 			populateScope(scope, element, false);
 			break;
 		case model:
-			// find module
+			// find model
 			populateScope(scope, element, true);
 			break;
 		}

@@ -203,6 +203,9 @@
 	          <partitionType
 	                id="org.eclipse.wst.html.HTML_DEFAULT">
 	          </partitionType>
+	          <partitionType
+	                id="org.eclipse.angularjs.ANGULAR_DEFAULT">
+	          </partitionType>	          
 	       </contentType>
 	    </proposalComputer>
 	</extension>
