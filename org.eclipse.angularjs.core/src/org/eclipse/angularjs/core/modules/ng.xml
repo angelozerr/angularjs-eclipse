@@ -4,7 +4,8 @@
 
 	<directive name="ngApp"
 		url="http://docs.angularjs.org/api/ng.directive:ngApp"
-		type="module" >
+		type="module"
+		optionnal="true" >
 		<description>
 		<![CDATA[
 			Use this directive to auto-bootstrap an AngularJS
@@ -68,7 +69,8 @@ The ngClick directive allows you to specify custom behavior when an element is c
 
 	<directive name="ngCloak"
 		url="http://docs.angularjs.org/api/ng.directive:ngCloak"
-		use-as="attr class">
+		use-as="attr class"
+		optionnal="true" >
 		<description>
 				<![CDATA[
 The ngCloak directive is used to prevent the Angular html template from being briefly displayed by the browser in its raw (uncompiled) form while your application is loading. Use this directive to avoid the undesirable flicker effect caused by the html template display.

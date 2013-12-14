@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.eclipse.angularjs.core.utils.StringUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -19,6 +20,9 @@ class SAXModuleHandler extends DefaultHandler {
 	private Module module;
 
 	private String directiveName;
+	private String url;
+	private Collection<UseAs> useAs;
+	private boolean optionnal;
 	private AngularType directiveType;
 	private Collection<String> tagsName;
 	private StringBuilder description = null;
@@ -38,11 +42,12 @@ class SAXModuleHandler extends DefaultHandler {
 			module = new Module(moduleName);
 		} else if ("directive".equals(name)) {
 			this.directiveName = attributes.getValue("name");
+			this.url = attributes.getValue("url");
 			this.directiveType = AngularType.get(attributes.getValue("type"));
+			// tags name
 			this.tagsName = new ArrayList<String>();
-
 			String tags = attributes.getValue("tags");
-			if (tags != null && tags.length() > 0) {
+			if (!StringUtils.isEmpty(tags)) {
 				String[] names = tags.split(",");
 				String tagName = null;
 
@@ -53,6 +58,26 @@ class SAXModuleHandler extends DefaultHandler {
 					}
 				}
 			}
+			// use-as
+			this.useAs = new ArrayList<UseAs>();
+			String useAs = attributes.getValue("use-as");
+			if (!StringUtils.isEmpty(useAs)) {
+				String[] uses = useAs.split(" ");
+				UseAs use = null;
+
+				for (int i = 0; i < uses.length; i++) {
+					use = UseAs.get(uses[i].trim());
+					if (use != null) {
+						this.useAs.add(use);
+					}
+				}
+			}
+			if (this.useAs.isEmpty()) {
+				this.useAs.add(UseAs.attr);
+			}
+			// optionnal
+			this.optionnal = StringUtils.asBoolean(
+					attributes.getValue("optionnal"), false);
 		} else if ("description".equals(name)) {
 			this.description = new StringBuilder();
 		}
@@ -63,11 +88,14 @@ class SAXModuleHandler extends DefaultHandler {
 	public void endElement(String uri, String localName, String name)
 			throws SAXException {
 		if ("directive".equals(name)) {
-			new Directive(directiveName, directiveType, tagsName,
-					description != null ? description.toString() : null, module);
+			new Directive(directiveName, directiveType, url, tagsName, useAs,
+					optionnal, description != null ? description.toString()
+							: null, module);
 			this.directiveName = null;
 			this.directiveType = null;
+			this.url = null;
 			this.tagsName = null;
+			this.useAs = null;
 			this.description = null;
 		}
 		super.endElement(uri, localName, name);

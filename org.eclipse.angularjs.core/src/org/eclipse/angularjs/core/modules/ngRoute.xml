@@ -3,7 +3,8 @@
 	<!-- See http://docs.angularjs.org/api/ng -->
 
 	<directive name="ngView"
-		url="http://docs.angularjs.org/api/ngRoute.directive:ngView" >
+		url="http://docs.angularjs.org/api/ngRoute.directive:ngView" 
+		optionnal="true" >
 		<description>
 		<![CDATA[
 			ngView is a directive that complements the $route service by including the rendered template of the current route into the main layout (index.html) file. 

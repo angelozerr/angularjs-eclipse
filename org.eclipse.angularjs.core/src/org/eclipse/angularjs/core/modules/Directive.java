@@ -12,14 +12,21 @@ public class Directive {
 
 	private final String name;
 	private final AngularType type;
+	private final String url;
+	private final Collection<UseAs> useAs;
 	private final Module module;
 	private final Collection<String> tagNames;
 	private final String description;
+	private final boolean optionnal;
 
-	public Directive(String name, AngularType type,
-			Collection<String> tagNames, String description, Module module) {
+	public Directive(String name, AngularType type, String url,
+			Collection<String> tagNames, Collection<UseAs> useAs,
+			boolean optionnal, String description, Module module) {
 		this.name = name;
 		this.type = type;
+		this.url = url;
+		this.useAs = useAs;
+		this.optionnal = optionnal;
 		this.module = module;
 		this.tagNames = tagNames;
 		this.description = description;
@@ -81,6 +88,14 @@ public class Directive {
 		return description;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public Collection<UseAs> getUseAs() {
+		return useAs;
+	}
+
 	public String getHTMLDescription() {
 		StringBuilder info = new StringBuilder("");
 		info.append("<b>");
@@ -95,7 +110,19 @@ public class Directive {
 			info.append("<br/>");
 			info.append(description);
 		}
+		if (!StringUtils.isEmpty(url)) {
+			info.append("<br/>");
+			info.append("<br/>");
+			info.append("@see <a href=\"");
+			info.append(url);
+			info.append("\">");
+			info.append(url);
+			info.append("</a>");
+		}
 		return info.toString();
 	}
 
+	public boolean isOptionnal() {
+		return optionnal;
+	}
 }

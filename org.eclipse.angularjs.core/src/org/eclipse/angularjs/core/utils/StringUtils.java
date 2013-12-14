@@ -17,6 +17,11 @@ package org.eclipse.angularjs.core.utils;
  */
 public class StringUtils {
 
+	public static final String TRUE = "true";
+	public static final String FALSE = "false";
+	public static final String YES = "yes";
+	public static final String NO = "no";
+
 	public static final String[] EMPTY_ARRAY = new String[0];
 
 	public static boolean isEmpty(String str) {
@@ -65,10 +70,10 @@ public class StringUtils {
 			return "";
 		}
 		int st = 0;
-		int off = 0;      /* avoid getfield opcode */
-		char[] val = s.toCharArray();    /* avoid getfield opcode */
+		int off = 0; /* avoid getfield opcode */
+		char[] val = s.toCharArray(); /* avoid getfield opcode */
 		int count = s.length();
-		
+
 		boolean parse = true;
 		char c;
 		while (parse) {
@@ -92,4 +97,20 @@ public class StringUtils {
 	private static boolean isParse(int len, int st, char c) {
 		return (st < len) && (c == ' ' || c == '\r' || c == '\n' || c == '\t');
 	}
+
+	public static boolean asBoolean(String value) {
+		return asBoolean(value, false);
+	}
+
+	public static boolean asBoolean(String value, boolean defaultValue) {
+		if (value == null)
+			return defaultValue;
+		value = value.trim();
+		if (defaultValue)
+			return !(FALSE.equals(value.toLowerCase()) || NO.equals(value
+					.toLowerCase()));
+		return TRUE.equals(value.toLowerCase())
+				|| YES.equals(value.toLowerCase());
+	}
+
 }
