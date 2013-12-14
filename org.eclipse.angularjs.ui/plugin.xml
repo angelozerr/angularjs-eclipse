@@ -229,5 +229,19 @@
 			</contentTypeIdentifier>
 		</validator>
 	</extension>
-		  	
+	
+	<!--======================================================================================-->
+	<!-- Hyperlink                                      						              -->
+	<!--======================================================================================-->
+		
+	<extension
+		point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+		<hyperlinkDetector
+			class="org.eclipse.angularjs.internal.ui.hyperlink.HTMLAngularHyperLinkDetector"
+			id="org.eclipse.angularjs.internal.ui.hyperlink.HTMLAngularHyperLinkDetector"
+			name="%HTMLAngularHyperLinkDetector.name"
+			targetId="org.eclipse.wst.html.core.htmlsource">
+		</hyperlinkDetector>
+		
+   </extension>			  	
 </plugin>        

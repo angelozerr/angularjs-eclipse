@@ -168,6 +168,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			TernDoc doc = new TernDoc();
 			doc.setQuery(query);
 
+			int localScriptNb = 0;
 			// loop for each script elements (how to improve that?)
 			Element scriptElt = null;
 			String src = null;
@@ -177,7 +178,14 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				scriptElt = (Element) scripts.item(i);
 				src = scriptElt.getAttribute("src");
 				if (StringUtils.isEmpty(src)) {
-					// TODO : get text content
+					String name = file.getName() + (localScriptNb++);
+					String text = DOMUtils.getTextNodeAsString(scriptElt);
+					doc.addFile(name, text, null);
+
+					if (StringUtils.isEmpty(scope.getModule())) {
+						query.addFile(name);
+					}
+					
 				} else {
 					if (src.startsWith("http")) {
 						// TODO : manage this case

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+<title>Hello World, AngularJS - ViralPatel.net</title>
+<script type="text/javascript"
+    src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+</head>
+<body>
+<div ng-controller="ContactController">
+     Email:<input type="text" ng-model="newcontact"/>
+    <button ng-click="add()">Add</button>
+    <h2>Contacts</h2>
+ 
+    <ul>
+        <li ng-repeat="contact in contacts"> {{ contact }} </li>
+    </ul>
+ 
+</div>
+<script type="text/javascript">
+    function ContactController($scope) {
+        $scope.contacts = ["hi@email.com", "hello@email.com"];
+ 
+        $scope.add = function() {
+        $scope.contacts.push($scope.newcontact);
+        $scope.newcontact = "";
+        }
+    }
+</script>
+</body>
