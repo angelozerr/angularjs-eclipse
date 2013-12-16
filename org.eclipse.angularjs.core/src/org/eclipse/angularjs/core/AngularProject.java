@@ -15,7 +15,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 
-import tern.eclipse.ide.core.EclipseTernProject;
+import tern.eclipse.ide.core.IDETernProject;
 
 /**
  * Angular project.
@@ -47,8 +47,8 @@ public class AngularProject {
 		return project;
 	}
 
-	public static EclipseTernProject getTernProject(IProject project)
+	public static IDETernProject getTernProject(IProject project)
 			throws CoreException {
-		return EclipseTernProject.getTernProject(project);
+		return IDETernProject.getTernProject(project);
 	}
 }

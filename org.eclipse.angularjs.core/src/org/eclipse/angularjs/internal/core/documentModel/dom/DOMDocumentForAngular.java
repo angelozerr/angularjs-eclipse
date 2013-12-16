@@ -47,7 +47,7 @@ public class DOMDocumentForAngular extends DocumentStyleImpl {
 	public Element createElement(String tagName) throws DOMException {
 		checkTagNameValidity(tagName);
 
-		ElementImplForFM element = new ElementImplForFM();
+		ElementImplForAngular element = new ElementImplForAngular();
 		element.setOwnerDocument(this);
 		element.setTagName(tagName);
 		return element;

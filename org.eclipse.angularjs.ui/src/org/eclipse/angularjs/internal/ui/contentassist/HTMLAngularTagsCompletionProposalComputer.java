@@ -19,14 +19,11 @@ import org.eclipse.angularjs.core.modules.AngularModulesManager;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.angularjs.core.modules.IDirectiveCollector;
 import org.eclipse.angularjs.core.utils.DOMUtils;
-import org.eclipse.angularjs.core.utils.StringUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -35,25 +32,24 @@ import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
-import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
+import org.json.simple.JSONArray;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import tern.eclipse.ide.core.EclipseTernProject;
+import tern.eclipse.ide.core.IDETernProject;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.angular.AngularType;
 import tern.server.protocol.angular.TernAngularQuery;
 import tern.server.protocol.angular.TernAngularScope;
+import tern.server.protocol.angular.completions.TernAngularCompletionsQuery;
 import tern.server.protocol.completions.ITernCompletionCollector;
-import tern.utils.IOUtils;
 
 /**
  * Completion in HTML editor for :
@@ -147,11 +143,12 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		IFile file = DOMUtils.getFile(element);
 		IProject eclipseProject = file.getProject();
 		try {
-			EclipseTernProject ternProject = AngularProject
+			IDETernProject ternProject = AngularProject
 					.getTernProject(eclipseProject);
 			ITernServer ternServer = ternProject.getTernServer();
 
-			TernAngularQuery query = new TernAngularQuery(angularType);
+			TernAngularQuery query = new TernAngularCompletionsQuery(
+					angularType);
 			TernAngularScope scope = query.getScope();
 			populateScope(scope, angularType, element);
 
@@ -165,48 +162,11 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			}
 			query.setExpression(startsWith);
 
-			TernDoc doc = new TernDoc();
-			doc.setQuery(query);
+			TernDoc doc = new TernDoc(query);
 
-			int localScriptNb = 0;
-			// loop for each script elements (how to improve that?)
-			Element scriptElt = null;
-			String src = null;
-			NodeList scripts = element.getOwnerDocument().getElementsByTagName(
-					"script");
-			for (int i = 0; i < scripts.getLength(); i++) {
-				scriptElt = (Element) scripts.item(i);
-				src = scriptElt.getAttribute("src");
-				if (StringUtils.isEmpty(src)) {
-					String name = file.getName() + (localScriptNb++);
-					String text = DOMUtils.getTextNodeAsString(scriptElt);
-					doc.addFile(name, text, null);
-
-					if (StringUtils.isEmpty(scope.getModule())) {
-						query.addFile(name);
-					}
-					
-				} else {
-					if (src.startsWith("http")) {
-						// TODO : manage this case
-					} else {
-
-						IContainer parent = file.getParent();
-						IFile scriptFile = parent.getFile(new Path(src));
-						if (scriptFile != null && scriptFile.exists()) {
-							String name = scriptFile.getName();
-							String text = IOUtils.toString(
-									scriptFile.getContents(),
-									scriptFile.getCharset());
-							doc.addFile(name, text, null);
-
-							if (StringUtils.isEmpty(scope.getModule())) {
-								query.addFile(name);
-							}
-						}
-					}
-				}
-			}
+			// Update TernDoc#addFile
+			JSONArray files = query.getFiles();
+			ternProject.getFileManager().updateFiles(element, file, doc, files);
 
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 

@@ -1,15 +1,13 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2013 Angelo ZERR.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
+ * Contributors:      
+ *     Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  *******************************************************************************/
-
 package org.eclipse.angularjs.internal.core.documentModel.dom;
 
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
@@ -24,16 +22,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * Represents elements in the dom model {@link DOMModelForPHP}
+ * Represents elements in the dom model Angular.
  * 
- * @author Roy, 2007
  */
-public class ElementImplForFM extends ElementStyleImpl implements IAdaptable,
-		IImplForAngular {
+public class ElementImplForAngular extends ElementStyleImpl implements
+		IAdaptable {
 
 	private static final String WORKBENCH_ADAPTER = "org.eclipse.ui.model.IWorkbenchAdapter"; //$NON-NLS-1$
 
-	public ElementImplForFM() {
+	public ElementImplForAngular() {
 		super();
 	}
 
@@ -44,7 +41,7 @@ public class ElementImplForFM extends ElementStyleImpl implements IAdaptable,
 		return Platform.getAdapterManager().getAdapter(this, adapter);
 	}
 
-	public ElementImplForFM(ElementStyleImpl that) {
+	public ElementImplForAngular(ElementStyleImpl that) {
 		super(that);
 	}
 
@@ -53,7 +50,7 @@ public class ElementImplForFM extends ElementStyleImpl implements IAdaptable,
 	}
 
 	public Node cloneNode(boolean deep) {
-		ElementImpl cloned = new ElementImplForFM(this);
+		ElementImpl cloned = new ElementImplForAngular(this);
 		if (deep)
 			cloneChildNodes(cloned, deep);
 		return cloned;
