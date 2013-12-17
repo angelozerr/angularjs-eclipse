@@ -14,16 +14,17 @@ package org.eclipse.angularjs.internal.ui.contentassist;
 import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.angularjs.core.modules.AngularModulesManager;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.angularjs.core.modules.IDirectiveCollector;
 import org.eclipse.angularjs.core.utils.DOMUtils;
+import org.eclipse.angularjs.core.utils.HTMLTernAngularHelper;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -36,18 +37,13 @@ import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
-import org.json.simple.JSONArray;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 
 import tern.eclipse.ide.core.IDETernProject;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.angular.AngularType;
 import tern.server.protocol.angular.TernAngularQuery;
-import tern.server.protocol.angular.TernAngularScope;
 import tern.server.protocol.angular.completions.TernAngularCompletionsQuery;
 import tern.server.protocol.completions.ITernCompletionCollector;
 
@@ -56,6 +52,7 @@ import tern.server.protocol.completions.ITernCompletionCollector;
  * 
  * <ul>
  * <li>attribute name with angular directive (ex : ng-app).</li>
+ * <li>attribute value with angular module, controller, model.</li>
  * </ul>
  * 
  */
@@ -145,13 +142,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		try {
 			IDETernProject ternProject = AngularProject
 					.getTernProject(eclipseProject);
-			ITernServer ternServer = ternProject.getTernServer();
 
+			// Create query
 			TernAngularQuery query = new TernAngularCompletionsQuery(
 					angularType);
-			TernAngularScope scope = query.getScope();
-			populateScope(scope, angularType, element);
-
 			String startsWith = contentAssistRequest.getMatchString();
 			if (insideExpression) {
 
@@ -162,11 +156,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			}
 			query.setExpression(startsWith);
 
-			TernDoc doc = new TernDoc(query);
-
-			// Update TernDoc#addFile
-			JSONArray files = query.getFiles();
-			ternProject.getFileManager().updateFiles(element, file, doc, files);
+			TernDoc doc = HTMLTernAngularHelper.createDoc(element, file,
+					ternProject.getFileManager(), query);
 
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
@@ -190,7 +181,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
 							: XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
 
-					CustomCompletionProposal proposal = new MarkupCompletionProposal(
+					ICompletionProposal proposal = new MarkupCompletionProposal(
 							replacementString, replacementOffset,
 							replacementLength, cursorPosition, image,
 							displayString, contextInformation,
@@ -200,6 +191,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				}
 			};
 
+			ITernServer ternServer = ternProject.getTernServer();
 			ternServer.request(doc, collector);
 
 		} catch (Exception e) {
@@ -237,53 +229,4 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				treeNode, xmlnode, context);
 	}
 
-	private void populateScope(TernAngularScope scope, AngularType angularType,
-			Node element) {
-		switch (angularType) {
-		case module:
-			// do nothing;
-			break;
-		case controller:
-			// find controller
-			populateScope(scope, element, false);
-			break;
-		case model:
-			// find model
-			populateScope(scope, element, true);
-			break;
-		}
-
-	}
-
-	private void populateScope(TernAngularScope scope, Node element,
-			boolean populateController) {
-		if (element == null || element.getNodeType() == Node.DOCUMENT_NODE) {
-			return;
-		}
-		NamedNodeMap attributes = element.getAttributes();
-		Node node = null;
-		for (int i = 0; i < attributes.getLength(); i++) {
-			node = attributes.item(i);
-			if (node instanceof IAngularDOMAttr) {
-				Directive directive = ((IAngularDOMAttr) node)
-						.getAngularDirective();
-				if (directive != null) {
-					switch (directive.getType()) {
-					case module:
-						String module = ((Attr) node).getValue();
-						scope.setModule(module);
-						return;
-					case controller:
-						if (populateController && scope.getController() == null) {
-							String controller = ((Attr) node).getValue();
-							scope.setController(controller);
-						}
-					default:
-						break;
-					}
-				}
-			}
-		}
-		populateScope(scope, element.getParentNode(), populateController);
-	}
 }

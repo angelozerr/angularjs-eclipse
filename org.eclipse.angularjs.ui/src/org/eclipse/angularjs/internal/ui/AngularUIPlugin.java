@@ -1,5 +1,8 @@
 package org.eclipse.angularjs.internal.ui;
 
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -51,6 +54,25 @@ public class AngularUIPlugin extends AbstractUIPlugin {
 	 */
 	public static AngularUIPlugin getDefault() {
 		return plugin;
+	}
+
+	public static IWorkbenchWindow getActiveWorkbenchWindow() {
+		return getDefault().getWorkbench().getActiveWorkbenchWindow();
+	}
+
+	public static Shell getActiveWorkbenchShell() {
+		IWorkbenchWindow window = getActiveWorkbenchWindow();
+		if (window != null) {
+			return window.getShell();
+		}
+		return null;
+	}
+
+	/**
+	 * @return Returns the active workbench window's currrent page.
+	 */
+	public static IWorkbenchPage getActivePage() {
+		return getActiveWorkbenchWindow().getActivePage();
 	}
 
 }

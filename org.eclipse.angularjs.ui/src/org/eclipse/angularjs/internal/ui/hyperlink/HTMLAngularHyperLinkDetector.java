@@ -1,17 +1,32 @@
 package org.eclipse.angularjs.internal.ui.hyperlink;
 
+import java.io.IOException;
+
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.angularjs.core.utils.DOMUtils;
+import org.eclipse.angularjs.core.utils.HTMLTernAngularHelper;
+import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
+import tern.TernException;
+import tern.eclipse.ide.core.IDETernProject;
+import tern.server.ITernServer;
+import tern.server.protocol.TernDoc;
 import tern.server.protocol.angular.AngularType;
+import tern.server.protocol.angular.TernAngularQuery;
+import tern.server.protocol.angular.definitions.TernAngularDefinitionQuery;
 
 public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 
@@ -41,22 +56,44 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 			Directive directive = ((IAngularDOMAttr) attr)
 					.getAngularDirective();
 			if (directive != null) {
-				switch (directive.getType()) {
-				case module:
-					findModule(attr);
-					break;
 
-				default:
-					break;
+				IFile file = DOMUtils.getFile(attr);
+				IProject eclipseProject = file.getProject();
+				try {
+					IDETernProject ternProject = AngularProject
+							.getTernProject(eclipseProject);
+
+					IHyperlink hyperlink = find(attr, file, ternProject,
+							directive.getType());
+					if (hyperlink != null) {
+						IHyperlink[] hyperlinks = new IHyperlink[1];
+						hyperlinks[0] = hyperlink;
+						return hyperlinks;
+					}
+
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error while tern hyperlink.", e);
 				}
 			}
 		}
 		return null;
 	}
 
-	private void findModule(IDOMAttr attr) {
-		// TODO Auto-generated method stub
-		
+	private IHyperlink find(IDOMAttr attr, IFile file,
+			IDETernProject ternProject, AngularType angularType)
+			throws CoreException, IOException, TernException {
+
+		TernAngularQuery query = new TernAngularDefinitionQuery(angularType);
+		query.setExpression(attr.getValue());
+
+		TernDoc doc = HTMLTernAngularHelper.createDoc(
+				(IDOMNode) attr.getOwnerElement(), file,
+				ternProject.getFileManager(), query);
+
+		ITernServer server = ternProject.getTernServer();
+		TernHyperlinkCollector collector = new TernHyperlinkCollector(attr);
+		server.request(doc, collector);
+		return collector.getHyperlink();
 	}
 
 }

@@ -1,6 +1,11 @@
 function TodoCtrl2($scope) {
 	var arr = [{text:"ee"}];
-	arr.
+	arr.  
+}
+
+function TodoCtrl3($scope) {
+	var arr = [{text:"ee"}];
+	arr.  
 }
 
 function TodoCtrl($scope) {

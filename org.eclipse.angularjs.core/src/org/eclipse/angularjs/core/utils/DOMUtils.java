@@ -44,6 +44,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import tern.server.protocol.angular.AngularType;
+import tern.server.protocol.angular.TernAngularScope;
+
 /**
  * Utilities for SSE DOM node {@link IDOMNode}.
  * 

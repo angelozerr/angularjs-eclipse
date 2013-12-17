@@ -21,7 +21,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.validation,
  tern.eclipse.ide.core;bundle-version="1.0.0",
  tern.core;bundle-version="1.0.0",
- tern.eclipse;bundle-version="1.0.0"
+ tern.eclipse;bundle-version="1.0.0",
+ org.eclipse.ui.ide
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.json.simple
