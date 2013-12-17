@@ -26,7 +26,7 @@ import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.angular.AngularType;
 import tern.server.protocol.angular.TernAngularQuery;
-import tern.server.protocol.angular.definitions.TernAngularDefinitionQuery;
+import tern.server.protocol.angular.definition.TernAngularDefinitionQuery;
 
 public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 

@@ -10,13 +10,33 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.taginfo;
 
+import java.io.IOException;
+
+import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.angularjs.core.utils.DOMUtils;
+import org.eclipse.angularjs.core.utils.HTMLTernAngularHelper;
+import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+
+import tern.TernException;
+import tern.eclipse.ide.core.IDETernProject;
+import tern.server.ITernServer;
+import tern.server.protocol.TernDoc;
+import tern.server.protocol.angular.AngularType;
+import tern.server.protocol.angular.TernAngularQuery;
+import tern.server.protocol.angular.type.TernAngularTypeQuery;
+import tern.server.protocol.completions.TernCompletionItem;
+import tern.server.protocol.type.ITernTypeCollector;
+import tern.utils.StringUtils;
 
 /**
  * Provides hover help documentation for Angular tags
@@ -46,8 +66,65 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeTagAttValueHelp(IDOMNode xmlnode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
 			ITextRegion region) {
+		IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
+		if (attr instanceof IAngularDOMAttr) {
+			Directive directive = ((IAngularDOMAttr) attr)
+					.getAngularDirective();
+			if (directive != null) {
+
+				IFile file = DOMUtils.getFile(attr);
+				IProject eclipseProject = file.getProject();
+				try {
+					IDETernProject ternProject = AngularProject
+							.getTernProject(eclipseProject);
+
+					String help = find(attr, file, ternProject,
+							directive.getType());
+					if (!StringUtils.isEmpty(help)) {
+						return help;
+					}
+
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error while tern hyperlink.", e);
+				}
+			}
+		}
 		return super.computeTagAttValueHelp(xmlnode, parentNode, flatNode,
 				region);
 	}
 
+	private String find(IDOMAttr attr, IFile file, IDETernProject ternProject,
+			final AngularType angularType) throws CoreException, IOException,
+			TernException {
+
+		TernAngularQuery query = new TernAngularTypeQuery(angularType);
+		query.setExpression(attr.getValue());
+
+		TernDoc doc = HTMLTernAngularHelper.createDoc(
+				(IDOMNode) attr.getOwnerElement(), file,
+				ternProject.getFileManager(), query);
+
+		ITernServer server = ternProject.getTernServer();
+
+		final StringBuilder help = new StringBuilder();
+		ITernTypeCollector collector = new ITernTypeCollector() {
+
+			@Override
+			public void setType(String name, String type, String origin) {
+				if (name != null) {
+
+					TernCompletionItem item = new TernCompletionItem(name,
+							type, origin);
+					help.append("<b>Angular ");
+					help.append(angularType.name());
+					help.append("</b><br/><br/><b>Signature : </b>");
+					help.append(item.getSignature());
+					help.append("<br/><b>Origin : </b>");
+					help.append(item.getOrigin());
+				}
+			}
+		};
+		server.request(doc, collector);
+		return help.toString();
+	}
 }
