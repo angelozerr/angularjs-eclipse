@@ -42,4 +42,12 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				region);
 	}
 
+	@Override
+	protected String computeTagAttValueHelp(IDOMNode xmlnode,
+			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
+			ITextRegion region) {
+		return super.computeTagAttValueHelp(xmlnode, parentNode, flatNode,
+				region);
+	}
+
 }

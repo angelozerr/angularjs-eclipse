@@ -47,6 +47,7 @@ import tern.server.protocol.angular.AngularType;
 import tern.server.protocol.angular.TernAngularQuery;
 import tern.server.protocol.angular.completions.TernAngularCompletionsQuery;
 import tern.server.protocol.completions.ITernCompletionCollector;
+import tern.server.protocol.completions.TernCompletionItem;
 
 /**
  * Completion in HTML editor for :
@@ -169,9 +170,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
 				@Override
-				public void addProposal(String name, String type, Object doc,
-						int pos) {
+				public void addProposal(String name, String type,
+						String origin, Object doc, int pos) {
 
+					
 					String replacementString = insideExpression ? name : "\""
 							+ name + "\"";
 					int replacementOffset = contentAssistRequest
@@ -180,7 +182,9 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 							.getReplacementLength();
 					int cursorPosition = getCursorPositionForProposedText(replacementString);
 
-					String displayString = name;
+					TernCompletionItem item = new TernCompletionItem(name, type, origin);
+					
+					String displayString = item.getText();
 					IContextInformation contextInformation = null;
 					String additionalProposalInfo = null;
 					int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
@@ -193,11 +197,6 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 							additionalProposalInfo, relevance);
 					contentAssistRequest.addProposal(proposal);
 
-				}
-
-				private Image getImage(AngularType angularType) {
-					// TODO Auto-generated method stub
-					return null;
 				}
 			};
 
