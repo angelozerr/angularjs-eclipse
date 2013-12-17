@@ -86,8 +86,8 @@ ngCloak works in cooperation with the following css rule embedded within angular
 		type="controller"  >
 		<description>
 		<![CDATA[
-			<p>The <code>ngController</code> directive attaches a controller class to the view. This is a key aspect of how angular
-supports the principles behind the Model-View-Controller design pattern.</p>
+			The <code>ngController</code> directive attaches a controller class to the view. This is a key aspect of how angular
+supports the principles behind the Model-View-Controller design pattern.
 <p>MVC components in angular:</p>
 <ul>
 <li>Model — The Model is scope properties; scopes are attached to the DOM where scope properties

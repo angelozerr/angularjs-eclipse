@@ -39,6 +39,8 @@ public class ImageResource {
 
 	// General Object Images
 	public static final String IMG_ANGULARJS = "angularjs";
+	public static final String IMG_DIRECTIVE = "directive";
+	public static final String IMG_CONTROLLER = "controller";
 
 	static {
 		try {
@@ -122,6 +124,8 @@ public class ImageResource {
 
 		// load general object images
 		registerImage(IMG_ANGULARJS, URL_OBJ + IMG_ANGULARJS + ".png");
+		registerImage(IMG_DIRECTIVE, URL_OBJ + IMG_DIRECTIVE + ".png");
+		registerImage(IMG_CONTROLLER, URL_OBJ + IMG_CONTROLLER + ".png");
 
 	}
 

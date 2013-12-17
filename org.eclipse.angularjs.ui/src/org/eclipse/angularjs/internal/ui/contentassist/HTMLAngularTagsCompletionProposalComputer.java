@@ -32,6 +32,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
@@ -68,10 +69,13 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
 		String tagName = element.getNodeName();
 		String directiveName = contentAssistRequest.getMatchString();
+		IDOMAttr attr = DOMUtils.getAttrByRegion(element,
+				contentAssistRequest.getRegion());
 		// get angular attribute name of the element
 		final List<String> existingDirectiveNames = DOMUtils
-				.getAngularDirectiveNames(element instanceof Element ? (Element) element
-						: null);
+				.getAngularDirectiveNames(
+						element instanceof Element ? (Element) element : null,
+						attr);
 
 		// Starts directives completion.
 		AngularModulesManager.getInstance().collectDirectives(tagName,
@@ -95,14 +99,15 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						int cursorPosition = getCursorPositionForProposedText(replacementString);
 
 						Image image = ImageResource
-								.getImage(ImageResource.IMG_ANGULARJS);
-						String displayString = name;
+								.getImage(ImageResource.IMG_DIRECTIVE);
+						String displayString = name + " - "
+								+ directive.getModule().getName();
 						IContextInformation contextInformation = null;
 						String additionalProposalInfo = directive
 								.getHTMLDescription();
 						int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME;
 
-						CustomCompletionProposal proposal = new CustomCompletionProposal(
+						ICompletionProposal proposal = new CustomCompletionProposal(
 								replacementString, replacementOffset,
 								replacementLength, cursorPosition, image,
 								displayString, contextInformation,
@@ -156,6 +161,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			}
 			query.setExpression(startsWith);
 
+			final Image image = getImage(angularType);
+
 			TernDoc doc = HTMLTernAngularHelper.createDoc(element, file,
 					ternProject.getFileManager(), query);
 
@@ -173,8 +180,6 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 							.getReplacementLength();
 					int cursorPosition = getCursorPositionForProposedText(replacementString);
 
-					Image image = ImageResource
-							.getImage(ImageResource.IMG_ANGULARJS);
 					String displayString = name;
 					IContextInformation contextInformation = null;
 					String additionalProposalInfo = null;
@@ -189,6 +194,11 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					contentAssistRequest.addProposal(proposal);
 
 				}
+
+				private Image getImage(AngularType angularType) {
+					// TODO Auto-generated method stub
+					return null;
+				}
 			};
 
 			ITernServer ternServer = ternProject.getTernServer();
@@ -197,6 +207,16 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error while tern completion.", e);
 		}
+	}
+
+	private Image getImage(AngularType angularType) {
+		switch (angularType) {
+		case module:
+			return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
+		case controller:
+			return ImageResource.getImage(ImageResource.IMG_CONTROLLER);
+		}
+		return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
 	}
 
 	@Override

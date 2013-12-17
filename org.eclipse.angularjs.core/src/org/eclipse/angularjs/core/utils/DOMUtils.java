@@ -641,7 +641,8 @@ public class DOMUtils {
 	 * @param element
 	 * @return
 	 */
-	public static List<String> getAngularDirectiveNames(Element element) {
+	public static List<String> getAngularDirectiveNames(Element element,
+			Attr selectedAttr) {
 		if (element == null) {
 			return Collections.emptyList();
 		}
@@ -651,12 +652,14 @@ public class DOMUtils {
 		Attr attr = null;
 		for (int i = 0; i < length; i++) {
 			attr = (Attr) attributes.item(i);
-			Directive directive = getAngularDirective(attr);
-			if (directive != null) {
-				if (names == null) {
-					names = new ArrayList<String>();
+			if (selectedAttr == null || !selectedAttr.equals(attr)) {
+				Directive directive = getAngularDirective(attr);
+				if (directive != null) {
+					if (names == null) {
+						names = new ArrayList<String>();
+					}
+					names.add(directive.getName());
 				}
-				names.add(directive.getName());
 			}
 		}
 		return (List<String>) (names != null ? names : Collections.emptyList());

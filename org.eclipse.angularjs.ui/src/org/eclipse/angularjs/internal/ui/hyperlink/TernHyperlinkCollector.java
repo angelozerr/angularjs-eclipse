@@ -16,7 +16,11 @@ public class TernHyperlinkCollector implements ITernDefinitionCollector {
 
 	@Override
 	public void setDefinition(String file, Long start, Long end) {
-		this.hyperlink = new TernHyperlink(attr, file, start, end);
+		if (file != null) {
+			this.hyperlink = new TernHyperlink(attr, file, start, end);
+		} else {
+			this.hyperlink = null;
+		}
 	}
 
 	public IHyperlink getHyperlink() {

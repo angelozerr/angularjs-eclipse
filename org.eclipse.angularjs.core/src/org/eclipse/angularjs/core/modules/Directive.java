@@ -113,11 +113,8 @@ public class Directive {
 		if (!StringUtils.isEmpty(url)) {
 			info.append("<br/>");
 			info.append("<br/>");
-			info.append("@see <a href=\"");
+			info.append("<b>@see</b> ");
 			info.append(url);
-			info.append("\">");
-			info.append(url);
-			info.append("</a>");
 		}
 		return info.toString();
 	}
