@@ -18,7 +18,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Angular UI Messages.
- *
+ * 
  */
 public final class AngularUIMessages extends NLS {
 
@@ -36,6 +36,9 @@ public final class AngularUIMessages extends NLS {
 
 	public static String AngularTyping_Auto_Complete;
 	public static String AngularTyping_Close_EL;
+
+	// Validation
+	public static String Validation_AngularElementNotFound;
 
 	private AngularUIMessages() {
 	}
