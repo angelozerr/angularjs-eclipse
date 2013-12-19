@@ -134,7 +134,9 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		if (angularType == null) {
 			return;
 		}
-
+		if (angularType.equals(AngularType.unknown)
+				|| angularType.equals(AngularType.directiveRepeat))
+			angularType = AngularType.model;
 		populateAngularProposals(contentAssistRequest, element, angularType,
 				false);
 		super.addAttributeValueProposals(contentAssistRequest, context);
@@ -173,7 +175,6 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				public void addProposal(String name, String type,
 						String origin, Object doc, int pos) {
 
-					
 					String replacementString = insideExpression ? name : "\""
 							+ name + "\"";
 					int replacementOffset = contentAssistRequest
@@ -182,8 +183,9 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 							.getReplacementLength();
 					int cursorPosition = getCursorPositionForProposedText(replacementString);
 
-					TernCompletionItem item = new TernCompletionItem(name, type, origin);
-					
+					TernCompletionItem item = new TernCompletionItem(name,
+							type, origin);
+
 					String displayString = item.getText();
 					IContextInformation contextInformation = null;
 					String additionalProposalInfo = null;

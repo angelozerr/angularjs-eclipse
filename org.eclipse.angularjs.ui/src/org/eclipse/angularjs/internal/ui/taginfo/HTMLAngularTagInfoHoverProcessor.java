@@ -85,7 +85,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 					}
 
 				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error while tern hyperlink.", e);
+					Trace.trace(Trace.SEVERE, "Error while tern hover.", e);
 				}
 			}
 		}

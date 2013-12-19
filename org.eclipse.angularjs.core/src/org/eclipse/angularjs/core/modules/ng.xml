@@ -115,7 +115,8 @@ and executed twice.</p>
 	</directive>
 
 	<directive name="ngRepeat"
-		url="http://docs.angularjs.org/api/ng.directive:ngRepeat">
+		url="http://docs.angularjs.org/api/ng.directive:ngRepeat"
+		type="directiveRepeat" >
 		<description>
 		<![CDATA[
 			The ngRepeat directive instantiates a template once per item from a collection. Each template instance gets its own scope, where the given loop variable is set to the current collection item, and $index is set to the item index or key.
