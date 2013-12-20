@@ -176,31 +176,35 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				public void addProposal(String name, String type,
 						String origin, Object doc, int pos) {
 
-					String replacementString = insideExpression ? name : "\""
-							+ name + "\"";
 					int replacementOffset = contentAssistRequest
 							.getReplacementBeginPosition();
-					int replacementLength = replacementString.length();//contentAssistRequest
-							//.getReplacementLength();
-					int cursorPosition = getCursorPositionForProposedText(replacementString);
-
-					TernCompletionItem item = new TernCompletionItem(name,
-							type, origin);
-
-					String displayString = item.getText();
-					IContextInformation contextInformation = null;
-					String additionalProposalInfo = null;
-					int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
-							: XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
 					
-					ICompletionProposal proposal = new MarkupCompletionProposal(
-							replacementString, replacementOffset,
-							replacementLength, cursorPosition, image,
-							displayString, contextInformation,
-							additionalProposalInfo, relevance);
-					
-					if (insideExpression) {
-						proposal = new TernCompletionProposal(name, type, origin, doc, 0, replacementOffset);
+					ICompletionProposal proposal = null;
+					if (!insideExpression) {
+
+						String replacementString = insideExpression ? name
+								: "\"" + name + "\"";						
+						int replacementLength = contentAssistRequest
+								.getReplacementLength();
+						int cursorPosition = getCursorPositionForProposedText(replacementString);
+
+						TernCompletionItem item = new TernCompletionItem(name,
+								type, origin);
+
+						String displayString = item.getText();
+						IContextInformation contextInformation = null;
+						String additionalProposalInfo = null;
+						int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
+								: XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
+
+						proposal = new MarkupCompletionProposal(
+								replacementString, replacementOffset,
+								replacementLength, cursorPosition, image,
+								displayString, contextInformation,
+								additionalProposalInfo, relevance);
+					} else {
+						proposal = new TernCompletionProposal(name, type,
+								origin, doc, pos, replacementOffset);
 					}
 					contentAssistRequest.addProposal(proposal);
 
