@@ -41,6 +41,7 @@ import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.w3c.dom.Element;
 
 import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.jface.contentassist.TernCompletionProposal;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.angular.AngularType;
@@ -179,8 +180,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 							+ name + "\"";
 					int replacementOffset = contentAssistRequest
 							.getReplacementBeginPosition();
-					int replacementLength = contentAssistRequest
-							.getReplacementLength();
+					int replacementLength = replacementString.length();//contentAssistRequest
+							//.getReplacementLength();
 					int cursorPosition = getCursorPositionForProposedText(replacementString);
 
 					TernCompletionItem item = new TernCompletionItem(name,
@@ -191,12 +192,16 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					String additionalProposalInfo = null;
 					int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
 							: XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
-
+					
 					ICompletionProposal proposal = new MarkupCompletionProposal(
 							replacementString, replacementOffset,
 							replacementLength, cursorPosition, image,
 							displayString, contextInformation,
 							additionalProposalInfo, relevance);
+					
+					if (insideExpression) {
+						proposal = new TernCompletionProposal(name, type, origin, doc, 0, replacementOffset);
+					}
 					contentAssistRequest.addProposal(proposal);
 
 				}
