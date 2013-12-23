@@ -16,7 +16,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
+import org.eclipse.angularjs.core.modules.AngularModulesManager;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -43,9 +45,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
-import tern.server.protocol.angular.AngularType;
-import tern.server.protocol.angular.TernAngularScope;
 
 /**
  * Utilities for SSE DOM node {@link IDOMNode}.
@@ -585,10 +584,10 @@ public class DOMUtils {
 		if (attr == null) {
 			return false;
 		}
-		if (!(attr instanceof IAngularDOMAttr)) {
-			return false;
+		if ((attr instanceof IAngularDOMAttr)) {
+			return ((IAngularDOMAttr) attr).isAngularDirective();
 		}
-		return ((IAngularDOMAttr) attr).isAngularDirective();
+		return getAngularDirective(attr) != null;
 	}
 
 	/**
@@ -604,10 +603,11 @@ public class DOMUtils {
 		if (attr == null) {
 			return null;
 		}
-		if (!(attr instanceof IAngularDOMAttr)) {
-			return null;
+		if ((attr instanceof IAngularDOMAttr)) {
+			return ((IAngularDOMAttr) attr).getAngularDirective();
 		}
-		return ((IAngularDOMAttr) attr).getAngularDirective();
+		return AngularModulesManager.getInstance().getDirective(
+				attr.getOwnerElement().getNodeName(), attr.getName());
 	}
 
 	/**
@@ -663,6 +663,14 @@ public class DOMUtils {
 			}
 		}
 		return (List<String>) (names != null ? names : Collections.emptyList());
+	}
+
+	public static boolean hasAngularNature(IDOMNode element) {
+		IFile file = DOMUtils.getFile(element);
+		if (file == null) {
+			return false;
+		}
+		return AngularProject.hasAngularNature(file.getProject());
 	}
 
 }

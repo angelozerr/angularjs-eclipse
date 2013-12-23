@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -71,31 +70,28 @@ public class HTMLTernAngularHelper {
 			return;
 		}
 		NamedNodeMap attributes = element.getAttributes();
-		Node node = null;
+		Attr node = null;
 		for (int i = 0; i < attributes.getLength(); i++) {
-			node = attributes.item(i);
-			if (node instanceof IAngularDOMAttr) {
-				Directive directive = ((IAngularDOMAttr) node)
-						.getAngularDirective();
-				if (directive != null) {
-					switch (directive.getType()) {
-					case module:
-						String module = ((Attr) node).getValue();
-						scope.setModule(module);
-						return;
-					case controller:
-						if (populateController && scope.getController() == null) {
-							String controller = ((Attr) node).getValue();
-							scope.setController(controller);
-						}
-						break;
-					case directiveRepeat:
-						String expression = ((Attr) node).getValue();
-						populateScope(expression, scope);
-						break;
-					default:
-						break;
+			node = (Attr) attributes.item(i);
+			Directive directive = DOMUtils.getAngularDirective(node);
+			if (directive != null) {
+				switch (directive.getType()) {
+				case module:
+					String module = ((Attr) node).getValue();
+					scope.setModule(module);
+					return;
+				case controller:
+					if (populateController && scope.getController() == null) {
+						String controller = ((Attr) node).getValue();
+						scope.setController(controller);
 					}
+					break;
+				case directiveRepeat:
+					String expression = ((Attr) node).getValue();
+					populateScope(expression, scope);
+					break;
+				default:
+					break;
 				}
 			}
 		}

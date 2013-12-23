@@ -11,6 +11,7 @@
 package org.eclipse.angularjs.core;
 
 import org.eclipse.angularjs.internal.core.AngularCorePlugin;
+import org.eclipse.angularjs.internal.core.Trace;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
@@ -50,5 +51,23 @@ public class AngularProject {
 	public static IDETernProject getTernProject(IProject project)
 			throws CoreException {
 		return IDETernProject.getTernProject(project);
+	}
+
+	/**
+	 * Return true if the given project have angular nature
+	 * "org.eclipse.angularjs.core.angularnature" and false otherwise.
+	 * 
+	 * @param project
+	 *            Eclipse project.
+	 * @return true if the given project have angular nature
+	 *         "org.eclipse.angularjs.core.angularnature" and false otherwise.
+	 */
+	public static boolean hasAngularNature(IProject project) {
+		try {
+			return project.hasNature(AngularNature.ID);
+		} catch (CoreException e) {
+			Trace.trace(Trace.SEVERE, "Error angular nature", e);
+			return false;
+		}
 	}
 }

@@ -3,7 +3,6 @@ package org.eclipse.angularjs.internal.ui.hyperlink;
 import java.io.IOException;
 
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.core.utils.HTMLTernAngularHelper;
@@ -52,28 +51,25 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 			return null;
 		}
 
-		if (attr instanceof IAngularDOMAttr) {
-			Directive directive = ((IAngularDOMAttr) attr)
-					.getAngularDirective();
-			if (directive != null) {
+		Directive directive = DOMUtils.getAngularDirective(attr);
+		if (directive != null) {
 
-				IFile file = DOMUtils.getFile(attr);
-				IProject eclipseProject = file.getProject();
-				try {
-					IDETernProject ternProject = AngularProject
-							.getTernProject(eclipseProject);
+			IFile file = DOMUtils.getFile(attr);
+			IProject eclipseProject = file.getProject();
+			try {
+				IDETernProject ternProject = AngularProject
+						.getTernProject(eclipseProject);
 
-					IHyperlink hyperlink = find(attr, file, ternProject,
-							directive.getType());
-					if (hyperlink != null) {
-						IHyperlink[] hyperlinks = new IHyperlink[1];
-						hyperlinks[0] = hyperlink;
-						return hyperlinks;
-					}
-
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error while tern hyperlink.", e);
+				IHyperlink hyperlink = find(attr, file, ternProject,
+						directive.getType());
+				if (hyperlink != null) {
+					IHyperlink[] hyperlinks = new IHyperlink[1];
+					hyperlinks[0] = hyperlink;
+					return hyperlinks;
 				}
+
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error while tern hyperlink.", e);
 			}
 		}
 		return null;

@@ -1,13 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2009 IBM Corporation and others.
+ * Copyright (c) 2013 Angelo ZERR.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  * 
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *     Zend Technologies
+ * Contributors:      
+ *     Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.contentassist;
 
@@ -66,58 +65,63 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 	protected void addAttributeNameProposals(
 			final ContentAssistRequest contentAssistRequest,
 			CompletionProposalInvocationContext context) {
-
-		// completion for attribute name with angular directive (ex : ng-app)
+		// Check if project has angular nature
 		IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
-		String tagName = element.getNodeName();
-		String directiveName = contentAssistRequest.getMatchString();
-		IDOMAttr attr = DOMUtils.getAttrByRegion(element,
-				contentAssistRequest.getRegion());
-		// get angular attribute name of the element
-		final List<String> existingDirectiveNames = DOMUtils
-				.getAngularDirectiveNames(
-						element instanceof Element ? (Element) element : null,
-						attr);
+		if (DOMUtils.hasAngularNature(element)) {
 
-		// Starts directives completion.
-		AngularModulesManager.getInstance().collectDirectives(tagName,
-				directiveName, false, new IDirectiveCollector() {
+			// completion for attribute name with angular directive (ex :
+			// ng-app)
+			String tagName = element.getNodeName();
+			String directiveName = contentAssistRequest.getMatchString();
+			IDOMAttr attr = DOMUtils.getAttrByRegion(element,
+					contentAssistRequest.getRegion());
+			// get angular attribute name of the element
+			final List<String> existingDirectiveNames = DOMUtils
+					.getAngularDirectiveNames(
+							element instanceof Element ? (Element) element
+									: null, attr);
 
-					@Override
-					public void add(Directive directive, String name) {
+			// Starts directives completion.
+			AngularModulesManager.getInstance().collectDirectives(tagName,
+					directiveName, false, new IDirectiveCollector() {
 
-						if (existingDirectiveNames.contains(directive.getName())) {
-							// The directive already exists in the element,
-							// completion should not show it.
-							return;
+						@Override
+						public void add(Directive directive, String name) {
+
+							if (existingDirectiveNames.contains(directive
+									.getName())) {
+								// The directive already exists in the element,
+								// completion should not show it.
+								return;
+							}
+
+							// Add the directive in the completion.
+							String replacementString = name + "=\"\"";
+							int replacementOffset = contentAssistRequest
+									.getReplacementBeginPosition();
+							int replacementLength = contentAssistRequest
+									.getReplacementLength();
+							int cursorPosition = getCursorPositionForProposedText(replacementString);
+
+							Image image = ImageResource
+									.getImage(ImageResource.IMG_DIRECTIVE);
+							String displayString = name + " - "
+									+ directive.getModule().getName();
+							IContextInformation contextInformation = null;
+							String additionalProposalInfo = directive
+									.getHTMLDescription();
+							int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME;
+
+							ICompletionProposal proposal = new CustomCompletionProposal(
+									replacementString, replacementOffset,
+									replacementLength, cursorPosition, image,
+									displayString, contextInformation,
+									additionalProposalInfo, relevance);
+							contentAssistRequest.addProposal(proposal);
+
 						}
-
-						// Add the directive in the completion.
-						String replacementString = name + "=\"\"";
-						int replacementOffset = contentAssistRequest
-								.getReplacementBeginPosition();
-						int replacementLength = contentAssistRequest
-								.getReplacementLength();
-						int cursorPosition = getCursorPositionForProposedText(replacementString);
-
-						Image image = ImageResource
-								.getImage(ImageResource.IMG_DIRECTIVE);
-						String displayString = name + " - "
-								+ directive.getModule().getName();
-						IContextInformation contextInformation = null;
-						String additionalProposalInfo = directive
-								.getHTMLDescription();
-						int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME;
-
-						ICompletionProposal proposal = new CustomCompletionProposal(
-								replacementString, replacementOffset,
-								replacementLength, cursorPosition, image,
-								displayString, contextInformation,
-								additionalProposalInfo, relevance);
-						contentAssistRequest.addProposal(proposal);
-
-					}
-				});
+					});
+		}
 		super.addAttributeNameProposals(contentAssistRequest, context);
 	}
 
@@ -125,21 +129,22 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 	protected void addAttributeValueProposals(
 			final ContentAssistRequest contentAssistRequest,
 			CompletionProposalInvocationContext context) {
-
 		IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
-		// is Angular directive attribute?
-		Directive directive = DOMUtils.getAngularDirective(element,
-				contentAssistRequest.getRegion());
-		AngularType angularType = directive != null ? directive.getType()
-				: null;
-		if (angularType == null) {
-			return;
+		if (DOMUtils.hasAngularNature(element)) {
+			// is Angular directive attribute?
+			Directive directive = DOMUtils.getAngularDirective(element,
+					contentAssistRequest.getRegion());
+			AngularType angularType = directive != null ? directive.getType()
+					: null;
+			if (angularType == null) {
+				return;
+			}
+			if (angularType.equals(AngularType.unknown)
+					|| angularType.equals(AngularType.directiveRepeat))
+				angularType = AngularType.model;
+			populateAngularProposals(contentAssistRequest, element,
+					angularType, false);
 		}
-		if (angularType.equals(AngularType.unknown)
-				|| angularType.equals(AngularType.directiveRepeat))
-			angularType = AngularType.model;
-		populateAngularProposals(contentAssistRequest, element, angularType,
-				false);
 		super.addAttributeValueProposals(contentAssistRequest, context);
 	}
 
@@ -178,12 +183,12 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 					int replacementOffset = contentAssistRequest
 							.getReplacementBeginPosition();
-					
+
 					ICompletionProposal proposal = null;
 					if (!insideExpression) {
 
 						String replacementString = insideExpression ? name
-								: "\"" + name + "\"";						
+								: "\"" + name + "\"";
 						int replacementLength = contentAssistRequest
 								.getReplacementLength();
 						int cursorPosition = getCursorPositionForProposedText(replacementString);
