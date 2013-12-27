@@ -1,7 +1,6 @@
 package org.eclipse.angularjs.core.utils;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,7 +8,6 @@ import java.util.regex.Pattern;
 import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.w3c.dom.Attr;
@@ -24,7 +22,7 @@ import tern.server.protocol.angular.TernAngularScope;
 
 public class HTMLTernAngularHelper {
 
-	public static TernDoc createDoc(IDOMNode element, IFile file,
+	public static TernDoc createDoc(Node element, IFile file,
 			IDETernFileManager fileManager, TernAngularQuery query)
 			throws CoreException, IOException {
 
@@ -81,9 +79,9 @@ public class HTMLTernAngularHelper {
 					scope.setModule(module);
 					return;
 				case controller:
-					if (populateController && scope.getController() == null) {
+					if (populateController) {
 						String controller = ((Attr) node).getValue();
-						scope.setController(controller);
+						scope.addController(controller);
 					}
 					break;
 				case directiveRepeat:
@@ -122,7 +120,4 @@ public class HTMLTernAngularHelper {
 		}
 	}
 
-	public static void main(String[] args) {
-		populateScope(" a in firends ", new HashMap());
-	}
 }
