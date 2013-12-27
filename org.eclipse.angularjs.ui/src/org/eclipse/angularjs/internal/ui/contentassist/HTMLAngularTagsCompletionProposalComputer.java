@@ -45,9 +45,9 @@ import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.angular.AngularType;
 import tern.server.protocol.angular.TernAngularQuery;
+import tern.server.protocol.angular.completions.TernAngularCompletionItem;
 import tern.server.protocol.angular.completions.TernAngularCompletionsQuery;
 import tern.server.protocol.completions.ITernCompletionCollector;
-import tern.server.protocol.completions.TernCompletionItem;
 
 /**
  * Completion in HTML editor for :
@@ -174,12 +174,26 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 			TernDoc doc = HTMLTernAngularHelper.createDoc(element, file,
 					ternProject.getFileManager(), query);
+			final ITernServer ternServer = ternProject.getTernServer();
 
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
 				@Override
 				public void addProposal(String name, String type,
-						String origin, Object doc, int pos) {
+						String origin, Object doc, int pos, Object completion) {
+
+					String module = ternServer.getText(completion, "module");
+					String controller = ternServer.getText(completion,
+							"controller");
+					if (doc == null) {
+						if (module != null) {
+							StringBuilder s = new StringBuilder("");
+							s.append("<b>Module</b>:");
+							s.append(module);
+
+							doc = s.toString();
+						}
+					}
 
 					int replacementOffset = contentAssistRequest
 							.getReplacementBeginPosition();
@@ -193,12 +207,12 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 								.getReplacementLength();
 						int cursorPosition = getCursorPositionForProposedText(replacementString);
 
-						TernCompletionItem item = new TernCompletionItem(name,
-								type, origin);
+						TernAngularCompletionItem item = new TernAngularCompletionItem(
+								name, type, origin, module, controller);
 
 						String displayString = item.getText();
 						IContextInformation contextInformation = null;
-						String additionalProposalInfo = null;
+						String additionalProposalInfo = doc != null ? doc.toString() : null;
 						int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
 								: XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
 
@@ -215,8 +229,6 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 				}
 			};
-
-			ITernServer ternServer = ternProject.getTernServer();
 			ternServer.request(doc, collector);
 
 		} catch (Exception e) {
