@@ -264,10 +264,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			String match = documentRegion.getText().substring(2, length);
 
 			ContentAssistRequest contentAssistRequest = new ContentAssistRequest(
-					xmlnode, xmlnode.getParentNode(), documentRegion,
+					treeNode, treeNode.getParentNode(), documentRegion,
 					completionRegion, documentPosition, 0, match);
 
-			populateAngularProposals(contentAssistRequest, xmlnode,
+			populateAngularProposals(contentAssistRequest, treeNode,
 					AngularType.model, true);
 
 			return contentAssistRequest;
