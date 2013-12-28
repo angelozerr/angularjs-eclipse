@@ -186,11 +186,22 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					String controller = ternServer.getText(completion,
 							"controller");
 					if (doc == null) {
+						StringBuilder s = null;
 						if (module != null) {
-							StringBuilder s = new StringBuilder("");
+							s = new StringBuilder("");
 							s.append("<b>Module</b>:");
 							s.append(module);
-
+						}
+						if (controller != null) {
+							if (s == null) {
+								s = new StringBuilder("");
+							} else {
+								s.append("<br>");
+							}
+							s.append("<b>Controller</b>:");
+							s.append(controller);
+						}
+						if (s != null) {
 							doc = s.toString();
 						}
 					}
@@ -212,7 +223,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 						String displayString = item.getText();
 						IContextInformation contextInformation = null;
-						String additionalProposalInfo = doc != null ? doc.toString() : null;
+						String additionalProposalInfo = doc != null ? doc
+								.toString() : null;
 						int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
 								: XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
 
