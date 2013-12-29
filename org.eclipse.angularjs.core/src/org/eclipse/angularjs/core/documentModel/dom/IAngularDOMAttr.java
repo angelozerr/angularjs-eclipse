@@ -10,9 +10,10 @@
  *******************************************************************************/
 package org.eclipse.angularjs.core.documentModel.dom;
 
-import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.w3c.dom.Attr;
+
+import tern.angular.modules.Directive;
 
 /**
  * Angular DOM {@link Attr} API.

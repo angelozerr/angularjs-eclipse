@@ -1,7 +1,5 @@
 package org.eclipse.angularjs.internal.ui.validation;
 
-import org.eclipse.angularjs.core.modules.AngularModulesManager;
-import org.eclipse.angularjs.internal.core.documentModel.handler.AngularModelHandler;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.html.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
@@ -9,6 +7,8 @@ import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.w3c.dom.Node;
+
+import tern.angular.modules.AngularModulesManager;
 
 public class HTMLAngularValidationReporter extends HTMLValidationReporter {
 

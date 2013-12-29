@@ -5,7 +5,6 @@ import org.eclipse.angularjs.internal.ui.style.IStyleConstantsForAngular;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.html.ui.internal.preferences.HTMLUIPreferenceNames;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 
 public class PreferenceConstants {

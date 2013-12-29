@@ -18,8 +18,6 @@ import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
-import org.eclipse.angularjs.core.modules.AngularModulesManager;
-import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -45,6 +43,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import tern.angular.modules.AngularModulesManager;
+import tern.angular.modules.Directive;
 
 /**
  * Utilities for SSE DOM node {@link IDOMNode}.

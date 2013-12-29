@@ -13,11 +13,8 @@ package org.eclipse.angularjs.internal.ui.contentassist;
 import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.modules.AngularModulesManager;
-import org.eclipse.angularjs.core.modules.Directive;
-import org.eclipse.angularjs.core.modules.IDirectiveCollector;
+import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.utils.DOMUtils;
-import org.eclipse.angularjs.core.utils.HTMLTernAngularHelper;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
@@ -39,14 +36,18 @@ import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.w3c.dom.Element;
 
+import tern.angular.AngularType;
+import tern.angular.modules.AngularModulesManager;
+import tern.angular.modules.Directive;
+import tern.angular.modules.IDirectiveCollector;
+import tern.angular.protocol.HTMLTernAngularHelper;
+import tern.angular.protocol.TernAngularQuery;
+import tern.angular.protocol.completions.TernAngularCompletionItem;
+import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.jface.contentassist.TernCompletionProposal;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
-import tern.server.protocol.angular.AngularType;
-import tern.server.protocol.angular.TernAngularQuery;
-import tern.server.protocol.angular.completions.TernAngularCompletionItem;
-import tern.server.protocol.angular.completions.TernAngularCompletionsQuery;
 import tern.server.protocol.completions.ITernCompletionCollector;
 
 /**
@@ -172,7 +173,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 			final Image image = getImage(angularType);
 
-			TernDoc doc = HTMLTernAngularHelper.createDoc(element, file,
+			TernDoc doc = HTMLTernAngularHelper.createDoc(element, DOMSSEDirectiveProvider.getInstance(), file,
 					ternProject.getFileManager(), query);
 			final ITernServer ternServer = ternProject.getTernServer();
 

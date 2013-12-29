@@ -3,9 +3,8 @@ package org.eclipse.angularjs.internal.ui.hyperlink;
 import java.io.IOException;
 
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.modules.Directive;
+import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.utils.DOMUtils;
-import org.eclipse.angularjs.core.utils.HTMLTernAngularHelper;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -20,12 +19,14 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
 import tern.TernException;
+import tern.angular.AngularType;
+import tern.angular.modules.Directive;
+import tern.angular.protocol.HTMLTernAngularHelper;
+import tern.angular.protocol.TernAngularQuery;
+import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
-import tern.server.protocol.angular.AngularType;
-import tern.server.protocol.angular.TernAngularQuery;
-import tern.server.protocol.angular.definition.TernAngularDefinitionQuery;
 
 public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 
@@ -83,7 +84,8 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 		query.setExpression(attr.getValue());
 
 		TernDoc doc = HTMLTernAngularHelper.createDoc(
-				(IDOMNode) attr.getOwnerElement(), file,
+				(IDOMNode) attr.getOwnerElement(),
+				DOMSSEDirectiveProvider.getInstance(), file,
 				ternProject.getFileManager(), query);
 
 		ITernServer server = ternProject.getTernServer();

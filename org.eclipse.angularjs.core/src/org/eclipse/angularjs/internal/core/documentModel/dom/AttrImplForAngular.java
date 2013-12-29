@@ -11,12 +11,13 @@
 package org.eclipse.angularjs.internal.core.documentModel.dom;
 
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
-import org.eclipse.angularjs.core.modules.AngularModulesManager;
-import org.eclipse.angularjs.core.modules.Directive;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import tern.angular.modules.AngularModulesManager;
+import tern.angular.modules.Directive;
 
 /**
  * Represents attributes implementation in Angular dom model

@@ -8,9 +8,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.validation.internal.provisional.core.IMessage;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
-import tern.server.protocol.angular.AngularType;
+import tern.angular.AngularType;
 
 public class ValidatorUtils {
 

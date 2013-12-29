@@ -3,8 +3,6 @@ package org.eclipse.angularjs.internal.ui.editor.highlighter;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
-import org.eclipse.angularjs.core.modules.AngularModulesManager;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.preferences.PreferenceConstants;

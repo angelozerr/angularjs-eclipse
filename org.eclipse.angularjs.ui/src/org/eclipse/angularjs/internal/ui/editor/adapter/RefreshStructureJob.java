@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

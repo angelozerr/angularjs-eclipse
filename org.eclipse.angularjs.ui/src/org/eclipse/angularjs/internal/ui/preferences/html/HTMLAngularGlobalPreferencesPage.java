@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 
 public class HTMLAngularGlobalPreferencesPage extends PreferencePage implements IWorkbenchPreferencePage {
 

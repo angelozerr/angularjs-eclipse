@@ -21,7 +21,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractPreferencePage;
-import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 
 /**
  * HTML Angular Typing preferences page.

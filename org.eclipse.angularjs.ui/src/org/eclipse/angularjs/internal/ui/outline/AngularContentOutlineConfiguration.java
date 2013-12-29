@@ -1,14 +1,9 @@
 package org.eclipse.angularjs.internal.ui.outline;
 
-import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.wst.html.ui.views.contentoutline.HTMLContentOutlineConfiguration;
-import org.eclipse.wst.sse.core.StructuredModelManager;
-import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
-import org.eclipse.wst.sse.ui.StructuredTextEditor;
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeContentProvider;
 
 public class AngularContentOutlineConfiguration extends
