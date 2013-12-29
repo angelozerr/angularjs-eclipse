@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -44,7 +45,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
 
 /**
@@ -601,14 +601,7 @@ public class DOMUtils {
 	 *         otherwise.
 	 */
 	public static Directive getAngularDirective(Attr attr) {
-		if (attr == null) {
-			return null;
-		}
-		if ((attr instanceof IAngularDOMAttr)) {
-			return ((IAngularDOMAttr) attr).getAngularDirective();
-		}
-		return AngularModulesManager.getInstance().getDirective(
-				attr.getOwnerElement().getNodeName(), attr.getName());
+		return DOMSSEDirectiveProvider.getInstance().getAngularDirective(attr);
 	}
 
 	/**
