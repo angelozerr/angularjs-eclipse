@@ -45,6 +45,7 @@ import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.completions.TernAngularCompletionItem;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.jface.TernImagesRegistry;
 import tern.eclipse.jface.contentassist.TernCompletionProposal;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
@@ -173,7 +174,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 			final Image image = getImage(angularType);
 
-			TernDoc doc = HTMLTernAngularHelper.createDoc(element, DOMSSEDirectiveProvider.getInstance(), file,
+			TernDoc doc = HTMLTernAngularHelper.createDoc(element,
+					DOMSSEDirectiveProvider.getInstance(), file,
 					ternProject.getFileManager(), query);
 			final ITernServer ternServer = ternProject.getTernServer();
 
@@ -229,12 +231,15 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
 								: XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
 
+						Image img = image != null ? image : TernImagesRegistry
+								.getImage(item);
 						proposal = new MarkupCompletionProposal(
 								replacementString, replacementOffset,
-								replacementLength, cursorPosition, image,
+								replacementLength, cursorPosition, img,
 								displayString, contextInformation,
 								additionalProposalInfo, relevance);
 					} else {
+
 						proposal = new TernCompletionProposal(name, type,
 								origin, doc, pos, replacementOffset);
 					}
@@ -256,7 +261,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		case controller:
 			return ImageResource.getImage(ImageResource.IMG_CONTROLLER);
 		}
-		return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
+		return null;
 	}
 
 	@Override
