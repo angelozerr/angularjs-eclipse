@@ -41,12 +41,13 @@ public class DOMModelForAngular extends DOMStyleModelImpl {
 	protected XMLModelUpdater createModelUpdater() {
 		return new AngularDOMModelUpdater(this);
 	}
+
 	@Override
 	public IndexedRegion getIndexedRegion(int offset) {
 		IndexedRegion result = super.getIndexedRegion(offset);
-		if(result == null && offset == getDocument().getEndOffset()){
+		if (result == null && offset == getDocument().getEndOffset()) {
 			return (IDOMNode) getDocument().getLastChild();
 		}
-		return super.getIndexedRegion(offset);
+		return result;
 	}
 }

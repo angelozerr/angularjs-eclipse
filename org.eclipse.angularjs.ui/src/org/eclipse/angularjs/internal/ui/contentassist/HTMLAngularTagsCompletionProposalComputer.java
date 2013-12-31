@@ -32,9 +32,9 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
-import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import tern.angular.AngularType;
 import tern.angular.modules.AngularModulesManager;
@@ -42,11 +42,8 @@ import tern.angular.modules.Directive;
 import tern.angular.modules.IDirectiveCollector;
 import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
-import tern.angular.protocol.completions.TernAngularCompletionItem;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IDETernProject;
-import tern.eclipse.jface.TernImagesRegistry;
-import tern.eclipse.jface.contentassist.TernCompletionProposal;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.completions.ITernCompletionCollector;
@@ -131,117 +128,82 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 	protected void addAttributeValueProposals(
 			final ContentAssistRequest contentAssistRequest,
 			CompletionProposalInvocationContext context) {
+		// Check if project has angular nature
 		IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
 		if (DOMUtils.hasAngularNature(element)) {
-			// is Angular directive attribute?
+			// is angular directive attribute?
 			Directive directive = DOMUtils.getAngularDirective(element,
 					contentAssistRequest.getRegion());
 			AngularType angularType = directive != null ? directive.getType()
 					: null;
-			if (angularType == null) {
-				return;
+			if (angularType != null) {
+				if (angularType.equals(AngularType.unknown)
+						|| angularType.equals(AngularType.directiveRepeat))
+					angularType = AngularType.model;
+				int startIndex = contentAssistRequest.getMatchString()
+						.startsWith("\"") ? 1 : 0;
+				populateAngularProposals(contentAssistRequest, element,
+						angularType, startIndex);
+			} else {
+				// is angular expression inside attribute?
+				String matchingString = contentAssistRequest.getMatchString();
+				int index = matchingString.lastIndexOf("{{");
+				if (index != -1) {
+					populateAngularProposals(contentAssistRequest, element,
+							AngularType.model, index);
+				}
 			}
-			if (angularType.equals(AngularType.unknown)
-					|| angularType.equals(AngularType.directiveRepeat))
-				angularType = AngularType.model;
-			populateAngularProposals(contentAssistRequest, element,
-					angularType, false);
 		}
 		super.addAttributeValueProposals(contentAssistRequest, context);
 	}
 
 	private void populateAngularProposals(
 			final ContentAssistRequest contentAssistRequest, IDOMNode element,
-			AngularType angularType, final boolean insideExpression) {
+			final AngularType angularType, final Integer startIndex) {
 		IFile file = DOMUtils.getFile(element);
 		IProject eclipseProject = file.getProject();
 		try {
 			IDETernProject ternProject = AngularProject
 					.getTernProject(eclipseProject);
 
-			// Create query
+			// get the expression to use for Tern completion
+			String expression = getExpression(contentAssistRequest, startIndex);
+
+			final int replacementOffset = getReplacementOffset(
+					contentAssistRequest, angularType,
+					element.getNodeType() != Node.TEXT_NODE);
+
+			// Create Tern doc + query
 			TernAngularQuery query = new TernAngularCompletionsQuery(
 					angularType);
-			String startsWith = contentAssistRequest.getMatchString();
-			if (insideExpression) {
-
-			} else {
-				if (startsWith.startsWith("\"")) {
-					startsWith = startsWith.substring(1, startsWith.length());
-				}
-			}
-			query.setExpression(startsWith);
-
-			final Image image = getImage(angularType);
-
+			query.setExpression(expression);
 			TernDoc doc = HTMLTernAngularHelper.createDoc(element,
 					DOMSSEDirectiveProvider.getInstance(), file,
 					ternProject.getFileManager(), query);
-			final ITernServer ternServer = ternProject.getTernServer();
 
+			// Execute Tern completion
+			final ITernServer ternServer = ternProject.getTernServer();
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
 				@Override
 				public void addProposal(String name, String type,
 						String origin, Object doc, int pos, Object completion) {
 
-					String module = ternServer.getText(completion, "module");
-					String controller = ternServer.getText(completion,
-							"controller");
-					if (doc == null) {
-						StringBuilder s = null;
-						if (module != null) {
-							s = new StringBuilder("");
-							s.append("<b>Module</b>:");
-							s.append(module);
-						}
-						if (controller != null) {
-							if (s == null) {
-								s = new StringBuilder("");
-							} else {
-								s.append("<br>");
-							}
-							s.append("<b>Controller</b>:");
-							s.append(controller);
-						}
-						if (s != null) {
-							doc = s.toString();
-						}
-					}
-
-					int replacementOffset = contentAssistRequest
-							.getReplacementBeginPosition();
-
-					ICompletionProposal proposal = null;
-					if (!insideExpression) {
-
-						String replacementString = insideExpression ? name
-								: "\"" + name + "\"";
+					AngularCompletionProposal proposal = new AngularCompletionProposal(
+							name, type, origin, doc, pos, completion,
+							ternServer, angularType, replacementOffset);
+					if (isModuleOrController(angularType)) {
+						// in the case of "module", "controller" completion
+						// the value must replace the existing value.
+						String replacementString = "\"" + name + "\"";
 						int replacementLength = contentAssistRequest
 								.getReplacementLength();
 						int cursorPosition = getCursorPositionForProposedText(replacementString);
-
-						TernAngularCompletionItem item = new TernAngularCompletionItem(
-								name, type, origin, module, controller);
-
-						String displayString = item.getText();
-						IContextInformation contextInformation = null;
-						String additionalProposalInfo = doc != null ? doc
-								.toString() : null;
-						int relevance = insideExpression ? XMLRelevanceConstants.R_ENTITY
-								: XMLRelevanceConstants.R_XML_ATTRIBUTE_VALUE;
-
-						Image img = image != null ? image : TernImagesRegistry
-								.getImage(item);
-						proposal = new MarkupCompletionProposal(
-								replacementString, replacementOffset,
-								replacementLength, cursorPosition, img,
-								displayString, contextInformation,
-								additionalProposalInfo, relevance);
-					} else {
-
-						proposal = new TernCompletionProposal(name, type,
-								origin, doc, pos, replacementOffset);
+						proposal.setReplacementString(replacementString);
+						proposal.setReplacementLength(replacementLength);
+						proposal.setCursorPosition(cursorPosition - 2);
+						proposal.setReplacementOffset(replacementOffset);
+						proposal.setImage(getImage(angularType));
 					}
 					contentAssistRequest.addProposal(proposal);
 
@@ -254,14 +216,59 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		}
 	}
 
-	private Image getImage(AngularType angularType) {
-		switch (angularType) {
-		case module:
-			return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
-		case controller:
-			return ImageResource.getImage(ImageResource.IMG_CONTROLLER);
+	/**
+	 * Returns the expression to use for tern completion.
+	 * 
+	 * @param contentAssistRequest
+	 * @param startIndex
+	 * @return
+	 */
+	private String getExpression(ContentAssistRequest contentAssistRequest,
+			Integer startIndex) {
+		String expression = contentAssistRequest.getMatchString();
+		if (startIndex != null) {
+			// start index is not null , this case comes from when completion is
+			// done in attribute :
+			// 1) when completion is done inside an attribute <span
+			// ng-app="MyModu
+			// in this case the expression to use is 'MyModu' and not
+			// '"MyModu'
+			// 2) when completion is done inside an
+			// attribute which define {{
+			// ex : <span class="done-{{to
+			// in this case, the expression to use is 'to' and not
+			// '"done-{{to'
+			expression = expression.substring(startIndex, expression.length());
 		}
-		return null;
+		return expression;
+	}
+
+	/**
+	 * Returns the replacement offset.
+	 * 
+	 * @param contentAssistRequest
+	 * @param angularType
+	 * @param isAttr
+	 * @return
+	 */
+	private int getReplacementOffset(ContentAssistRequest contentAssistRequest,
+			AngularType angularType, boolean isAttr) {
+		int replacementOffset = contentAssistRequest
+				.getReplacementBeginPosition();
+		if (isAttr) {
+			// the completion is done in an attribute.
+			if (!isModuleOrController(angularType)) {
+				// getReplacementBeginPosition returns the position of the
+				// starts of the attribute value (or quote).
+				// in the case of attribute different from "module",
+				// "controller", the replacement offset must
+				// be the position where completion starts (ex : ng-model="todo.
+				// => the position should be after todo. and before.
+				replacementOffset += contentAssistRequest.getMatchString()
+						.length();
+			}
+		}
+		return replacementOffset;
 	}
 
 	@Override
@@ -273,25 +280,59 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_OPEN
 				|| regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
 
+			// completion for Angular expression {{}} insitde text node.
 			int documentPosition = context.getInvocationOffset();
 			IStructuredDocumentRegion documentRegion = ContentAssistUtils
 					.getStructuredDocumentRegion(context.getViewer(),
 							documentPosition);
 
 			int length = documentPosition - documentRegion.getStartOffset();
-			String match = documentRegion.getText().substring(2, length);
+			if (length > 1) {
+				// here we have {{
+				String match = documentRegion.getText().substring(2, length);
 
-			ContentAssistRequest contentAssistRequest = new ContentAssistRequest(
-					treeNode, treeNode.getParentNode(), documentRegion,
-					completionRegion, documentPosition, 0, match);
+				ContentAssistRequest contentAssistRequest = new ContentAssistRequest(
+						treeNode, treeNode.getParentNode(), documentRegion,
+						completionRegion, documentPosition, 0, match);
 
-			populateAngularProposals(contentAssistRequest, treeNode,
-					AngularType.model, true);
+				populateAngularProposals(contentAssistRequest, treeNode,
+						AngularType.model, null);
 
-			return contentAssistRequest;
+				return contentAssistRequest;
+			}
 		}
 		return super.computeCompletionProposals(matchString, completionRegion,
 				treeNode, xmlnode, context);
+	}
+
+	/**
+	 * Returns true if the given angular type is module or controller and false
+	 * otherwise.
+	 * 
+	 * @param angularType
+	 * @return
+	 */
+	private boolean isModuleOrController(final AngularType angularType) {
+		return angularType == AngularType.module
+				|| angularType == AngularType.controller;
+	}
+
+	/**
+	 * Returns the image to use for completion according to teh given angular
+	 * type.
+	 * 
+	 * @param angularType
+	 * @return
+	 */
+	private static Image getImage(AngularType angularType) {
+		switch (angularType) {
+		case module:
+			return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
+		case controller:
+			return ImageResource.getImage(ImageResource.IMG_CONTROLLER);
+		default:
+			return null;
+		}
 	}
 
 }
