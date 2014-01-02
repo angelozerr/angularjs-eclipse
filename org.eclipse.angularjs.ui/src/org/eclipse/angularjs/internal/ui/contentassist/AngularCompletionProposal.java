@@ -47,6 +47,7 @@ public class AngularCompletionProposal extends TernCompletionProposal {
 		if (s != null && doc != null) {
 			s.append("<br>");
 			s.append("<b>Documentation</b>:");
+			s.append("<br>");
 			s.append(doc);
 		}
 		return s != null ? s.toString() : doc;
