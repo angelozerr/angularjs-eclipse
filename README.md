@@ -26,7 +26,7 @@ You will see that AngularJS directive + EL are highlighted, completion is availa
 
 # Javascript Editor
 
-See [Tern Eclipse IDE](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE))
+See [Tern Eclipse IDE](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE).
 
 # Installation
 
