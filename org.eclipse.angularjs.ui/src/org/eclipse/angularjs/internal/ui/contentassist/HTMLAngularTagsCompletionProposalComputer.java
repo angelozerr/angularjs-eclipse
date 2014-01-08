@@ -30,6 +30,7 @@ import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
@@ -277,20 +278,41 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			IDOMNode treeNode, IDOMNode xmlnode,
 			CompletionProposalInvocationContext context) {
 		String regionType = completionRegion.getType();
+		boolean isXMLContent = (regionType == DOMRegionContext.XML_CONTENT);
 		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_OPEN
-				|| regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
+				|| regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT
+				|| (isXMLContent && DOMUtils.hasAngularNature(xmlnode))) {
 
-			// completion for Angular expression {{}} insitde text node.
+			// completion for Angular expression {{}} inside text node.
 			int documentPosition = context.getInvocationOffset();
 			IStructuredDocumentRegion documentRegion = ContentAssistUtils
 					.getStructuredDocumentRegion(context.getViewer(),
 							documentPosition);
 
+			String match = null;
 			int length = documentPosition - documentRegion.getStartOffset();
-			if (length > 1) {
-				// here we have {{
-				String match = documentRegion.getText().substring(2, length);
-
+			if (isXMLContent) {
+				// case for JSP
+				String text = documentRegion.getText().substring(0, length);
+				int startExprIndex = text.lastIndexOf("{{");
+				if (startExprIndex != -1) {
+					int endExprIndex = text.lastIndexOf("}}");
+					if (endExprIndex == -1 || endExprIndex < startExprIndex) {
+						// completion (for JSP) is done inside angular
+						// expression {{
+						match = text.substring(startExprIndex + 2,
+								text.length());
+					}
+				}
+			} else {
+				// case for HTML where regionType is an angular expression
+				// open/content.
+				if (length > 1) {
+					// here we have {{
+					match = documentRegion.getText().substring(2, length);
+				}
+			}
+			if (match != null) {
 				ContentAssistRequest contentAssistRequest = new ContentAssistRequest(
 						treeNode, treeNode.getParentNode(), documentRegion,
 						completionRegion, documentPosition, 0, match);
