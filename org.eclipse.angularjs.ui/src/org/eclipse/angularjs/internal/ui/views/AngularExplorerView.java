@@ -18,7 +18,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import tern.eclipse.ide.core.IDETernProject;
 
-public class AngularControllerView extends ViewPart implements
+public class AngularExplorerView extends ViewPart implements
 		ISelectionListener {
 
 	private IWorkbenchPart currentEditor;
@@ -66,8 +66,8 @@ public class AngularControllerView extends ViewPart implements
 		parent.setLayout(layout);
 
 		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
-		viewer.setContentProvider(new AngularControllerContentProvider(this));
-		viewer.setLabelProvider(new AngularControllerLabelProvider());
+		viewer.setContentProvider(new AngularExplorerContentProvider(this));
+		viewer.setLabelProvider(new AngularExplorerLabelProvider());
 
 		getSite().getWorkbenchWindow().getPartService()
 				.addPartListener(partListener);

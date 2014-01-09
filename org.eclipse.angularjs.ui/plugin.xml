@@ -311,10 +311,10 @@
           id="org.eclipse.angularjs.ui.views">
       </category>
       <view
-            name="%AngularControllerView.name"
-            icon="$nl$/icons/full/eview16/angularcontroller.png"
+            name="%AngularExplorerView.name"
+            icon="$nl$/icons/full/eview16/explorer.png"
             category="org.eclipse.angularjs.ui.views"
-            class="org.eclipse.angularjs.internal.ui.views.AngularControllerView"
+            class="org.eclipse.angularjs.internal.ui.views.AngularExplorerView"
             id="org.eclipse.angularjs.ui.views.AngularControllerView">
       </view>
    </extension>

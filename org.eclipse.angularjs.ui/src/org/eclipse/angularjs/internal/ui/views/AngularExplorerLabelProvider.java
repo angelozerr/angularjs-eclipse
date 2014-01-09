@@ -5,7 +5,7 @@ import org.eclipse.swt.graphics.Image;
 
 import tern.eclipse.ide.ui.viewers.TernScriptPathLabelProvider;
 
-public class AngularControllerLabelProvider extends TernScriptPathLabelProvider {
+public class AngularExplorerLabelProvider extends TernScriptPathLabelProvider {
 
 	@Override
 	public String getText(Object element) {

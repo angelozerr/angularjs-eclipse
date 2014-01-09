@@ -6,12 +6,12 @@ import java.util.List;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.viewers.TernScriptPathContentProvider;
 
-public class AngularControllerContentProvider extends
+public class AngularExplorerContentProvider extends
 		TernScriptPathContentProvider {
 
-	private final AngularControllerView view;
+	private final AngularExplorerView view;
 
-	public AngularControllerContentProvider(AngularControllerView view) {
+	public AngularExplorerContentProvider(AngularExplorerView view) {
 		this.view = view;
 	}
 
