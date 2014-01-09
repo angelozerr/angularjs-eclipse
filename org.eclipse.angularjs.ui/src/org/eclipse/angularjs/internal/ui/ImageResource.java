@@ -41,6 +41,7 @@ public class ImageResource {
 	public static final String IMG_ANGULARJS = "angularjs";
 	public static final String IMG_DIRECTIVE = "directive";
 	public static final String IMG_CONTROLLER = "controller";
+	public static final String IMG_FOLDER = "folder";
 
 	static {
 		try {
@@ -126,6 +127,7 @@ public class ImageResource {
 		registerImage(IMG_ANGULARJS, URL_OBJ + IMG_ANGULARJS + ".png");
 		registerImage(IMG_DIRECTIVE, URL_OBJ + IMG_DIRECTIVE + ".png");
 		registerImage(IMG_CONTROLLER, URL_OBJ + IMG_CONTROLLER + ".png");
+		registerImage(IMG_FOLDER, URL_OBJ + IMG_FOLDER + ".gif");
 
 	}
 

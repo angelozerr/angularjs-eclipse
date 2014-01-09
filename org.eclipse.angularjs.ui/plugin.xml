@@ -304,4 +304,19 @@
 		</hyperlinkDetector>		
    </extension>			  	
    
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+          name="%viewCategory.name"
+          id="org.eclipse.angularjs.ui.views">
+      </category>
+      <view
+            name="%AngularControllerView.name"
+            icon="$nl$/icons/full/eview16/angularcontroller.png"
+            category="org.eclipse.angularjs.ui.views"
+            class="org.eclipse.angularjs.internal.ui.views.AngularControllerView"
+            id="org.eclipse.angularjs.ui.views.AngularControllerView">
+      </view>
+   </extension>
+   
 </plugin>        

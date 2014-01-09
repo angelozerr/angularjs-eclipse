@@ -22,7 +22,8 @@ Require-Bundle: org.eclipse.ui,
  tern.eclipse.ide.core;bundle-version="1.0.0",
  tern.core;bundle-version="1.0.0",
  tern.eclipse;bundle-version="1.0.0",
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ tern.eclipse.ide.ui;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: org.json.simple
