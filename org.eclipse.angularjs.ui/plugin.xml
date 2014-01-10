@@ -315,7 +315,7 @@
             icon="$nl$/icons/full/eview16/explorer.png"
             category="org.eclipse.angularjs.ui.views"
             class="org.eclipse.angularjs.internal.ui.views.AngularExplorerView"
-            id="org.eclipse.angularjs.ui.views.AngularControllerView">
+            id="org.eclipse.angularjs.ui.views.AngularExplorerView">
       </view>
    </extension>
    

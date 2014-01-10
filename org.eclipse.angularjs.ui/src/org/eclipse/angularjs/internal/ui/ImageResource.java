@@ -36,12 +36,16 @@ public class ImageResource {
 	private static URL ICON_BASE_URL;
 
 	private static final String URL_OBJ = "full/obj16/";
+	private static final String ELCL_OBJ = "full/elcl16/";
 
 	// General Object Images
 	public static final String IMG_ANGULARJS = "angularjs";
 	public static final String IMG_DIRECTIVE = "directive";
 	public static final String IMG_CONTROLLER = "controller";
 	public static final String IMG_FOLDER = "folder";
+
+	public static final String IMG_ELCL_REFRESH = "refresh";
+	public static final String IMG_ELCL_GOTO_DEF = "goto_def";
 
 	static {
 		try {
@@ -128,6 +132,9 @@ public class ImageResource {
 		registerImage(IMG_DIRECTIVE, URL_OBJ + IMG_DIRECTIVE + ".png");
 		registerImage(IMG_CONTROLLER, URL_OBJ + IMG_CONTROLLER + ".png");
 		registerImage(IMG_FOLDER, URL_OBJ + IMG_FOLDER + ".gif");
+
+		registerImage(IMG_ELCL_REFRESH, ELCL_OBJ + IMG_ELCL_REFRESH + ".gif");
+		registerImage(IMG_ELCL_GOTO_DEF, ELCL_OBJ + IMG_ELCL_GOTO_DEF + ".gif");
 
 	}
 

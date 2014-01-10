@@ -40,6 +40,12 @@ public final class AngularUIMessages extends NLS {
 	// Validation
 	public static String Validation_AngularElementNotFound;
 
+	// Angular Explorer View
+	public static String RefreshExplorerAction_text;
+	public static String RefreshExplorerAction_tooltip;
+	public static String GoToDefinitionAction_text;
+	public static String GoToDefinitionAction_tooltip;
+
 	private AngularUIMessages() {
 	}
 
