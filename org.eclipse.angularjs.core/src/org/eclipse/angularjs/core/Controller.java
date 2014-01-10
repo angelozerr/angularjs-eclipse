@@ -1,14 +1,10 @@
-package org.eclipse.angularjs.internal.ui.views;
-
-import org.eclipse.angularjs.internal.ui.hyperlink.EditorUtils;
-import org.eclipse.core.resources.IFile;
+package org.eclipse.angularjs.core;
 
 import tern.angular.AngularType;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
-public class Controller extends BaseModel implements ITernDefinitionCollector,
-		IOpenableInEditor {
+public class Controller extends BaseModel implements IOpenableInEditor {
 
 	private final Module module;
 
@@ -21,21 +17,14 @@ public class Controller extends BaseModel implements ITernDefinitionCollector,
 		return module;
 	}
 
-	public void openInEditor() {
+	@Override
+	public void openInEditor(ITernDefinitionCollector collector) {
 		// load all controllers of the given module
 		TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
 				AngularType.controller);
 		query.getScope().setModule(getModule().getName());
 		query.setExpression(super.getName());
-		super.execute(query, this);
+		super.execute(query, collector);
 	}
 
-	@Override
-	public void setDefinition(String filename, Long start, Long end) {
-		IFile file = super.getProject().getFile(filename);
-		if (file.exists()) {
-			EditorUtils.openInEditor(file, start.intValue(), end.intValue()
-					- start.intValue(), true);
-		}
-	}
 }

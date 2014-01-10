@@ -1,4 +1,4 @@
-package org.eclipse.angularjs.internal.ui.views;
+package org.eclipse.angularjs.core;
 
 import java.io.IOException;
 

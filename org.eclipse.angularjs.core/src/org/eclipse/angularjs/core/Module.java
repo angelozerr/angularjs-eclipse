@@ -1,10 +1,7 @@
-package org.eclipse.angularjs.internal.ui.views;
+package org.eclipse.angularjs.core;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.angularjs.internal.ui.hyperlink.EditorUtils;
-import org.eclipse.core.resources.IFile;
 
 import tern.angular.AngularType;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
@@ -14,23 +11,24 @@ import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
 public class Module extends BaseModel implements ITernCompletionCollector,
-		ITernDefinitionCollector, IOpenableInEditor {
+		IOpenableInEditor {
 
-	private final List<Controller> controllers;
+	private List<Controller> controllers;
 
 	public Module(String name, ITernScriptPath scriptPath) {
 		super(name, Type.Module, scriptPath);
-		this.controllers = new ArrayList<Controller>();
 	}
 
 	public Object[] getControllers() {
-		this.controllers.clear();
-		// load all controllers of the given module
-		TernAngularCompletionsQuery query = new TernAngularCompletionsQuery(
-				AngularType.controller);
-		query.getScope().setModule(super.getName());
-		query.setExpression("");
-		super.execute(query, this);
+		if (controllers == null) {
+			this.controllers = new ArrayList<Controller>();
+			// load all controllers of the given module
+			TernAngularCompletionsQuery query = new TernAngularCompletionsQuery(
+					AngularType.controller);
+			query.getScope().setModule(super.getName());
+			query.setExpression("");
+			super.execute(query, this);
+		}
 		return controllers.toArray();
 	}
 
@@ -40,20 +38,12 @@ public class Module extends BaseModel implements ITernCompletionCollector,
 		controllers.add(new Controller(name, Module.this));
 	}
 
-	public void openInEditor() {
+	@Override
+	public void openInEditor(ITernDefinitionCollector collector) {
 		// load all controllers of the given module
 		TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
 				AngularType.module);
 		query.setExpression(super.getName());
-		super.execute(query, this);
-	}
-
-	@Override
-	public void setDefinition(String filename, Long start, Long end) {
-		IFile file = super.getProject().getFile(filename);
-		if (file.exists()) {
-			EditorUtils.openInEditor(file, start.intValue(), end.intValue()
-					- start.intValue(), true);
-		}
+		super.execute(query, collector);
 	}
 }

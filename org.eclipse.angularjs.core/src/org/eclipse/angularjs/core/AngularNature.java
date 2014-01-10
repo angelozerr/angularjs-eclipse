@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
 import tern.TernProject;
+import tern.server.TernDef;
 import tern.server.TernPlugin;
 
 public class AngularNature implements IProjectNature {
@@ -22,6 +23,9 @@ public class AngularNature implements IProjectNature {
 		// Add "angular" plugin
 		TernProject ternProject = AngularProject.getTernProject(project);
 		ternProject.addPlugin(TernPlugin.angular);
+		// Add "browser" + "ecma5" JSON Type Def
+		ternProject.addLib(TernDef.browser.name());
+		ternProject.addLib(TernDef.ecma5.name());
 		try {
 			ternProject.save();
 		} catch (IOException e) {

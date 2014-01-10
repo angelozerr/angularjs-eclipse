@@ -1,4 +1,4 @@
-package org.eclipse.angularjs.internal.ui.views;
+package org.eclipse.angularjs.core;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,20 +11,21 @@ import tern.server.protocol.completions.ITernCompletionCollector;
 public class ModulesFolder extends BaseModel implements
 		ITernCompletionCollector {
 
-	private final List<Module> modules;
+	private List<Module> modules;
 
 	public ModulesFolder(ITernScriptPath scriptPath) {
 		super("modules", Type.ModulesFolder, scriptPath);
-		modules = new ArrayList<Module>();
 	}
 
 	public Object[] getModules() {
-		modules.clear();
-		// load all modules
-		TernAngularCompletionsQuery query = new TernAngularCompletionsQuery(
-				AngularType.module);
-		query.setExpression("");
-		super.execute(query, this);
+		if (modules == null) {
+			modules = new ArrayList<Module>();
+			// load all modules
+			TernAngularCompletionsQuery query = new TernAngularCompletionsQuery(
+					AngularType.module);
+			query.setExpression("");
+			super.execute(query, this);
+		}
 		return modules.toArray();
 	}
 

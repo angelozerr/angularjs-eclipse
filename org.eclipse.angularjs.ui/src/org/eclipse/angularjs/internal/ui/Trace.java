@@ -1,12 +1,12 @@
 /*******************************************************************************
- * Copyright (c) 2003, 2007 IBM Corporation and others.
+ * Copyright (c) 2013 Angelo ZERR.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *    IBM Corporation - Initial API and implementation
+ * 
+ * Contributors:      
+ *     Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  *******************************************************************************/
 package org.eclipse.angularjs.internal.ui;
 
@@ -74,14 +74,14 @@ public class Trace {
 			return;
 
 		if (level == SEVERE) {
-		//	if (!logged.contains(s)) {
-				AngularUIPlugin
-						.getDefault()
-						.getLog()
-						.log(new Status(IStatus.ERROR,
-								AngularUIPlugin.PLUGIN_ID, s, t));
-			//	logged.add(s);
-			//}
+			// if (!logged.contains(s)) {
+			AngularUIPlugin
+					.getDefault()
+					.getLog()
+					.log(new Status(IStatus.ERROR, AngularUIPlugin.PLUGIN_ID,
+							s, t));
+			// logged.add(s);
+			// }
 		}
 
 		if (!AngularUIPlugin.getDefault().isDebugging())
