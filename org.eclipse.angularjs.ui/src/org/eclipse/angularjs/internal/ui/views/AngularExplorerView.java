@@ -216,8 +216,8 @@ public class AngularExplorerView extends ViewPart implements
 		if (part.equals(this) || part.equals(currentEditor))
 			return;
 		currentEditor = part;
-		currentResource = null;
 		if (part != null && part instanceof IEditorPart) {
+			currentResource = null;
 			Object sel = ((IEditorPart) part).getEditorInput();
 			if (sel instanceof IAdaptable) {
 				IResource resource = (IResource) ((IAdaptable) sel)

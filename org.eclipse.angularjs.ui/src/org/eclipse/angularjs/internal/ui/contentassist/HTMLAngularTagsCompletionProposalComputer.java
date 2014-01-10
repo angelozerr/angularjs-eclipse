@@ -15,6 +15,8 @@ import java.util.List;
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.utils.DOMUtils;
+import org.eclipse.angularjs.core.utils.PersistentUtils;
+import org.eclipse.angularjs.core.utils.PersistentUtils.ControllerInfo;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
@@ -34,6 +36,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
+import org.json.simple.JSONArray;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -45,6 +48,7 @@ import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.scriptpath.IPageScriptPath;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.completions.ITernCompletionCollector;
@@ -181,6 +185,28 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			TernDoc doc = HTMLTernAngularHelper.createDoc(element,
 					DOMSSEDirectiveProvider.getInstance(), file,
 					ternProject.getFileManager(), query);
+			if (angularType != AngularType.module
+					&& angularType != AngularType.controller) {
+				// Check if query has controller defined.
+				if (!query.hasControllers()) {
+					// check if HTML file is linked to controller
+					ControllerInfo info = PersistentUtils
+							.getControllerInfo(file);
+					if (info != null) {
+
+						JSONArray files = query.getFiles();
+						ternProject.getFileManager().updateFiles(
+								((IPageScriptPath) info.getScriptPath())
+										.getDocument().getDocumentElement(),
+								(IFile) info.getScriptPath().getResource(),
+								doc, files);
+
+						query.getScope().setModule(info.getModule());
+						query.getScope().getControllers()
+								.add(info.getController());
+					}
+				}
+			}
 
 			// Execute Tern completion
 			final ITernServer ternServer = ternProject.getTernServer();
