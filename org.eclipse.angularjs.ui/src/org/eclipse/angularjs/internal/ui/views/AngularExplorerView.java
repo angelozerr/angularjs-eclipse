@@ -1,5 +1,9 @@
 package org.eclipse.angularjs.internal.ui.views;
 
+import org.eclipse.angularjs.internal.ui.views.actions.GoToDefinitionAction;
+import org.eclipse.angularjs.internal.ui.views.actions.LinkToControllerAction;
+import org.eclipse.angularjs.internal.ui.views.actions.RefreshExplorerAction;
+import org.eclipse.angularjs.internal.ui.views.actions.UnLinkToControllerAction;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -34,8 +38,10 @@ public class AngularExplorerView extends ViewPart implements ISelectionListener 
 	private IDETernProject currentTernProject;
 	private TreeViewer viewer;
 
-	private RefreshExplorerAction refreshAction;
+	private LinkToControllerAction linkAction;
+	private UnLinkToControllerAction unLinkAction;
 	private GoToDefinitionAction openAction;
+	private RefreshExplorerAction refreshAction;
 
 	private IPartListener2 partListener = new IPartListener2() {
 		public void partVisible(IWorkbenchPartReference ref) {
@@ -111,11 +117,13 @@ public class AngularExplorerView extends ViewPart implements ISelectionListener 
 
 		getSite().getWorkbenchWindow().getPartService()
 				.addPartListener(partListener);
-		
+
 		updateEnabledActions();
 	}
 
 	private void updateEnabledActions() {
+		this.linkAction.setEnabled(false);
+		this.unLinkAction.setEnabled(false);
 		this.openAction.setEnabled(false);
 		IStructuredSelection selection = (IStructuredSelection) viewer
 				.getSelection();
@@ -129,6 +137,11 @@ public class AngularExplorerView extends ViewPart implements ISelectionListener 
 	public void registerActions() {
 		IToolBarManager manager = getViewSite().getActionBars()
 				.getToolBarManager();
+
+		this.linkAction = new LinkToControllerAction(viewer);
+		manager.add(linkAction);
+		this.unLinkAction = new UnLinkToControllerAction(viewer);
+		manager.add(unLinkAction);
 
 		this.openAction = new GoToDefinitionAction(viewer);
 		manager.add(openAction);

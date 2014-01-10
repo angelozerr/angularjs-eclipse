@@ -46,6 +46,8 @@ public class ImageResource {
 
 	public static final String IMG_ELCL_REFRESH = "refresh";
 	public static final String IMG_ELCL_GOTO_DEF = "goto_def";
+	public static final String IMG_ELCL_LINK_TO_CTRL = "link_to_ctrl";
+	public static final String IMG_ELCL_UNLINK_TO_CTRL = "unlink_to_ctrl";
 
 	static {
 		try {
@@ -135,7 +137,10 @@ public class ImageResource {
 
 		registerImage(IMG_ELCL_REFRESH, ELCL_OBJ + IMG_ELCL_REFRESH + ".gif");
 		registerImage(IMG_ELCL_GOTO_DEF, ELCL_OBJ + IMG_ELCL_GOTO_DEF + ".gif");
-
+		registerImage(IMG_ELCL_LINK_TO_CTRL, ELCL_OBJ + IMG_ELCL_LINK_TO_CTRL
+				+ ".gif");
+		registerImage(IMG_ELCL_UNLINK_TO_CTRL, ELCL_OBJ
+				+ IMG_ELCL_UNLINK_TO_CTRL + ".gif");
 	}
 
 	/**

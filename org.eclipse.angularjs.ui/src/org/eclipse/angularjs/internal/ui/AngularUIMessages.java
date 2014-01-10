@@ -45,6 +45,10 @@ public final class AngularUIMessages extends NLS {
 	public static String RefreshExplorerAction_tooltip;
 	public static String GoToDefinitionAction_text;
 	public static String GoToDefinitionAction_tooltip;
+	public static String LinkToControllerAction_text;
+	public static String LinkToControllerAction_tooltip;
+	public static String UnLinkToControllerAction_text;
+	public static String UnLinkToControllerAction_tooltip;
 
 	private AngularUIMessages() {
 	}

@@ -1,4 +1,4 @@
-package org.eclipse.angularjs.internal.ui.views;
+package org.eclipse.angularjs.internal.ui.views.actions;
 
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.ImageResource;

@@ -1,7 +1,8 @@
-package org.eclipse.angularjs.internal.ui.views;
+package org.eclipse.angularjs.internal.ui.views.actions;
 
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.ImageResource;
+import org.eclipse.angularjs.internal.ui.views.IOpenableInEditor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
