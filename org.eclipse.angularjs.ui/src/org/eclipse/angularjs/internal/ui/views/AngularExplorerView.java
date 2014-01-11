@@ -40,6 +40,8 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.part.ViewPart;
 
 import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.scriptpath.IPageScriptPath;
+import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
 public class AngularExplorerView extends ViewPart implements
@@ -116,13 +118,9 @@ public class AngularExplorerView extends ViewPart implements
 				Tree tree = (Tree) e.getSource();
 				if (tree.getSelectionCount() > 0) {
 					Object firstSelection = tree.getSelection()[0].getData();
-					if (firstSelection instanceof IOpenableInEditor) {
-						((IOpenableInEditor) firstSelection)
-								.openInEditor(AngularExplorerView.this);
-					}
+					tryOpenInEditor(firstSelection);
 				}
 			}
-
 		});
 
 		registerActions();
@@ -132,6 +130,17 @@ public class AngularExplorerView extends ViewPart implements
 				.addPartListener(partListener);
 
 		updateEnabledActions();
+	}
+
+	/**
+	 * Open the file in an editor if file exists.
+	 * 
+	 * @param file
+	 */
+	private void tryToOpenFile(IFile file) {
+		if (file.exists()) {
+			EditorUtils.openInEditor(file, 0, 0, true);
+		}
 	}
 
 	/**
@@ -148,7 +157,9 @@ public class AngularExplorerView extends ViewPart implements
 			// Open action (Go To Definition available if teh selected element
 			// can be opened in a editor).
 			this.openAction
-					.setEnabled(firstSelection instanceof IOpenableInEditor);
+					.setEnabled(firstSelection instanceof IPageScriptPath
+							/*|| firstSelection instanceof String*/
+							|| firstSelection instanceof IOpenableInEditor);
 			// Link/Unlink actions
 			if (firstSelection instanceof Controller) {
 				// The selected element is a controller.
@@ -298,5 +309,25 @@ public class AngularExplorerView extends ViewPart implements
 	public void updateEnabledLinkActions(boolean isLinked) {
 		this.linkAction.setEnabled(!isLinked);
 		this.unLinkAction.setEnabled(isLinked);
+	}
+
+	public void tryOpenInEditor(Object firstSelection) {
+		if (firstSelection instanceof ITernScriptPath) {
+			ITernScriptPath scriptPath = (ITernScriptPath) firstSelection;
+			IResource resource = scriptPath.getResource();
+			if (resource.getType() == IResource.FILE) {
+				tryToOpenFile((IFile) resource);
+			}
+		} 
+		/*else if (firstSelection instanceof String) {
+			// file path, try to open it
+			String path = (String) firstSelection;
+			IFile file = getCurrentTernProject().getProject()
+					.getFile(path);
+			tryToOpenFile(file);
+		} */else if (firstSelection instanceof IOpenableInEditor) {
+			((IOpenableInEditor) firstSelection)
+					.openInEditor(AngularExplorerView.this);
+		}
 	}
 }
