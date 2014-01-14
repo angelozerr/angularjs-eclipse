@@ -12,14 +12,14 @@
    <feature url="features/tern-feature_1.0.0.qualifier.jar" id="tern-feature" version="1.0.0.qualifier">
       <category name="Tern"/>
    </feature>
+   <feature url="features/tern-jsdt-feature_1.0.0.qualifier.jar" id="tern-jsdt-feature" version="1.0.0.qualifier">
+      <category name="Tern - JSDT"/>
+   </feature>
    <bundle id="org.eclipse.angularjs.core" version="1.0.0.qualifier">
       <category name="AngularJS"/>
    </bundle>
    <bundle id="org.eclipse.angularjs.ui" version="1.0.0.qualifier">
       <category name="AngularJS"/>
-   </bundle>
-   <bundle id="tern.eclipse.ide.jsdt" version="1.0.0.qualifier">
-      <category name="Tern - JSDT"/>
    </bundle>
    <bundle id="tern.server.rhino" version="1.0.0.qualifier">
       <category name="Tern server - Rhino"/>
