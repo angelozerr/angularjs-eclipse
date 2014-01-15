@@ -15,26 +15,17 @@
    <feature url="features/tern-jsdt-feature_1.0.0.qualifier.jar" id="tern-jsdt-feature" version="1.0.0.qualifier">
       <category name="Tern - JSDT"/>
    </feature>
+   <feature url="features/tern-server-rhino-feature_1.0.0.qualifier.jar" id="tern-server-rhino-feature" version="1.0.0.qualifier">
+      <category name="Tern server - Rhino"/>
+   </feature>
+   <feature url="features/tern-server-nodejs-feature_1.0.0.qualifier.jar" id="tern-server-nodejs-feature" version="1.0.0.qualifier">
+      <category name="Tern server - Node.js"/>
+   </feature>
    <bundle id="org.eclipse.angularjs.core" version="1.0.0.qualifier">
       <category name="AngularJS"/>
    </bundle>
    <bundle id="org.eclipse.angularjs.ui" version="1.0.0.qualifier">
       <category name="AngularJS"/>
-   </bundle>
-   <bundle id="tern.server.rhino" version="1.0.0.qualifier">
-      <category name="Tern server - Rhino"/>
-   </bundle>
-   <bundle id="tern.eclipse.ide.server.rhino.core" version="1.0.0.qualifier">
-      <category name="Tern server - Rhino"/>
-   </bundle>
-   <bundle id="tern.server.nodejs" version="1.0.0.qualifier">
-      <category name="Tern server - Node.js"/>
-   </bundle>
-   <bundle id="tern.eclipse.ide.server.nodejs.core" version="1.0.0.qualifier">
-      <category name="Tern server - Node.js"/>
-   </bundle>
-   <bundle id="tern.eclipse.ide.server.nodejs.ui" version="1.0.0.qualifier">
-      <category name="Tern server - Node.js"/>
    </bundle>
    <category-def name="AngularJS" label="AngularJS  Eclipse Tooling"/>
    <category-def name="Tern" label="Tern">
