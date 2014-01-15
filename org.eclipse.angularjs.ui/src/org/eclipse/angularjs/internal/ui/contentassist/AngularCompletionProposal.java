@@ -1,5 +1,7 @@
 package org.eclipse.angularjs.internal.ui.contentassist;
 
+import org.eclipse.angularjs.core.utils.StringUtils;
+
 import tern.angular.AngularType;
 import tern.eclipse.jface.contentassist.TernCompletionProposal;
 import tern.server.ITernServer;
@@ -43,13 +45,23 @@ public class AngularCompletionProposal extends TernCompletionProposal {
 			s.append("<b>Controller</b>:");
 			s.append(controller);
 		}
+		String origin = super.getOrigin();
+		if (!StringUtils.isEmpty(origin)) {
+			if (s == null) {
+				s = new StringBuilder("");
+			} else {
+				s.append("<br>");
+			}
+			s.append("<b>Origin</b>:");
+			s.append(origin);
+		}
 		String doc = super.getAdditionalProposalInfo();
 		if (s != null && doc != null) {
 			s.append("<br>");
 			s.append("<b>Documentation</b>:");
 			s.append("<br>");
 			s.append(doc);
-		}
+		}		
 		return s != null ? s.toString() : doc;
 	}
 
