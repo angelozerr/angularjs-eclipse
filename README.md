@@ -37,6 +37,8 @@ See [Tern Eclipse IDE](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse
 
 # Installation
 
+AngularJS Eclipse is developped with Eclipse Kepler. It is adwiced to use Kepler (even if AngularJS Eclipse could work with older version of Eclipse).
+
 If you wish to test the snapshot version of AngularJS Eclipse, you can install it with the Eclipse Update site 
 http://oss.opensagres.fr/angularjs-eclipse/1.0.0-SNAPSHOT/ but it's not an official release.
 
