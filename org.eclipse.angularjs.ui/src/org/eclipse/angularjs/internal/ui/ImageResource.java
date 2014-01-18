@@ -40,6 +40,7 @@ public class ImageResource {
 
 	// General Object Images
 	public static final String IMG_ANGULARJS = "angularjs";
+	public static final String IMG_ANGULARJS_CHECKED = "angularjs_checked";
 	public static final String IMG_DIRECTIVE = "directive";
 	public static final String IMG_CONTROLLER = "controller";
 	public static final String IMG_CONTROLLER_CHECKED = "controller_checked";
@@ -132,6 +133,8 @@ public class ImageResource {
 
 		// load general object images
 		registerImage(IMG_ANGULARJS, URL_OBJ + IMG_ANGULARJS + ".png");
+		registerImage(IMG_ANGULARJS_CHECKED, URL_OBJ + IMG_ANGULARJS_CHECKED
+				+ ".png");
 		registerImage(IMG_DIRECTIVE, URL_OBJ + IMG_DIRECTIVE + ".png");
 		registerImage(IMG_CONTROLLER, URL_OBJ + IMG_CONTROLLER + ".png");
 		registerImage(IMG_CONTROLLER_CHECKED, URL_OBJ + IMG_CONTROLLER_CHECKED

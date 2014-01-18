@@ -11,8 +11,8 @@
 package org.eclipse.angularjs.internal.ui.views.actions;
 
 import org.eclipse.angularjs.core.Controller;
-import org.eclipse.angularjs.core.utils.PersistentUtils;
-import org.eclipse.angularjs.core.utils.PersistentUtils.ControllerInfo;
+import org.eclipse.angularjs.core.Module;
+import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.views.AngularExplorerView;
@@ -44,19 +44,27 @@ public class LinkToControllerAction extends Action {
 			IStructuredSelection selection = (IStructuredSelection) explorer
 					.getViewer().getSelection();
 			if (!selection.isEmpty()) {
+				Module module = null;
+				Controller controller = null;
+				String elementId = null;
 				Object firstSelection = selection.getFirstElement();
-				if (firstSelection instanceof Controller) {
-					Controller controller = (Controller) firstSelection;
+				if (firstSelection instanceof Module) {
+					module = (Module) firstSelection;
+				} else if (firstSelection instanceof Controller) {
+					controller = (Controller) firstSelection;
+					module = controller.getModule();
+				}
+				if (module != null) {
 					try {
-						PersistentUtils.setController(controller
-								.getScriptPath(), controller.getModule()
-								.getName(), controller.getName(), resource);
+						AngularLinkHelper.setController(module.getScriptPath(),
+								module.getName(),
+								controller != null ? controller.getName()
+										: null, resource, elementId);
 						explorer.updateEnabledLinkActions(true);
 						explorer.refreshTree(true);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-
 				}
 			}
 		}

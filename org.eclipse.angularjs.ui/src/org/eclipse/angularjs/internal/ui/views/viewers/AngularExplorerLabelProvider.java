@@ -12,7 +12,8 @@ package org.eclipse.angularjs.internal.ui.views.viewers;
 
 import org.eclipse.angularjs.core.BaseModel;
 import org.eclipse.angularjs.core.Controller;
-import org.eclipse.angularjs.core.utils.PersistentUtils;
+import org.eclipse.angularjs.core.Module;
+import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.views.AngularExplorerView;
 import org.eclipse.core.resources.IResource;
@@ -43,17 +44,25 @@ public class AngularExplorerLabelProvider extends TernScriptPathLabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof BaseModel) {
+			IResource resource = view.getCurrentResource();
 			switch (((BaseModel) element).getType()) {
 			case Module:
+				Module module = (Module) element;
+				if (resource != null
+						&& AngularLinkHelper.isSameController(resource,
+								module.getScriptPath(), module.getName(), null,
+								null)) {
+					return ImageResource
+							.getImage(ImageResource.IMG_ANGULARJS_CHECKED);
+				}
 				return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
 			case Controller:
 				Controller controller = (Controller) element;
-				IResource resource = view.getCurrentResource();
 				if (resource != null
-						&& PersistentUtils.isSameController(resource,
+						&& AngularLinkHelper.isSameController(resource,
 								controller.getScriptPath(), controller
 										.getModule().getName(), controller
-										.getName())) {
+										.getName(), null)) {
 					return ImageResource
 							.getImage(ImageResource.IMG_CONTROLLER_CHECKED);
 				}

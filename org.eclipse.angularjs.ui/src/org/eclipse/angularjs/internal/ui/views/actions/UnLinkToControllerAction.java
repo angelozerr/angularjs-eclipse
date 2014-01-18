@@ -11,7 +11,8 @@
 package org.eclipse.angularjs.internal.ui.views.actions;
 
 import org.eclipse.angularjs.core.Controller;
-import org.eclipse.angularjs.core.utils.PersistentUtils;
+import org.eclipse.angularjs.core.Module;
+import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.views.AngularExplorerView;
@@ -45,12 +46,25 @@ public class UnLinkToControllerAction extends Action {
 					.getViewer().getSelection();
 			if (!selection.isEmpty()) {
 				Object firstSelection = selection.getFirstElement();
-				if (firstSelection instanceof Controller) {
+
+				Module module = null;
+				Controller controller = null;
+				String elementId = null;
+				if (firstSelection instanceof Module) {
+					module = (Module) firstSelection;
+				} else if (firstSelection instanceof Controller) {
+					controller = (Controller) firstSelection;
+					module = controller.getModule();
+				}
+				if (module != null) {
 					try {
-						PersistentUtils.removeController(resource);
-						explorer.updateEnabledLinkActions(false);
+						AngularLinkHelper.removeController(resource, module
+								.getScriptPath(), module.getName(),
+								controller != null ? controller.getName()
+										: null, elementId);
+						explorer.updateEnabledLinkActions(true);
 						explorer.refreshTree(true);
-					} catch (CoreException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}

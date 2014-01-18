@@ -21,9 +21,11 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.angularjs.internal.core.AngularCorePlugin
 Export-Package: org.eclipse.angularjs.core,
  org.eclipse.angularjs.core.documentModel.dom,
+ org.eclipse.angularjs.core.link,
  org.eclipse.angularjs.core.utils,
  org.eclipse.angularjs.internal.core.documentModel.handler,
  org.eclipse.angularjs.internal.core.documentModel.parser;x-friends:="org.eclipse.angularjs.core.tests",
  org.eclipse.angularjs.internal.core.documentModel.partitioner,
  org.eclipse.angularjs.internal.core.documentModel.provisional.contenttype
-Import-Package: org.json.simple;version="1.1.1"
+Import-Package: org.json.simple;version="1.1.1",
+ org.json.simple.parser;version="1.1.1"

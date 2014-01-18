@@ -14,9 +14,11 @@ import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
+import org.eclipse.angularjs.core.link.AngularLink;
+import org.eclipse.angularjs.core.link.AngularLinkHelper;
+import org.eclipse.angularjs.core.link.AngularLinkResource;
 import org.eclipse.angularjs.core.utils.DOMUtils;
-import org.eclipse.angularjs.core.utils.PersistentUtils;
-import org.eclipse.angularjs.core.utils.PersistentUtils.ControllerInfo;
+import org.eclipse.angularjs.core.utils.StringUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
@@ -190,20 +192,31 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				// Check if query has controller defined.
 				if (!query.hasControllers()) {
 					// check if HTML file is linked to controller
-					ControllerInfo info = PersistentUtils
+					AngularLinkResource info = AngularLinkHelper
 							.getControllerInfo(file);
 					if (info != null) {
-
 						JSONArray files = query.getFiles();
-						ternProject.getFileManager().updateFiles(
-								((IPageScriptPath) info.getScriptPath())
-										.getDocument().getDocumentElement(),
-								(IFile) info.getScriptPath().getResource(),
-								doc, files);
+						AngularLink resourceLink = info.getResourceLink();
+						if (resourceLink != null) {
+							ternProject
+									.getFileManager()
+									.updateFiles(
+											((IPageScriptPath) resourceLink
+													.getScriptPath())
+													.getDocument()
+													.getDocumentElement(),
+											(IFile) resourceLink
+													.getScriptPath()
+													.getResource(), doc, files);
 
-						query.getScope().setModule(info.getModule());
-						query.getScope().getControllers()
-								.add(info.getController());
+							query.getScope()
+									.setModule(resourceLink.getModule());
+							if (!StringUtils.isEmpty(resourceLink
+									.getController())) {
+								query.getScope().getControllers()
+										.add(resourceLink.getController());
+							}
+						}
 					}
 				}
 			}

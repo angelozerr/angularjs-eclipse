@@ -3,7 +3,8 @@ package org.eclipse.angularjs.internal.ui.views;
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.Controller;
 import org.eclipse.angularjs.core.IOpenableInEditor;
-import org.eclipse.angularjs.core.utils.PersistentUtils;
+import org.eclipse.angularjs.core.Module;
+import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.hyperlink.EditorUtils;
 import org.eclipse.angularjs.internal.ui.views.actions.GoToDefinitionAction;
 import org.eclipse.angularjs.internal.ui.views.actions.LinkToControllerAction;
@@ -158,20 +159,24 @@ public class AngularExplorerView extends ViewPart implements
 			// can be opened in a editor).
 			this.openAction
 					.setEnabled(firstSelection instanceof IPageScriptPath
-							/*|| firstSelection instanceof String*/
-							|| firstSelection instanceof IOpenableInEditor);
+					/* || firstSelection instanceof String */
+					|| firstSelection instanceof IOpenableInEditor);
 			// Link/Unlink actions
-			if (firstSelection instanceof Controller) {
-				// The selected element is a controller.
-				IResource resource = getCurrentResource();
-				if (resource != null) {
-					Controller controller = (Controller) firstSelection;
-					boolean isLinked = PersistentUtils.isSameController(
-							resource, controller.getScriptPath(), controller
-									.getModule().getName(), controller
-									.getName());
-					updateEnabledLinkActions(isLinked);
-				}
+			Module module = null;
+			Controller controller = null;
+			String elementId = null;
+			if (firstSelection instanceof Module) {
+				module = (Module) firstSelection;
+			} else if (firstSelection instanceof Controller) {
+				controller = (Controller) firstSelection;
+				module = controller.getModule();
+			} // The selected element is a controller.
+			IResource resource = getCurrentResource();
+			if (resource != null && module != null) {
+				boolean isLinked = AngularLinkHelper.isSameController(resource,
+						module.getScriptPath(), module.getName(),
+						controller != null ? controller.getName() : null, null);
+				updateEnabledLinkActions(isLinked);
 			}
 		}
 	}
@@ -318,14 +323,7 @@ public class AngularExplorerView extends ViewPart implements
 			if (resource.getType() == IResource.FILE) {
 				tryToOpenFile((IFile) resource);
 			}
-		} 
-		/*else if (firstSelection instanceof String) {
-			// file path, try to open it
-			String path = (String) firstSelection;
-			IFile file = getCurrentTernProject().getProject()
-					.getFile(path);
-			tryToOpenFile(file);
-		} */else if (firstSelection instanceof IOpenableInEditor) {
+		} else if (firstSelection instanceof IOpenableInEditor) {
 			((IOpenableInEditor) firstSelection)
 					.openInEditor(AngularExplorerView.this);
 		}
