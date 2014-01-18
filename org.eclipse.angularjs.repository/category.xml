@@ -21,12 +21,9 @@
    <feature url="features/tern-server-nodejs-feature_1.0.0.qualifier.jar" id="tern-server-nodejs-feature" version="1.0.0.qualifier">
       <category name="Tern server - Node.js"/>
    </feature>
-   <bundle id="org.eclipse.angularjs.core" version="1.0.0.qualifier">
+   <feature url="features/angularjs-eclipse-feature_1.0.0.qualifier.jar" id="angularjs-eclipse-feature" version="1.0.0.qualifier">
       <category name="AngularJS"/>
-   </bundle>
-   <bundle id="org.eclipse.angularjs.ui" version="1.0.0.qualifier">
-      <category name="AngularJS"/>
-   </bundle>
+   </feature>
    <category-def name="AngularJS" label="AngularJS  Eclipse Tooling"/>
    <category-def name="Tern" label="Tern">
       <description>
