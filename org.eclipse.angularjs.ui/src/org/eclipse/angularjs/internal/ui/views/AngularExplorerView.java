@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2013 Angelo ZERR.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:      
+ *     Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.views;
 
 import org.eclipse.angularjs.core.AngularProject;
@@ -5,6 +15,8 @@ import org.eclipse.angularjs.core.Controller;
 import org.eclipse.angularjs.core.IOpenableInEditor;
 import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
+import org.eclipse.angularjs.internal.ui.AngularUIMessages;
+import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.hyperlink.EditorUtils;
 import org.eclipse.angularjs.internal.ui.views.actions.GoToDefinitionAction;
 import org.eclipse.angularjs.internal.ui.views.actions.LinkToControllerAction;
@@ -17,14 +29,18 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -41,10 +57,14 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.part.ViewPart;
 
 import tern.eclipse.ide.core.IDETernProject;
-import tern.eclipse.ide.core.scriptpath.IPageScriptPath;
+import tern.eclipse.ide.core.scriptpath.IScriptResource;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
+/**
+ * Angular explorer view.
+ * 
+ */
 public class AngularExplorerView extends ViewPart implements
 		ISelectionListener, ITernDefinitionCollector {
 
@@ -134,17 +154,6 @@ public class AngularExplorerView extends ViewPart implements
 	}
 
 	/**
-	 * Open the file in an editor if file exists.
-	 * 
-	 * @param file
-	 */
-	private void tryToOpenFile(IFile file) {
-		if (file.exists()) {
-			EditorUtils.openInEditor(file, 0, 0, true);
-		}
-	}
-
-	/**
 	 * Update enabled of actions.
 	 */
 	private void updateEnabledActions() {
@@ -158,19 +167,20 @@ public class AngularExplorerView extends ViewPart implements
 			// Open action (Go To Definition available if teh selected element
 			// can be opened in a editor).
 			this.openAction
-					.setEnabled(firstSelection instanceof IPageScriptPath
-					/* || firstSelection instanceof String */
-					|| firstSelection instanceof IOpenableInEditor);
+					.setEnabled(firstSelection instanceof IScriptResource
+							|| firstSelection instanceof IOpenableInEditor);
 			// Link/Unlink actions
 			Module module = null;
 			Controller controller = null;
 			String elementId = null;
 			if (firstSelection instanceof Module) {
+				// The selected element is a module.
 				module = (Module) firstSelection;
 			} else if (firstSelection instanceof Controller) {
+				// The selected element is a controller.
 				controller = (Controller) firstSelection;
 				module = controller.getModule();
-			} // The selected element is a controller.
+			}
 			IResource resource = getCurrentResource();
 			if (resource != null && module != null) {
 				boolean isLinked = AngularLinkHelper.isSameController(resource,
@@ -285,6 +295,13 @@ public class AngularExplorerView extends ViewPart implements
 		return viewer;
 	}
 
+	/**
+	 * Refresh the tree of the view.
+	 * 
+	 * @param updateLabels
+	 *            true if only labels of each tree item must be refreshed and
+	 *            false otherwise.
+	 */
 	public void refreshTree(boolean updateLabels) {
 		if (!updateLabels) {
 			try {
@@ -302,15 +319,6 @@ public class AngularExplorerView extends ViewPart implements
 		viewer.setExpandedTreePaths(expandedTreePaths);
 	}
 
-	@Override
-	public void setDefinition(String filename, Long start, Long end) {
-		IFile file = getCurrentTernProject().getProject().getFile(filename);
-		if (file.exists()) {
-			EditorUtils.openInEditor(file, start.intValue(), end.intValue()
-					- start.intValue(), true);
-		}
-	}
-
 	public void updateEnabledLinkActions(boolean isLinked) {
 		this.linkAction.setEnabled(!isLinked);
 		this.unLinkAction.setEnabled(isLinked);
@@ -321,11 +329,66 @@ public class AngularExplorerView extends ViewPart implements
 			ITernScriptPath scriptPath = (ITernScriptPath) firstSelection;
 			IResource resource = scriptPath.getResource();
 			if (resource.getType() == IResource.FILE) {
-				tryToOpenFile((IFile) resource);
+				IFile file = (IFile) resource;
+				tryToOpenFile(file, file.getFullPath().makeRelative()
+						.toString(), null, null);
 			}
+		} else if (firstSelection instanceof IScriptResource) {
+			IScriptResource scriptResource = (IScriptResource) firstSelection;
+			IFile file = scriptResource.getFile();
+			tryToOpenFile(file, scriptResource.getLabel(), null, null);
 		} else if (firstSelection instanceof IOpenableInEditor) {
 			((IOpenableInEditor) firstSelection)
 					.openInEditor(AngularExplorerView.this);
 		}
+	}
+
+	/**
+	 * Try to open file.
+	 * 
+	 * @param file
+	 */
+	private void tryToOpenFile(IFile file, String filename, Long start, Long end) {
+		IStatus status = openFile(file, filename, start, end);
+		if (!status.isOK()) {
+			ErrorDialog.openError(getSite().getShell(),
+					AngularUIMessages.AngularExplorerView_openFileDialog_title,
+					status.getMessage(), status);
+		}
+	}
+
+	/**
+	 * Open the file in an editor if file exists.
+	 * 
+	 * @param file
+	 */
+	private IStatus openFile(IFile file, String filename, Long start, Long end) {
+		if (file == null) {
+			file = getCurrentTernProject().getProject().getFile(filename);
+		}
+		if (file == null) {
+			return new Status(
+					IStatus.ERROR,
+					AngularUIPlugin.PLUGIN_ID,
+					NLS.bind(
+							AngularUIMessages.AngularExplorerView_openFile_error,
+							filename != null ? filename : "null"));
+		}
+		if (!file.exists()) {
+			return new Status(
+					IStatus.ERROR,
+					AngularUIPlugin.PLUGIN_ID,
+					NLS.bind(
+							AngularUIMessages.AngularExplorerView_openFile_error,
+							file.getFullPath()));
+		}
+		EditorUtils.openInEditor(file, start != null ? start.intValue() : 0,
+				end != null ? end.intValue() - start.intValue() : 0, true);
+		return Status.OK_STATUS;
+	}
+
+	@Override
+	public void setDefinition(String filename, Long start, Long end) {
+		tryToOpenFile(null, filename, start, end);
 	}
 }

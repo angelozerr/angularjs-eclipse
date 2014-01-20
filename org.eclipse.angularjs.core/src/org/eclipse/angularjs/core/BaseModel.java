@@ -2,19 +2,15 @@ package org.eclipse.angularjs.core;
 
 import java.io.IOException;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.json.simple.JSONArray;
-import org.w3c.dom.Node;
 
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.eclipse.ide.core.IDETernProject;
-import tern.eclipse.ide.core.scriptpath.IPageScriptPath;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath.ScriptPathsType;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.completions.ITernCompletionCollector;
@@ -89,17 +85,10 @@ public class BaseModel {
 
 	public TernDoc createDoc(TernAngularQuery query, IDETernProject ternProject)
 			throws IOException {
-		TernDoc doc = null;
-		if (getScriptPath().getType().equals(ScriptPathsType.PAGE)) {
-			IPageScriptPath scriptPath = (IPageScriptPath) getScriptPath();
-			Node element = scriptPath.getDocument().getDocumentElement();
-			doc = new TernDoc(query);
-			// Update TernDoc#addFile
-			JSONArray files = query.getFiles();
-			ternProject.getFileManager().updateFiles(element,
-					(IFile) scriptPath.getResource(), doc, files);
-
-		}
+		TernDoc doc = new TernDoc(query);
+		ITernScriptPath scriptPath = getScriptPath();
+		JSONArray files = query.getFiles();
+		scriptPath.updateFiles(ternProject.getFileManager(), doc, files);
 		return doc;
 	}
 }

@@ -48,6 +48,8 @@ public final class AngularUIMessages extends NLS {
 	public static String LinkToControllerAction_tooltip;
 	public static String UnLinkToControllerAction_text;
 	public static String UnLinkToControllerAction_tooltip;
+	public static String AngularExplorerView_openFile_error;
+	public static String AngularExplorerView_openFileDialog_title;
 
 	private AngularUIMessages() {
 	}

@@ -50,7 +50,6 @@ import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IDETernProject;
-import tern.eclipse.ide.core.scriptpath.IPageScriptPath;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.completions.ITernCompletionCollector;
@@ -61,6 +60,7 @@ import tern.server.protocol.completions.ITernCompletionCollector;
  * <ul>
  * <li>attribute name with angular directive (ex : ng-app).</li>
  * <li>attribute value with angular module, controller, model.</li>
+ * <li>attribute expression in text node {{}} and directive attribute value.</li>
  * </ul>
  * 
  */
@@ -198,17 +198,9 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						JSONArray files = query.getFiles();
 						AngularLink resourceLink = info.getResourceLink();
 						if (resourceLink != null) {
-							ternProject
-									.getFileManager()
-									.updateFiles(
-											((IPageScriptPath) resourceLink
-													.getScriptPath())
-													.getDocument()
-													.getDocumentElement(),
-											(IFile) resourceLink
-													.getScriptPath()
-													.getResource(), doc, files);
-
+							// Load needed files
+							resourceLink.getScriptPath().updateFiles(
+									ternProject.getFileManager(), doc, files);
 							query.getScope()
 									.setModule(resourceLink.getModule());
 							if (!StringUtils.isEmpty(resourceLink
