@@ -46,6 +46,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 import tern.angular.modules.Directive;
+import tern.angular.modules.DirectiveParameter;
 
 /**
  * Utilities for SSE DOM node {@link IDOMNode}.
@@ -87,13 +88,23 @@ public class DOMUtils {
 	 */
 	public static final IDOMNode getNodeByOffset(IStructuredModel model,
 			int offset) {
+		IndexedRegion node = null;
 		if (model != null) {
-			IndexedRegion node = model.getIndexedRegion(offset);
+			node = model.getIndexedRegion(offset);
 			if (node instanceof IDOMNode) {
 				return (IDOMNode) node;
 			}
+
+			if (model != null) {
+				int lastOffset = offset;
+				node = model.getIndexedRegion(offset);
+				while (node == null && lastOffset >= 0) {
+					lastOffset--;
+					node = model.getIndexedRegion(lastOffset);
+				}
+			}
 		}
-		return null;
+		return (IDOMNode) node;
 	}
 
 	/**
@@ -629,18 +640,18 @@ public class DOMUtils {
 	 * <p>
 	 * <div id="xxx" ng-model="MyModel" />
 	 * 
-	 * will return the array ['MyModel']
+	 * will return the array ['ngModel']
 	 * </p>
 	 * 
 	 * @param element
 	 * @return
 	 */
-	public static List<String> getAngularDirectiveNames(Element element,
+	public static List<Directive> getAngularDirectives(Element element,
 			Attr selectedAttr) {
 		if (element == null) {
 			return Collections.emptyList();
 		}
-		List<String> names = null;
+		List<Directive> names = null;
 		NamedNodeMap attributes = element.getAttributes();
 		int length = attributes.getLength();
 		Attr attr = null;
@@ -650,13 +661,14 @@ public class DOMUtils {
 				Directive directive = getAngularDirective(attr);
 				if (directive != null) {
 					if (names == null) {
-						names = new ArrayList<String>();
+						names = new ArrayList<Directive>();
 					}
-					names.add(directive.getName());
+					names.add(directive);
 				}
 			}
 		}
-		return (List<String>) (names != null ? names : Collections.emptyList());
+		return (List<Directive>) (names != null ? names : Collections
+				.emptyList());
 	}
 
 	public static boolean hasAngularNature(IDOMNode element) {
@@ -665,6 +677,24 @@ public class DOMUtils {
 			return false;
 		}
 		return AngularProject.hasAngularNature(file.getProject());
+	}
+
+	public static DirectiveParameter getAngularDirectiveParameter(IDOMAttr attr) {
+		if (attr == null) {
+			return null;
+		}
+		List<Directive> existingDirectives = DOMUtils.getAngularDirectives(
+				attr.getOwnerElement(), attr);
+		if (existingDirectives != null) {
+			DirectiveParameter parameter = null;
+			for (Directive existingDirective : existingDirectives) {
+				parameter = existingDirective.getParameter(attr.getName());
+				if (parameter != null) {
+					return parameter;
+				}
+			}
+		}
+		return null;
 	}
 
 }

@@ -11,6 +11,7 @@
 package org.eclipse.angularjs.internal.ui.taginfo;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
@@ -24,11 +25,14 @@ import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.w3c.dom.Element;
 
 import tern.TernException;
 import tern.angular.AngularType;
 import tern.angular.modules.Directive;
+import tern.angular.modules.DirectiveParameter;
 import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.type.TernAngularTypeQuery;
@@ -52,11 +56,20 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeTagAttNameHelp(IDOMNode xmlnode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
 			ITextRegion region) {
+
 		// Display Help of Angular Directive if it's an angular directive
 		// attribute
-		Directive directive = DOMUtils.getAngularDirective(xmlnode, region);
+		IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
+		Directive directive = DOMUtils.getAngularDirective(attr);
 		if (directive != null) {
 			return directive.getHTMLDescription();
+		} else {
+			// Check if it's a directive parameter which is hovered.
+			DirectiveParameter parameter = DOMUtils
+					.getAngularDirectiveParameter(attr);
+			if (parameter != null) {
+				return parameter.getHTMLDescription();
+			}
 		}
 		// Here the attribute is not a directive, display classic Help.
 		return super.computeTagAttNameHelp(xmlnode, parentNode, flatNode,
