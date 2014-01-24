@@ -1,9 +1,16 @@
+/*******************************************************************************
+ * Copyright (c) 2014 Angelo ZERR.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:      
+ *     Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.hyperlink;
 
-import java.io.IOException;
-
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IFile;
@@ -15,21 +22,16 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Node;
 
-import tern.TernException;
-import tern.angular.AngularType;
 import tern.angular.modules.Directive;
-import tern.angular.protocol.HTMLTernAngularHelper;
-import tern.angular.protocol.TernAngularQuery;
-import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.eclipse.ide.core.IDETernProject;
-import tern.server.protocol.TernDoc;
 
+/**
+ * 
+ * HTML Angular HyperLink Detector.
+ */
 public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
-
-	public static final IHyperlink[] EMPTY_HYPERLINK = new IHyperlink[0];
 
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer,
@@ -59,7 +61,7 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 				if (directive != null) {
 					IDETernProject ternProject = AngularProject
 							.getTernProject(project);
-					IHyperlink hyperlink = new TernHyperlink(attr, file,
+					IHyperlink hyperlink = new HTMLAngularHyperLink(attr, file,
 							ternProject, directive.getType());
 					if (hyperlink != null) {
 						IHyperlink[] hyperlinks = new IHyperlink[1];
@@ -68,7 +70,7 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 					}
 				}
 			} catch (CoreException e) {
-				Trace.trace(Trace.WARNING, "Error while tern hyperlink", e);
+				Trace.trace(Trace.WARNING, "Error while Angular hyperlink", e);
 			}
 		}
 		return null;

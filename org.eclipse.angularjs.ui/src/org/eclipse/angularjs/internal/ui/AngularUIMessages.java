@@ -51,6 +51,10 @@ public final class AngularUIMessages extends NLS {
 	public static String AngularExplorerView_openFile_error;
 	public static String AngularExplorerView_openFileDialog_title;
 
+	// Hyperlink
+	public static String HTMLAngularHyperLink_text;
+	public static String HTMLAngularHyperLink_typeLabel;
+
 	private AngularUIMessages() {
 	}
 
