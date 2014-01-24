@@ -5,7 +5,7 @@ AngularJS Eclipse Plugin extends Eclipse WTP to :
 
  * provides an HTML editor which supports AngularJS expression and directive. See [HTML features](https://github.com/angelozerr/angularjs-eclipse/wiki/HTML-Features) for more informations.
  * provides an [Angular Explorer](https://github.com/angelozerr/angularjs-eclipse/wiki/Angular-Explorer-View) view which displays modules, controllers of your project in a tree.
- * provides a Javascript editor which supports AngularJS features (modules, etc).
+ * provides a Javascript editor which supports AngularJS features (modules, etc). See [Javascript features](https://github.com/angelozerr/angularjs-eclipse/wiki/Javascript-Features) for more informations.
 
 AngularJS Eclipse is based on [tern.java](https://github.com/angelozerr/tern.java) to manage powerfull completion on HTML files (AngularsJS Expression, directive, modules) and Javascripts files (see [Tern Eclipse IDE](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE))
 
@@ -33,7 +33,7 @@ See [HTML features](https://github.com/angelozerr/angularjs-eclipse/wiki/HTML-Fe
 
 # Javascript Editor
 
-See [Tern Eclipse IDE](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE).
+See [Javascript features](https://github.com/angelozerr/angularjs-eclipse/wiki/Javascript-Features) and [Tern Eclipse IDE](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE) for more informations.
 
 # Installation
 
