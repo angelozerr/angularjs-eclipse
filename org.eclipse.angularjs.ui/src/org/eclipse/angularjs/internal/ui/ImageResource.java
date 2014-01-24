@@ -42,6 +42,7 @@ public class ImageResource {
 	public static final String IMG_ANGULARJS = "angularjs";
 	public static final String IMG_ANGULARJS_CHECKED = "angularjs_checked";
 	public static final String IMG_DIRECTIVE = "directive";
+	public static final String IMG_DIRECTIVE_PARAM = "directive_param";
 	public static final String IMG_CONTROLLER = "controller";
 	public static final String IMG_CONTROLLER_CHECKED = "controller_checked";
 	public static final String IMG_FOLDER = "folder";
@@ -136,6 +137,7 @@ public class ImageResource {
 		registerImage(IMG_ANGULARJS_CHECKED, URL_OBJ + IMG_ANGULARJS_CHECKED
 				+ ".png");
 		registerImage(IMG_DIRECTIVE, URL_OBJ + IMG_DIRECTIVE + ".png");
+		registerImage(IMG_DIRECTIVE_PARAM, URL_OBJ + IMG_DIRECTIVE_PARAM + ".png");
 		registerImage(IMG_CONTROLLER, URL_OBJ + IMG_CONTROLLER + ".png");
 		registerImage(IMG_CONTROLLER_CHECKED, URL_OBJ + IMG_CONTROLLER_CHECKED
 				+ ".png");

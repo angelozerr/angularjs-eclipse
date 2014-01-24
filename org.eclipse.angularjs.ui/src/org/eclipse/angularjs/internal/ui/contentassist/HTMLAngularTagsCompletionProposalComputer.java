@@ -119,7 +119,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 							String additionalProposalInfo = parameter
 									.getHTMLDescription();
 							Image image = ImageResource
-									.getImage(ImageResource.IMG_ANGULARJS);
+									.getImage(ImageResource.IMG_DIRECTIVE_PARAM);
 							addProposal(contentAssistRequest,
 									parameter.getName(), displayString, image,
 									additionalProposalInfo);
