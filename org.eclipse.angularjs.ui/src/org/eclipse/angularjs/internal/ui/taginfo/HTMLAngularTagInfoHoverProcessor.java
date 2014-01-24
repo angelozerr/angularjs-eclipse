@@ -119,8 +119,6 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				DOMSSEDirectiveProvider.getInstance(), file,
 				ternProject.getFileManager(), query);
 
-		ITernServer server = ternProject.getTernServer();
-
 		final StringBuilder help = new StringBuilder();
 		ITernTypeCollector collector = new ITernTypeCollector() {
 
@@ -139,7 +137,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				}
 			}
 		};
-		server.request(doc, collector);
+		ternProject.request(doc, collector);
 		return help.toString();
 	}
 }

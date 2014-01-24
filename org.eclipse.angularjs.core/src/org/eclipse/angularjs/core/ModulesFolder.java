@@ -6,6 +6,7 @@ import java.util.List;
 import tern.angular.AngularType;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.server.ITernServer;
 import tern.server.protocol.completions.ITernCompletionCollector;
 
 public class ModulesFolder extends BaseModel implements
@@ -31,7 +32,7 @@ public class ModulesFolder extends BaseModel implements
 
 	@Override
 	public void addProposal(String name, String type, String origin,
-			Object doc, int pos, Object completion) {
+			Object doc, int pos, Object completion, ITernServer ternServer) {
 		modules.add(new Module(name, getScriptPath()));
 	}
 }

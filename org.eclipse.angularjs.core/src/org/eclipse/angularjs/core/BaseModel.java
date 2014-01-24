@@ -60,8 +60,7 @@ public class BaseModel {
 			TernDoc doc = createDoc(query, ternProject);
 			if (doc != null) {
 				// Execute Tern completion
-				final ITernServer ternServer = ternProject.getTernServer();
-				ternServer.request(doc, collector);
+				ternProject.request(doc, collector);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,9 +73,8 @@ public class BaseModel {
 			IDETernProject ternProject = getTernProject();
 			TernDoc doc = createDoc(query, ternProject);
 			if (doc != null) {
-				// Execute Tern completion
-				final ITernServer ternServer = ternProject.getTernServer();
-				ternServer.request(doc, collector);
+				// Execute Tern definition
+				ternProject.request(doc, collector);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

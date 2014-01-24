@@ -25,7 +25,6 @@ import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.eclipse.ide.core.IDETernProject;
-import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 
 public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
@@ -51,47 +50,28 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 		if (attr == null) {
 			return null;
 		}
-
-		Directive directive = DOMUtils.getAngularDirective(attr);
-		if (directive != null) {
-
-			IFile file = DOMUtils.getFile(attr);
-			IProject eclipseProject = file.getProject();
+		IFile file = DOMUtils.getFile(attr);
+		IProject project = file.getProject();
+		if (IDETernProject.hasTernNature(project)) {
 			try {
-				IDETernProject ternProject = AngularProject
-						.getTernProject(eclipseProject);
 
-				IHyperlink hyperlink = find(attr, file, ternProject,
-						directive.getType());
-				if (hyperlink != null) {
-					IHyperlink[] hyperlinks = new IHyperlink[1];
-					hyperlinks[0] = hyperlink;
-					return hyperlinks;
+				Directive directive = DOMUtils.getAngularDirective(attr);
+				if (directive != null) {
+					IDETernProject ternProject = AngularProject
+							.getTernProject(project);
+					IHyperlink hyperlink = new TernHyperlink(attr, file,
+							ternProject, directive.getType());
+					if (hyperlink != null) {
+						IHyperlink[] hyperlinks = new IHyperlink[1];
+						hyperlinks[0] = hyperlink;
+						return hyperlinks;
+					}
 				}
-
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error while tern hyperlink.", e);
+			} catch (CoreException e) {
+				Trace.trace(Trace.WARNING, "Error while tern hyperlink", e);
 			}
 		}
 		return null;
-	}
-
-	private IHyperlink find(IDOMAttr attr, IFile file,
-			IDETernProject ternProject, AngularType angularType)
-			throws CoreException, IOException, TernException {
-
-		TernAngularQuery query = new TernAngularDefinitionQuery(angularType);
-		query.setExpression(attr.getValue());
-
-		TernDoc doc = HTMLTernAngularHelper.createDoc(
-				(IDOMNode) attr.getOwnerElement(),
-				DOMSSEDirectiveProvider.getInstance(), file,
-				ternProject.getFileManager(), query);
-
-		ITernServer server = ternProject.getTernServer();
-		TernHyperlinkCollector collector = new TernHyperlinkCollector(attr);
-		server.request(doc, collector);
-		return collector.getHyperlink();
 	}
 
 }

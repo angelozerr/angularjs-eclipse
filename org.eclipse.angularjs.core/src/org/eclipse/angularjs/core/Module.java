@@ -7,6 +7,7 @@ import tern.angular.AngularType;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.server.ITernServer;
 import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
@@ -34,7 +35,7 @@ public class Module extends BaseModel implements ITernCompletionCollector,
 
 	@Override
 	public void addProposal(String name, String type, String origin,
-			Object doc, int pos, Object completion) {
+			Object doc, int pos, Object completion, ITernServer ternServer) {
 		controllers.add(new Controller(name, Module.this));
 	}
 

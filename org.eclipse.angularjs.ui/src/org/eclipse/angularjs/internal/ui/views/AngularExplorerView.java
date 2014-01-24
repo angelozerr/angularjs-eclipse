@@ -17,7 +17,6 @@ import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
-import org.eclipse.angularjs.internal.ui.hyperlink.EditorUtils;
 import org.eclipse.angularjs.internal.ui.views.actions.GoToDefinitionAction;
 import org.eclipse.angularjs.internal.ui.views.actions.LinkToControllerAction;
 import org.eclipse.angularjs.internal.ui.views.actions.RefreshExplorerAction;
@@ -59,6 +58,7 @@ import org.eclipse.ui.part.ViewPart;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.IScriptResource;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.eclipse.ide.ui.utils.EditorUtils;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
 /**

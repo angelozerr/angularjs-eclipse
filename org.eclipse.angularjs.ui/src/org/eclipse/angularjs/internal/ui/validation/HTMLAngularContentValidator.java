@@ -107,7 +107,6 @@ public class HTMLAngularContentValidator extends AbstractValidator {
 				DOMSSEDirectiveProvider.getInstance(), file,
 				ternProject.getFileManager(), query);
 
-		ITernServer server = ternProject.getTernServer();
 
 		final StringBuilder help = new StringBuilder();
 		ITernTypeCollector collector = new ITernTypeCollector() {
@@ -127,7 +126,7 @@ public class HTMLAngularContentValidator extends AbstractValidator {
 				}
 			}
 		};
-		server.request(doc, collector);
+		ternProject.request(doc, collector);
 		return help.toString().length() > 0;
 	}
 }

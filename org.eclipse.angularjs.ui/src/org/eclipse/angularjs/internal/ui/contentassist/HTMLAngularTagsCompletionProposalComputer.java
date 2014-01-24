@@ -94,8 +94,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					new IDirectiveCollector() {
 
 						@Override
-						public void add(Directive directive,
-								String name) {
+						public void add(Directive directive, String name) {
 
 							// Add the directive in the completion.
 							String displayString = name + " - "
@@ -104,8 +103,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 									.getHTMLDescription();
 							Image image = ImageResource
 									.getImage(ImageResource.IMG_DIRECTIVE);
-							addProposal(contentAssistRequest,
-									name, displayString, image,
+							addProposal(contentAssistRequest, name,
+									displayString, image,
 									additionalProposalInfo);
 						}
 
@@ -236,12 +235,13 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			}
 
 			// Execute Tern completion
-			final ITernServer ternServer = ternProject.getTernServer();
+			// final ITernServer ternServer = ternProject.getTernServer();
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
 				@Override
 				public void addProposal(String name, String type,
-						String origin, Object doc, int pos, Object completion) {
+						String origin, Object doc, int pos, Object completion,
+						ITernServer ternServer) {
 
 					AngularCompletionProposal proposal = new AngularCompletionProposal(
 							name, type, origin, doc, pos, completion,
@@ -263,7 +263,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 				}
 			};
-			ternServer.request(doc, collector);
+			ternProject.request(doc, collector);
 
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error while tern completion.", e);
