@@ -118,6 +118,10 @@ public class DOMUtils {
 	 * @return
 	 */
 	public static IDOMAttr getAttrByRegion(IDOMNode element, ITextRegion region) {
+		if (!isAttrRegion(region)) {
+			return null;
+		}
+
 		IStructuredDocumentRegion structuredDocumentRegionElement = element
 				.getFirstStructuredDocumentRegion();
 
@@ -142,6 +146,16 @@ public class DOMUtils {
 		String attrName = structuredDocumentRegionElement
 				.getText(attrNameRegion);
 		return (IDOMAttr) element.getAttributes().getNamedItem(attrName);
+	}
+
+	private static boolean isAttrRegion(ITextRegion region) {
+		if (region == null) {
+			return false;
+		}
+		String type = region.getType();
+		return DOMRegionContext.XML_TAG_ATTRIBUTE_NAME.equals(type)
+				|| DOMRegionContext.XML_TAG_ATTRIBUTE_EQUALS.equals(type)
+				|| DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE.equals(type);
 	}
 
 	/**
