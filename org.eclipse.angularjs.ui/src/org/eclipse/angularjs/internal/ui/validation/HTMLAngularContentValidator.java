@@ -101,32 +101,11 @@ public class HTMLAngularContentValidator extends AbstractValidator {
 
 		TernAngularQuery query = new TernAngularTypeQuery(angularType);
 		query.setExpression(attr.getValue());
+		HTMLTernAngularHelper.populateScope((IDOMNode) attr.getOwnerElement(),
+				DOMSSEDirectiveProvider.getInstance(), query);
 
-		TernDoc doc = HTMLTernAngularHelper.createDoc(
-				(IDOMNode) attr.getOwnerElement(),
-				DOMSSEDirectiveProvider.getInstance(), file,
-				ternProject.getFileManager(), query);
-
-
-		final StringBuilder help = new StringBuilder();
-		ITernTypeCollector collector = new ITernTypeCollector() {
-
-			@Override
-			public void setType(String name, String type, String origin) {
-				if (name != null) {
-
-					TernCompletionItem item = new TernCompletionItem(name,
-							type, origin);
-					help.append("<b>Angular ");
-					help.append(angularType.name());
-					help.append("</b><br/><br/><b>Signature : </b>");
-					help.append(item.getSignature());
-					help.append("<br/><b>Origin : </b>");
-					help.append(item.getOrigin());
-				}
-			}
-		};
-		ternProject.request(doc, collector);
-		return help.toString().length() > 0;
+		ValidationTernTypeCollector collector = new ValidationTernTypeCollector();
+		ternProject.request(query, query.getFiles(), attr, file, collector);
+		return collector.isExists();
 	}
 }

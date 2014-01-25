@@ -34,12 +34,22 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 	private final IFile file;
 	private final AngularType angularType;
 
-	public HTMLAngularHyperLink(IDOMAttr attr, IFile file, IDETernProject ternProject,
-			AngularType angularType) {
+	public HTMLAngularHyperLink(IDOMAttr attr, IFile file,
+			IDETernProject ternProject, AngularType angularType) {
 		super(HyperlinkUtils.getHyperlinkRegion(attr), ternProject);
 		this.attr = attr;
 		this.file = file;
 		this.angularType = angularType;
+	}
+
+	@Override
+	public void open() {
+		try {
+			TernAngularDefinitionQuery query = createQuery();
+			ternProject.request(query, query.getFiles(), attr, file, this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -52,16 +62,13 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 		return AngularUIMessages.HTMLAngularHyperLink_typeLabel;
 	}
 
-	@Override
-	protected TernDoc createDoc() throws Exception {
-		TernAngularQuery query = new TernAngularDefinitionQuery(angularType);
+	public TernAngularDefinitionQuery createQuery() {
+		TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
+				angularType);
 		query.setExpression(attr.getValue());
-
-		TernDoc doc = HTMLTernAngularHelper.createDoc(
-				(IDOMNode) attr.getOwnerElement(),
-				DOMSSEDirectiveProvider.getInstance(), file,
-				ternProject.getFileManager(), query);
-		return doc;
+		HTMLTernAngularHelper.populateScope(attr.getOwnerElement(),
+				DOMSSEDirectiveProvider.getInstance(), query);
+		return query;
 	}
 
 }

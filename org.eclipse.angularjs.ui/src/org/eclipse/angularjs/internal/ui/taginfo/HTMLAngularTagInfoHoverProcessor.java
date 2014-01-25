@@ -113,11 +113,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 
 		TernAngularQuery query = new TernAngularTypeQuery(angularType);
 		query.setExpression(attr.getValue());
-
-		TernDoc doc = HTMLTernAngularHelper.createDoc(
-				(IDOMNode) attr.getOwnerElement(),
-				DOMSSEDirectiveProvider.getInstance(), file,
-				ternProject.getFileManager(), query);
+		HTMLTernAngularHelper.populateScope((IDOMNode) attr.getOwnerElement(),
+				DOMSSEDirectiveProvider.getInstance(), query);
 
 		final StringBuilder help = new StringBuilder();
 		ITernTypeCollector collector = new ITernTypeCollector() {
@@ -137,7 +134,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				}
 			}
 		};
-		ternProject.request(doc, collector);
+		ternProject.request(query, query.getFiles(), attr, file, collector);
 		return help.toString();
 	}
 }

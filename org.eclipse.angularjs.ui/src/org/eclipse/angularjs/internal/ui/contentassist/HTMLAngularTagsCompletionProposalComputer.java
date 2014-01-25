@@ -51,6 +51,7 @@ import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.completions.ITernCompletionCollector;
@@ -201,13 +202,13 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					contentAssistRequest, angularType,
 					element.getNodeType() != Node.TEXT_NODE);
 
+			ITernScriptPath scriptPath = null;
 			// Create Tern doc + query
 			TernAngularQuery query = new TernAngularCompletionsQuery(
 					angularType);
 			query.setExpression(expression);
-			TernDoc doc = HTMLTernAngularHelper.createDoc(element,
-					DOMSSEDirectiveProvider.getInstance(), file,
-					ternProject.getFileManager(), query);
+			HTMLTernAngularHelper.populateScope(element,
+					DOMSSEDirectiveProvider.getInstance(), query);
 			if (angularType != AngularType.module
 					&& angularType != AngularType.controller) {
 				// Check if query has controller defined.
@@ -220,8 +221,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						AngularLink resourceLink = info.getResourceLink();
 						if (resourceLink != null) {
 							// Load needed files
-							resourceLink.getScriptPath().updateFiles(
-									ternProject.getFileManager(), doc, files);
+							scriptPath = resourceLink.getScriptPath();
 							query.getScope()
 									.setModule(resourceLink.getModule());
 							if (!StringUtils.isEmpty(resourceLink
@@ -263,7 +263,14 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 				}
 			};
-			ternProject.request(doc, collector);
+
+			if (scriptPath != null) {
+				ternProject.request(query, query.getFiles(), scriptPath,
+						collector);
+			} else {
+				ternProject.request(query, query.getFiles(), element, file,
+						collector);
+			}
 
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error while tern completion.", e);

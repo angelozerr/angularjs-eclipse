@@ -1,18 +1,12 @@
 package org.eclipse.angularjs.core;
 
-import java.io.IOException;
-
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.json.simple.JSONArray;
 
-import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
-import tern.server.ITernServer;
-import tern.server.protocol.TernDoc;
 import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
@@ -57,11 +51,7 @@ public class BaseModel {
 			ITernCompletionCollector collector) {
 		try {
 			IDETernProject ternProject = getTernProject();
-			TernDoc doc = createDoc(query, ternProject);
-			if (doc != null) {
-				// Execute Tern completion
-				ternProject.request(doc, collector);
-			}
+			ternProject.request(query, query.getFiles(), scriptPath, collector);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -71,22 +61,10 @@ public class BaseModel {
 			ITernDefinitionCollector collector) {
 		try {
 			IDETernProject ternProject = getTernProject();
-			TernDoc doc = createDoc(query, ternProject);
-			if (doc != null) {
-				// Execute Tern definition
-				ternProject.request(doc, collector);
-			}
+			ternProject.request(query, query.getFiles(), scriptPath, collector);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public TernDoc createDoc(TernAngularQuery query, IDETernProject ternProject)
-			throws IOException {
-		TernDoc doc = new TernDoc(query);
-		ITernScriptPath scriptPath = getScriptPath();
-		JSONArray files = query.getFiles();
-		scriptPath.updateFiles(ternProject.getFileManager(), doc, files);
-		return doc;
-	}
 }
