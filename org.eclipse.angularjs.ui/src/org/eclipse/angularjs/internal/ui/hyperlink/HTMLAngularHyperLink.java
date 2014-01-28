@@ -10,20 +10,17 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.hyperlink;
 
-import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.utils.HyperlinkUtils;
+import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 import tern.angular.AngularType;
-import tern.angular.protocol.HTMLTernAngularHelper;
-import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.hyperlink.AbstractTernHyperlink;
-import tern.server.protocol.TernDoc;
 
 /**
  * HTML angular element hyperlink.
@@ -45,8 +42,16 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 	@Override
 	public void open() {
 		try {
-			TernAngularDefinitionQuery query = createQuery();
-			ternProject.request(query, query.getFiles(), attr, file, this);
+			TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
+					angularType);
+			query.setExpression(attr.getValue());
+			ITernScriptPath scriptPath = AngularScopeHelper.populateScope(
+					attr.getOwnerElement(), file, angularType, query);
+			if (scriptPath != null) {
+				ternProject.request(query, query.getFiles(), scriptPath, this);
+			} else {
+				ternProject.request(query, query.getFiles(), attr, file, this);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,15 +65,6 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 	@Override
 	public String getTypeLabel() {
 		return AngularUIMessages.HTMLAngularHyperLink_typeLabel;
-	}
-
-	public TernAngularDefinitionQuery createQuery() {
-		TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
-				angularType);
-		query.setExpression(attr.getValue());
-		HTMLTernAngularHelper.populateScope(attr.getOwnerElement(),
-				DOMSSEDirectiveProvider.getInstance(), query);
-		return query;
 	}
 
 }

@@ -17,6 +17,7 @@ import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.angularjs.core.utils.DOMUtils;
+import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -37,6 +38,7 @@ import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
 import tern.server.protocol.TernDoc;
 import tern.server.protocol.completions.TernCompletionItem;
@@ -108,13 +110,12 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	}
 
 	private String find(IDOMAttr attr, IFile file, IDETernProject ternProject,
-			final AngularType angularType) throws CoreException, IOException,
-			TernException {
+			final AngularType angularType) throws Exception {
 
 		TernAngularQuery query = new TernAngularTypeQuery(angularType);
 		query.setExpression(attr.getValue());
-		HTMLTernAngularHelper.populateScope((IDOMNode) attr.getOwnerElement(),
-				DOMSSEDirectiveProvider.getInstance(), query);
+		ITernScriptPath scriptPath = AngularScopeHelper.populateScope(
+				attr.getOwnerElement(), file, angularType, query);
 
 		final StringBuilder help = new StringBuilder();
 		ITernTypeCollector collector = new ITernTypeCollector() {
@@ -134,7 +135,11 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				}
 			}
 		};
-		ternProject.request(query, query.getFiles(), attr, file, collector);
+		if (scriptPath != null) {
+			ternProject.request(query, query.getFiles(), scriptPath, collector);
+		} else {
+			ternProject.request(query, query.getFiles(), attr, file, collector);
+		}
 		return help.toString();
 	}
 }

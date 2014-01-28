@@ -20,6 +20,7 @@ import org.eclipse.angularjs.core.link.AngularLinkResource;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.core.utils.StringUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
+import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IFile;
@@ -53,7 +54,6 @@ import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
-import tern.server.protocol.TernDoc;
 import tern.server.protocol.completions.ITernCompletionCollector;
 
 /**
@@ -201,38 +201,12 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			final int replacementOffset = getReplacementOffset(
 					contentAssistRequest, angularType,
 					element.getNodeType() != Node.TEXT_NODE);
-
-			ITernScriptPath scriptPath = null;
 			// Create Tern doc + query
 			TernAngularQuery query = new TernAngularCompletionsQuery(
 					angularType);
 			query.setExpression(expression);
-			HTMLTernAngularHelper.populateScope(element,
-					DOMSSEDirectiveProvider.getInstance(), query);
-			if (angularType != AngularType.module
-					&& angularType != AngularType.controller) {
-				// Check if query has controller defined.
-				if (!query.hasControllers()) {
-					// check if HTML file is linked to controller
-					AngularLinkResource info = AngularLinkHelper
-							.getControllerInfo(file);
-					if (info != null) {
-						JSONArray files = query.getFiles();
-						AngularLink resourceLink = info.getResourceLink();
-						if (resourceLink != null) {
-							// Load needed files
-							scriptPath = resourceLink.getScriptPath();
-							query.getScope()
-									.setModule(resourceLink.getModule());
-							if (!StringUtils.isEmpty(resourceLink
-									.getController())) {
-								query.getScope().getControllers()
-										.add(resourceLink.getController());
-							}
-						}
-					}
-				}
-			}
+			ITernScriptPath scriptPath = AngularScopeHelper.populateScope(
+					element, file, angularType, query);
 
 			// Execute Tern completion
 			// final ITernServer ternServer = ternProject.getTernServer();
