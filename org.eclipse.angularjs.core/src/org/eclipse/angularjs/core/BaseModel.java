@@ -13,7 +13,7 @@ import tern.server.protocol.definition.ITernDefinitionCollector;
 public class BaseModel {
 
 	public enum Type {
-		ScriptsFolder, ModulesFolder, Module, Controller
+		ScriptsFolder, ModulesFolder, Module, AngularElement
 	}
 
 	private final String name;

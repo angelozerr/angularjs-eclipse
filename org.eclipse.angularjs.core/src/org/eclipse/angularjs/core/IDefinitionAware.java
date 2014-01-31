@@ -2,8 +2,8 @@ package org.eclipse.angularjs.core;
 
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
-public interface IOpenableInEditor {
+public interface IDefinitionAware {
 
-	void openInEditor(ITernDefinitionCollector collector);
+	void findDefinition(ITernDefinitionCollector collector);
 
 }

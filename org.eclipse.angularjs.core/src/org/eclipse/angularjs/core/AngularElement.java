@@ -4,12 +4,14 @@ import tern.angular.AngularType;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
-public class Controller extends BaseModel implements IOpenableInEditor {
+public class AngularElement extends BaseModel implements IDefinitionAware {
 
+	private final AngularType angularType;
 	private final Module module;
 
-	public Controller(String name, Module module) {
-		super(name, Type.Controller, module.getScriptPath());
+	public AngularElement(String name, AngularType angularType, Module module) {
+		super(name, Type.AngularElement, module.getScriptPath());
+		this.angularType = angularType;
 		this.module = module;
 	}
 
@@ -18,13 +20,16 @@ public class Controller extends BaseModel implements IOpenableInEditor {
 	}
 
 	@Override
-	public void openInEditor(ITernDefinitionCollector collector) {
-		// load all controllers of the given module
+	public void findDefinition(ITernDefinitionCollector collector) {
+		// Find definition of the angular element
 		TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
-				AngularType.controller);
+				angularType);
 		query.getScope().setModule(getModule().getName());
 		query.setExpression(super.getName());
 		super.execute(query, collector);
 	}
 
+	public AngularType getAngularType() {
+		return angularType;
+	}
 }

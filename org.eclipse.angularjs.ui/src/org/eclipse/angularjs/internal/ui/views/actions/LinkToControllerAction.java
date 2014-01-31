@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.views.actions;
 
-import org.eclipse.angularjs.core.Controller;
+import org.eclipse.angularjs.core.AngularElement;
 import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
@@ -45,20 +45,20 @@ public class LinkToControllerAction extends Action {
 					.getViewer().getSelection();
 			if (!selection.isEmpty()) {
 				Module module = null;
-				Controller controller = null;
+				AngularElement angularElement = null;
 				String elementId = null;
 				Object firstSelection = selection.getFirstElement();
 				if (firstSelection instanceof Module) {
 					module = (Module) firstSelection;
-				} else if (firstSelection instanceof Controller) {
-					controller = (Controller) firstSelection;
-					module = controller.getModule();
+				} else if (firstSelection instanceof AngularElement) {
+					angularElement = (AngularElement) firstSelection;
+					module = angularElement.getModule();
 				}
 				if (module != null) {
 					try {
 						AngularLinkHelper.setController(module.getScriptPath(),
 								module.getName(),
-								controller != null ? controller.getName()
+								angularElement != null ? angularElement.getName()
 										: null, resource, elementId);
 						explorer.updateEnabledLinkActions(true);
 						explorer.refreshTree(true);

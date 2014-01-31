@@ -11,8 +11,8 @@
 package org.eclipse.angularjs.internal.ui.views;
 
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.Controller;
-import org.eclipse.angularjs.core.IOpenableInEditor;
+import org.eclipse.angularjs.core.AngularElement;
+import org.eclipse.angularjs.core.IDefinitionAware;
 import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
@@ -55,6 +55,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.part.ViewPart;
 
+import tern.angular.AngularType;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.IScriptResource;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
@@ -168,17 +169,19 @@ public class AngularExplorerView extends ViewPart implements
 			// can be opened in a editor).
 			this.openAction
 					.setEnabled(firstSelection instanceof IScriptResource
-							|| firstSelection instanceof IOpenableInEditor);
+							|| firstSelection instanceof IDefinitionAware);
 			// Link/Unlink actions
 			Module module = null;
-			Controller controller = null;
+			AngularElement controller = null;
 			String elementId = null;
 			if (firstSelection instanceof Module) {
 				// The selected element is a module.
 				module = (Module) firstSelection;
-			} else if (firstSelection instanceof Controller) {
+			} else if (firstSelection instanceof AngularElement
+					&& AngularType.controller == ((AngularElement) firstSelection)
+							.getAngularType()) {
 				// The selected element is a controller.
-				controller = (Controller) firstSelection;
+				controller = (AngularElement) firstSelection;
 				module = controller.getModule();
 			}
 			IResource resource = getCurrentResource();
@@ -337,9 +340,9 @@ public class AngularExplorerView extends ViewPart implements
 			IScriptResource scriptResource = (IScriptResource) firstSelection;
 			IFile file = scriptResource.getFile();
 			tryToOpenFile(file, scriptResource.getLabel(), null, null);
-		} else if (firstSelection instanceof IOpenableInEditor) {
-			((IOpenableInEditor) firstSelection)
-					.openInEditor(AngularExplorerView.this);
+		} else if (firstSelection instanceof IDefinitionAware) {
+			((IDefinitionAware) firstSelection)
+					.findDefinition(AngularExplorerView.this);
 		}
 	}
 
@@ -363,7 +366,7 @@ public class AngularExplorerView extends ViewPart implements
 	 * @param file
 	 */
 	private IStatus openFile(IFile file, String filename, Long start, Long end) {
-		if (file == null) {
+		if (file == null && filename != null) {
 			file = getCurrentTernProject().getProject().getFile(filename);
 		}
 		if (file == null) {

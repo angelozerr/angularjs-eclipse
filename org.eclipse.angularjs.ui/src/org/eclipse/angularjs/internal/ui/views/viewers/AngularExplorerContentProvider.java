@@ -48,7 +48,7 @@ public class AngularExplorerContentProvider extends
 			case ModulesFolder:
 				return ((ModulesFolder) element).getModules();
 			case Module:
-				return ((Module) element).getControllers();
+				return ((Module) element).getAngularElements();
 			}
 		}
 		return null;
@@ -61,7 +61,7 @@ public class AngularExplorerContentProvider extends
 		}
 		if (element instanceof BaseModel) {
 			return !((BaseModel) element).getType().equals(
-					BaseModel.Type.Controller);
+					BaseModel.Type.AngularElement);
 		}
 		return false;
 	}

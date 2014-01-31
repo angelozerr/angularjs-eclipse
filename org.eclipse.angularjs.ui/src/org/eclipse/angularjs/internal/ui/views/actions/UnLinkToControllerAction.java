@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.views.actions;
 
-import org.eclipse.angularjs.core.Controller;
+import org.eclipse.angularjs.core.AngularElement;
 import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
@@ -48,12 +48,12 @@ public class UnLinkToControllerAction extends Action {
 				Object firstSelection = selection.getFirstElement();
 
 				Module module = null;
-				Controller controller = null;
+				AngularElement controller = null;
 				String elementId = null;
 				if (firstSelection instanceof Module) {
 					module = (Module) firstSelection;
-				} else if (firstSelection instanceof Controller) {
-					controller = (Controller) firstSelection;
+				} else if (firstSelection instanceof AngularElement) {
+					controller = (AngularElement) firstSelection;
 					module = controller.getModule();
 				}
 				if (module != null) {

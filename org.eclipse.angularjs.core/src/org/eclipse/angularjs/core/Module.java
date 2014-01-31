@@ -12,35 +12,38 @@ import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
 public class Module extends BaseModel implements ITernCompletionCollector,
-		IOpenableInEditor {
+		IDefinitionAware {
 
-	private List<Controller> controllers;
+	private List<AngularElement> elements;
 
 	public Module(String name, ITernScriptPath scriptPath) {
 		super(name, Type.Module, scriptPath);
 	}
 
-	public Object[] getControllers() {
-		if (controllers == null) {
-			this.controllers = new ArrayList<Controller>();
+	public Object[] getAngularElements() {
+		if (elements == null) {
+			this.elements = new ArrayList<AngularElement>();
 			// load all controllers of the given module
 			TernAngularCompletionsQuery query = new TernAngularCompletionsQuery(
 					AngularType.controller);
+			query.addType(AngularType.directive);
 			query.getScope().setModule(super.getName());
 			query.setExpression("");
 			super.execute(query, this);
 		}
-		return controllers.toArray();
+		return elements.toArray();
 	}
 
 	@Override
 	public void addProposal(String name, String type, String origin,
 			Object doc, int pos, Object completion, ITernServer ternServer) {
-		controllers.add(new Controller(name, Module.this));
+		AngularType angularType = AngularType.get(ternServer.getText(
+				completion, "angularType"));
+		elements.add(new AngularElement(name, angularType, Module.this));
 	}
 
 	@Override
-	public void openInEditor(ITernDefinitionCollector collector) {
+	public void findDefinition(ITernDefinitionCollector collector) {
 		// load all controllers of the given module
 		TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
 				AngularType.module);
