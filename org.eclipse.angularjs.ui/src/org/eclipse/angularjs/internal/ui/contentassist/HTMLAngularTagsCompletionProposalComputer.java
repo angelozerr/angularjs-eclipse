@@ -89,9 +89,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 							element instanceof Element ? (Element) element
 									: null, attr);
 
+			IProject project = DOMUtils.getFile(attr).getProject();
 			// Starts directives completion.
-			AngularModulesManager.getInstance().collectDirectives(tagName,
-					directiveName, false, existingDirectives,
+			AngularModulesManager.getInstance().collectDirectives(project,
+					tagName, directiveName, false, existingDirectives,
 					new IDirectiveCollector() {
 
 						@Override

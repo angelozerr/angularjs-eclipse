@@ -24,8 +24,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 
+import tern.angular.modules.AngularModulesManager;
+import tern.angular.modules.Directive;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.server.ITernServer;
 
 /**
  * Angular project.
@@ -40,9 +43,14 @@ public class AngularProject {
 
 	private final Map<ITernScriptPath, List<BaseModel>> folders;
 
+	private final CustomAngularModulesRegistry customDirectives;
+
 	AngularProject(IProject project) throws CoreException {
 		this.project = project;
 		this.folders = new HashMap<ITernScriptPath, List<BaseModel>>();
+		this.customDirectives = new CustomAngularModulesRegistry(project);
+		AngularModulesManager.getInstance().addRegistry(project,
+				customDirectives);
 		project.setSessionProperty(ANGULAR_PROJECT, this);
 	}
 
@@ -102,5 +110,10 @@ public class AngularProject {
 
 	public void cleanModel() {
 		this.folders.clear();
+	}
+
+	public Directive getDirective(String tagName, String name) {
+		return AngularModulesManager.getInstance().getDirective(project,
+				tagName, name);
 	}
 }

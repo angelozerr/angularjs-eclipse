@@ -10,8 +10,12 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.core.documentModel.dom;
 
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
+import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,8 +65,14 @@ public class AttrImplForAngular extends AttrImpl implements IAngularDOMAttr {
 		if (element == null) {
 			return null;
 		}
-		return AngularModulesManager.getInstance().getDirective(
-				element.getNodeName(), super.getName());
+		IProject project = DOMUtils.getFile(this).getProject();
+		try {
+			return AngularProject.getAngularProject(project).getDirective(
+					element.getNodeName(), super.getName());
+		} catch (CoreException e) {
+			return AngularModulesManager.getInstance().getDirective(project,
+					element.getNodeName(), super.getName());
+		}
 	}
 
 }

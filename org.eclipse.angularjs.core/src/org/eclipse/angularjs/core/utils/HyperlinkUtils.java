@@ -19,7 +19,29 @@ import org.w3c.dom.Node;
 
 public class HyperlinkUtils {
 
-	public static IRegion getHyperlinkRegion(Node node) {
+	public static IRegion getNameRegion(IDOMAttr attr) {
+		int regOffset = attr.getNameRegionStartOffset();
+		int regLength = attr.getNameRegionText().length();
+		/*String attValue = attr.getValueRegionText();
+		if (StringUtils.isQuoted(attValue)) {
+			regOffset++;
+			regLength -= 2;
+		}*/
+		return new Region(regOffset, regLength);
+	}
+
+	public static IRegion getValueRegion(IDOMAttr attr) {
+		int regOffset = attr.getValueRegionStartOffset();
+		int regLength = attr.getValueRegionText().length();
+		String attValue = attr.getValueRegionText();
+		if (StringUtils.isQuoted(attValue)) {
+			regOffset++;
+			regLength -= 2;
+		}
+		return new Region(regOffset, regLength);
+	}
+
+	/**public static IRegion getHyperlinkRegion(Node node) {
 		if (node != null)
 			switch (node.getNodeType()) {
 			case 3: // '\003'
@@ -50,5 +72,5 @@ public class HyperlinkUtils {
 				return new Region(regOffset, regLength);
 			}
 		return null;
-	}
+	}**/
 }

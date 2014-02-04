@@ -14,6 +14,7 @@ import org.eclipse.angularjs.core.utils.HyperlinkUtils;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 
 import tern.angular.AngularType;
@@ -29,13 +30,16 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 
 	private final IDOMAttr attr;
 	private final IFile file;
+	private final String expression;
 	private final AngularType angularType;
 
-	public HTMLAngularHyperLink(IDOMAttr attr, IFile file,
-			IDETernProject ternProject, AngularType angularType) {
-		super(HyperlinkUtils.getHyperlinkRegion(attr), ternProject);
+	public HTMLAngularHyperLink(IDOMAttr attr, IRegion region, IFile file,
+			IDETernProject ternProject, String expression,
+			AngularType angularType) {
+		super(region, ternProject);
 		this.attr = attr;
 		this.file = file;
+		this.expression = expression;
 		this.angularType = angularType;
 	}
 
@@ -44,7 +48,7 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 		try {
 			TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
 					angularType);
-			query.setExpression(attr.getValue());
+			query.setExpression(expression);
 			ITernScriptPath scriptPath = AngularScopeHelper.populateScope(
 					attr.getOwnerElement(), file, angularType, query);
 			if (scriptPath != null) {
