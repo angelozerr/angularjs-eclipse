@@ -10,37 +10,26 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.ui.taginfo;
 
-import java.io.IOException;
-import java.util.List;
-
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
-import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.w3c.dom.Element;
 
-import tern.TernException;
 import tern.angular.AngularType;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
-import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
-import tern.server.ITernServer;
-import tern.server.protocol.TernDoc;
 import tern.server.protocol.completions.TernCompletionItem;
 import tern.server.protocol.type.ITernTypeCollector;
 import tern.utils.StringUtils;
@@ -58,19 +47,20 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeTagAttNameHelp(IDOMNode xmlnode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
 			ITextRegion region) {
-
-		// Display Help of Angular Directive if it's an angular directive
-		// attribute
-		IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
-		Directive directive = DOMUtils.getAngularDirective(attr);
-		if (directive != null) {
-			return directive.getHTMLDescription();
-		} else {
-			// Check if it's a directive parameter which is hovered.
-			DirectiveParameter parameter = DOMUtils
-					.getAngularDirectiveParameter(attr);
-			if (parameter != null) {
-				return parameter.getHTMLDescription();
+		if (DOMUtils.hasAngularNature(xmlnode)) {
+			// Display Help of Angular Directive if it's an angular directive
+			// attribute
+			IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
+			Directive directive = DOMUtils.getAngularDirective(attr);
+			if (directive != null) {
+				return directive.getHTMLDescription();
+			} else {
+				// Check if it's a directive parameter which is hovered.
+				DirectiveParameter parameter = DOMUtils
+						.getAngularDirectiveParameter(attr);
+				if (parameter != null) {
+					return parameter.getHTMLDescription();
+				}
 			}
 		}
 		// Here the attribute is not a directive, display classic Help.
@@ -82,10 +72,9 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeTagAttValueHelp(IDOMNode xmlnode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
 			ITextRegion region) {
-		IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
-		if (attr instanceof IAngularDOMAttr) {
-			Directive directive = ((IAngularDOMAttr) attr)
-					.getAngularDirective();
+		if (DOMUtils.hasAngularNature(xmlnode)) {
+			IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
+			Directive directive = DOMUtils.getAngularDirective(attr);
 			if (directive != null) {
 
 				IFile file = DOMUtils.getFile(attr);
@@ -107,6 +96,21 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 		}
 		return super.computeTagAttValueHelp(xmlnode, parentNode, flatNode,
 				region);
+	}
+
+	@Override
+	protected String computeTagNameHelp(IDOMNode xmlnode, IDOMNode parentNode,
+			IStructuredDocumentRegion flatNode, ITextRegion region) {
+		// Display Help of Angular Directive if it's an angular directive
+		// attribute
+		if (DOMUtils.hasAngularNature(xmlnode) && xmlnode instanceof Element) {
+			Element element = (Element) xmlnode;
+			Directive directive = DOMUtils.getAngularDirective(element);
+			if (directive != null) {
+				return directive.getHTMLDescription();
+			}
+		}
+		return super.computeTagNameHelp(xmlnode, parentNode, flatNode, region);
 	}
 
 	private String find(IDOMAttr attr, IFile file, IDETernProject ternProject,

@@ -20,6 +20,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.w3c.dom.Element;
 
 /**
  * Coloring mechanism for Freemarker partitions
@@ -75,19 +76,12 @@ public class LineStyleProviderForAngular extends LineStyleProviderForHTML
 				result = (TextAttribute) getTextAttributes().get(
 						IStyleConstantsForAngular.ANGULAR_EXPRESSION);
 			}
-			/*
-			 * else if (type == PHPRegionContext.PHP_CLOSE) { result =
-			 * getAttributeFor(PHPRegionTypes.PHP_CLOSETAG); } else { result =
-			 * getAttributeFor(region.getType()); }
-			 */
 		}
 
 		// return the defalt attributes if there is not highlight color for the
 		// region
 		if (result != null) {
 			return result;
-			// result = (TextAttribute) getTextAttributes().get(
-			// PreferenceConstants.EDITOR_NORMAL_COLOR);
 		}
 		return super.getAttributeFor(region);
 	}
@@ -97,15 +91,26 @@ public class LineStyleProviderForAngular extends LineStyleProviderForHTML
 			ITextRegion region) {
 		if (region != null) {
 			final String type = region.getType();
-			if ((type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)) {
-				IDOMNode node = DOMUtils.getNodeByOffset(model,
+			if ((type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME || type == DOMRegionContext.XML_TAG_NAME)) {
+				IDOMNode parent = DOMUtils.getNodeByOffset(model,
 						collection.getStart());
-				if (node != null) {
-					IDOMAttr attr = DOMUtils.getAttrByOffset(node,
-							collection.getStart() + region.getStart());
-					if (DOMUtils.isAngularDirective(attr)) {
-						return (TextAttribute) getTextAttributes()
-								.get(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
+				if (parent != null) {
+					if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
+						IDOMAttr attr = DOMUtils.getAttrByOffset(parent,
+								collection.getStart() + region.getStart());
+						if (DOMUtils.isAngularDirective(attr)) {
+							// directive as attribute
+							return (TextAttribute) getTextAttributes()
+									.get(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
+						}
+					} else {
+						if (parent instanceof Element
+								&& DOMUtils
+										.isAngularDirective((Element) parent)) {
+							// directive as element
+							return (TextAttribute) getTextAttributes()
+									.get(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
+						}
 					}
 				}
 			}

@@ -11,6 +11,7 @@
 package org.eclipse.angularjs.core.documentModel.dom;
 
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.w3c.dom.Attr;
 
 import tern.angular.modules.Directive;
@@ -19,6 +20,7 @@ import tern.angular.modules.Directive;
  * Angular DOM {@link Attr} API.
  * 
  */
-public interface IAngularDOMAttr extends IDOMAttr, IAngularDirectiveProvider {
+public interface IAngularDOMElement extends IDOMElement,
+		IAngularDirectiveProvider {
 
 }

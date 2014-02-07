@@ -17,9 +17,10 @@ import org.eclipse.core.runtime.CoreException;
 import tern.angular.AngularType;
 import tern.angular.modules.AbstractAngularModulesRegistry;
 import tern.angular.modules.Directive;
+import tern.angular.modules.DirectiveValue;
 import tern.angular.modules.IDirectiveCollector;
 import tern.angular.modules.Module;
-import tern.angular.modules.UseAs;
+import tern.angular.modules.Restriction;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.utils.FileUtils;
@@ -53,10 +54,10 @@ public class CustomAngularModulesRegistry extends
 	@Override
 	public void collectDirectives(String tagName, String directiveName,
 			boolean fullMatch, List<Directive> existingDirectives,
-			IDirectiveCollector collector) {
+			Restriction restriction, IDirectiveCollector collector) {
 		refreshIfNeeded();
 		super.collectDirectives(tagName, directiveName, fullMatch,
-				existingDirectives, collector);
+				existingDirectives, restriction, collector);
 	}
 
 	protected void refreshIfNeeded() {
@@ -89,9 +90,12 @@ public class CustomAngularModulesRegistry extends
 									}
 
 									List<String> tagsName = new ArrayList<String>();
-									List<UseAs> useAs = new ArrayList<UseAs>();
+									String restrict = ternServer.getText(
+											completion, "restrict");
+									DirectiveValue directiveValue = DirectiveValue.none;
 									new Directive(name, AngularType.model,
-											null, tagsName, useAs, true, module);
+											null, tagsName, restrict,
+											directiveValue, module);
 								}
 
 							}

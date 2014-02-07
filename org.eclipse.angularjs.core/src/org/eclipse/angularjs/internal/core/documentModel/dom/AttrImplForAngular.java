@@ -36,10 +36,12 @@ public class AttrImplForAngular extends AttrImpl implements IAngularDOMAttr {
 		return regionType == AngularRegionContext.ANGULAR_EXPRESSION_OPEN;
 	}
 
+	@Override
 	protected void setOwnerDocument(Document ownerDocument) {
 		super.setOwnerDocument(ownerDocument);
 	}
 
+	@Override
 	protected void setName(String name) {
 		super.setName(name);
 		// Attribute name changes, the angular directive should be re-computed.

@@ -10,6 +10,8 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.w3c.dom.Node;
 
 import tern.angular.modules.AngularModulesManager;
+import tern.angular.modules.Directive;
+import tern.angular.modules.Restriction;
 
 public class HTMLAngularValidationReporter extends HTMLValidationReporter {
 
@@ -26,12 +28,12 @@ public class HTMLAngularValidationReporter extends HTMLValidationReporter {
 		int targetType = info.getTargetType();
 		// org.eclipse.wst.html.core.internal.validate.ErrorState.UNDEFINED_NAME_ERROR
 		// = 11 is private -(
-		if (targetType == Node.ATTRIBUTE_NODE && info.getState() == 11) {
+		if ((targetType == Node.ATTRIBUTE_NODE || targetType == Node.ELEMENT_NODE)
+				&& info.getState() == 11) {
 			// It's an error about attribute name, check if it's an Angular
 			// Attribute (ex : ng-app)
-			String attrName = info.getHint();
-			if (AngularModulesManager.getInstance().getDirective(project, null,
-					attrName) == null) {
+			String name = info.getHint();
+			if (!isDirective(project, name, targetType)) {
 				// it's not an angular directive, report the error
 				super.report(info);
 			}
@@ -39,6 +41,30 @@ public class HTMLAngularValidationReporter extends HTMLValidationReporter {
 			// report the error
 			super.report(info);
 		}
+	}
+
+	/**
+	 * Returns true if the given name is a directive for the current node
+	 * (attribute, element) and false otherwise.
+	 * 
+	 * @param project
+	 * @param name
+	 * @param targetType
+	 * @return
+	 */
+	private boolean isDirective(IProject project, String name, int targetType) {
+		Directive directive = AngularModulesManager.getInstance().getDirective(
+				project, null, name);
+		if (directive == null) {
+			return false;
+		}
+		switch (targetType) {
+		case Node.ATTRIBUTE_NODE:
+			return directive.isMatch(Restriction.A);
+		case Node.ELEMENT_NODE:
+			return directive.isMatch(Restriction.E);
+		}
+		return false;
 	}
 
 }

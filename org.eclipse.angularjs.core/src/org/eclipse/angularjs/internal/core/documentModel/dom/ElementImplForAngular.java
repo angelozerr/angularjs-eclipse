@@ -10,7 +10,12 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.core.documentModel.dom;
 
+import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMElement;
+import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
@@ -19,16 +24,23 @@ import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import tern.angular.modules.AngularModulesManager;
+import tern.angular.modules.Directive;
 
 /**
  * Represents elements in the dom model Angular.
  * 
  */
 public class ElementImplForAngular extends ElementStyleImpl implements
-		IAdaptable {
+		IAdaptable, IAngularDOMElement {
 
 	private static final String WORKBENCH_ADAPTER = "org.eclipse.ui.model.IWorkbenchAdapter"; //$NON-NLS-1$
+
+	private boolean angularDirectiveDirty = true;
+	private Directive angularDirective;
 
 	public ElementImplForAngular() {
 		super();
@@ -67,8 +79,12 @@ public class ElementImplForAngular extends ElementStyleImpl implements
 	/**
 	 * @see setTagName(String) make this method package visible
 	 */
+	@Override
 	protected void setTagName(String tagName) {
 		super.setTagName(tagName);
+		// Element tag name changes, the angular directive should be
+		// re-computed.
+		angularDirectiveDirty = true;
 	}
 
 	public boolean isGlobalTag() {
@@ -106,4 +122,31 @@ public class ElementImplForAngular extends ElementStyleImpl implements
 	public boolean isStartTagClosed() {
 		return isPhpTag() ? true : super.isStartTagClosed();
 	}
+
+	@Override
+	public boolean isAngularDirective() {
+		return getAngularDirective() != null;
+	}
+
+	@Override
+	public Directive getAngularDirective() {
+		if (angularDirectiveDirty) {
+			angularDirective = computeAngularDirective();
+			angularDirectiveDirty = false;
+		}
+		return angularDirective;
+	}
+
+	private Directive computeAngularDirective() {
+
+		IProject project = DOMUtils.getFile(this).getProject();
+		try {
+			return AngularProject.getAngularProject(project).getDirective(null,
+					super.getTagName());
+		} catch (CoreException e) {
+			return AngularModulesManager.getInstance().getDirective(project,
+					null, super.getTagName());
+		}
+	}
+
 }

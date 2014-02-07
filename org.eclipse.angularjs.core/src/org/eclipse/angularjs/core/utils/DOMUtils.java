@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
-import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
+import org.eclipse.angularjs.core.documentModel.dom.IAngularDirectiveProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -162,7 +162,7 @@ public class DOMUtils {
 	 * Returns the SSE DOM Attribute {@link IDOMAttr} by offset from the SSE DOM
 	 * node {@link IDOMNode}.
 	 * 
-	 * @param element
+	 * @param E
 	 *            the SSE DOM element {@link IDOMElement}.
 	 * @param region
 	 *            the region.
@@ -610,8 +610,8 @@ public class DOMUtils {
 		if (attr == null) {
 			return false;
 		}
-		if ((attr instanceof IAngularDOMAttr)) {
-			return ((IAngularDOMAttr) attr).isAngularDirective();
+		if ((attr instanceof IAngularDirectiveProvider)) {
+			return ((IAngularDirectiveProvider) attr).isAngularDirective();
 		}
 		return getAngularDirective(attr) != null;
 	}
@@ -631,7 +631,7 @@ public class DOMUtils {
 
 	/**
 	 * Returns the {@link Directive} by the attribute region from the SSE DOM
-	 * element {@link IDOMElement} anf null otherwise.
+	 * element {@link IDOMElement} and null otherwise.
 	 * 
 	 * @param element
 	 *            the SSE DOM element {@link IDOMElement}.
@@ -641,7 +641,7 @@ public class DOMUtils {
 	 * @return the {@link Directive} by the attribute region from the SSE DOM
 	 *         element {@link IDOMElement} anf null otherwise.
 	 */
-	public static Directive getAngularDirective(IDOMNode element,
+	public static Directive getAngularDirectiveAttr(IDOMNode element,
 			ITextRegion region) {
 		IDOMAttr attr = DOMUtils.getAttrByRegion(element, region);
 		return DOMUtils.getAngularDirective(attr);
@@ -685,6 +685,39 @@ public class DOMUtils {
 				.emptyList());
 	}
 
+	/**
+	 * Returns true if the given element is an angular directive and false
+	 * otherwise.
+	 * 
+	 * @param attr
+	 *            DOM element.
+	 * @return true if the given attribute is an angular directive and false
+	 *         otherwise.
+	 */
+	public static boolean isAngularDirective(Element element) {
+		if (element == null) {
+			return false;
+		}
+		if ((element instanceof IAngularDirectiveProvider)) {
+			return ((IAngularDirectiveProvider) element).isAngularDirective();
+		}
+		return getAngularDirective(element) != null;
+	}
+
+	/**
+	 * Returns the angular {@link Directive} of the given attribute and null
+	 * otherwise.
+	 * 
+	 * @param attr
+	 *            DOM attribute.
+	 * @return the angular {@link Directive} of the given attribute and null
+	 *         otherwise.
+	 */
+	public static Directive getAngularDirective(Element element) {
+		return DOMSSEDirectiveProvider.getInstance().getAngularDirective(
+				element);
+	}
+
 	public static boolean hasAngularNature(IDOMNode element) {
 		IFile file = DOMUtils.getFile(element);
 		if (file == null) {
@@ -709,6 +742,19 @@ public class DOMUtils {
 			}
 		}
 		return null;
+	}
+
+	public static boolean isAngularDirective(Node node) {
+		if (node == null) {
+			return false;
+		}
+		switch (node.getNodeType()) {
+		case Node.ATTRIBUTE_NODE:
+			return isAngularDirective((Attr) node);
+		case Node.ELEMENT_NODE:
+			return isAngularDirective((Element) node);
+		}
+		return false;
 	}
 
 }
