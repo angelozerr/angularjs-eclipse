@@ -180,6 +180,33 @@
 			class="org.eclipse.angularjs.internal.ui.preferences.AngularUIPreferenceInitializer" />
 	</extension>		     
 	
+	<extension
+         point="org.eclipse.ui.propertyPages">		      
+      <page
+            name="%AngularMainPropertyPage.name"        
+            class="org.eclipse.angularjs.internal.ui.properties.AngularMainPropertyPage"
+            id="org.eclipse.angularjs.internal.ui.properties.AngularMainPropertyPage">
+         <enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		          <test property="org.eclipse.core.resources.projectNature" 
+		          		value="org.eclipse.angularjs.core.angularnature"/>
+		     </adapt>         
+         </enabledWhen>
+      </page>
+      <page
+            name="%DirectivesPropertyPage.name"        
+            category="org.eclipse.angularjs.internal.ui.properties.AngularMainPropertyPage"       
+            class="org.eclipse.angularjs.internal.ui.properties.DirectivesPropertyPage"
+            id="org.eclipse.angularjs.internal.ui.properties.DirectivesPropertyPage">
+         <enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		          <test property="org.eclipse.core.resources.projectNature" 
+		          		value="org.eclipse.angularjs.core.angularnature"/>
+		     </adapt>         
+         </enabledWhen>
+      </page>      
+	</extension>		     
+	      	
 	<!-- Angular UI Adapter factories					   						  				  -->
 	<!--
 		======================================================================================

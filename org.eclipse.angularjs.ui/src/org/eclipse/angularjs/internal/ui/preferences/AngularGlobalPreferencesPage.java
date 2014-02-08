@@ -11,6 +11,7 @@
 package org.eclipse.angularjs.internal.ui.preferences;
 
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
+import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -29,6 +30,11 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
  */
 public class AngularGlobalPreferencesPage extends PreferencePage implements
 		IWorkbenchPreferencePage {
+
+	public AngularGlobalPreferencesPage() {
+		setImageDescriptor(ImageResource
+				.getImageDescriptor(ImageResource.IMG_ANGULARJS));
+	}
 
 	private Composite createComposite(Composite parent, int numColumns) {
 		noDefaultAndApplyButton();
