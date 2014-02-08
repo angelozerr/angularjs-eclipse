@@ -26,9 +26,11 @@ import org.eclipse.core.runtime.Status;
 
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
+import tern.angular.modules.DirectiveSyntax;
+import tern.angular.modules.IDirectiveCollector;
+import tern.angular.modules.Restriction;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
-import tern.server.ITernServer;
 
 /**
  * Angular project.
@@ -44,6 +46,8 @@ public class AngularProject {
 	private final Map<ITernScriptPath, List<BaseModel>> folders;
 
 	private final CustomAngularModulesRegistry customDirectives;
+
+	private DirectiveSyntax syntax;
 
 	AngularProject(IProject project) throws CoreException {
 		this.project = project;
@@ -115,5 +119,18 @@ public class AngularProject {
 	public Directive getDirective(String tagName, String name) {
 		return AngularModulesManager.getInstance().getDirective(project,
 				tagName, name);
+	}
+
+	public DirectiveSyntax getDirectiveSyntax() {
+		return syntax;
+	}
+
+	public void collectDirectives(String tagName, String directiveName,
+			boolean fullMatch, List<Directive> existingDirectives,
+			Restriction restriction, IDirectiveCollector collector) {
+		AngularModulesManager.getInstance().collectDirectives(project, tagName,
+				directiveName, syntax, fullMatch, existingDirectives,
+				restriction, collector);
+
 	}
 }

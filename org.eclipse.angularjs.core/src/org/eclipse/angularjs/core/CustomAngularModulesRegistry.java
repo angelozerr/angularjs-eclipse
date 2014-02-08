@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.CoreException;
 import tern.angular.AngularType;
 import tern.angular.modules.AbstractAngularModulesRegistry;
 import tern.angular.modules.Directive;
+import tern.angular.modules.DirectiveSyntax;
 import tern.angular.modules.DirectiveValue;
 import tern.angular.modules.IDirectiveCollector;
 import tern.angular.modules.Module;
@@ -53,10 +54,11 @@ public class CustomAngularModulesRegistry extends
 
 	@Override
 	public void collectDirectives(String tagName, String directiveName,
-			boolean fullMatch, List<Directive> existingDirectives,
-			Restriction restriction, IDirectiveCollector collector) {
+			DirectiveSyntax syntax, boolean fullMatch,
+			List<Directive> existingDirectives, Restriction restriction,
+			IDirectiveCollector collector) {
 		refreshIfNeeded();
-		super.collectDirectives(tagName, directiveName, fullMatch,
+		super.collectDirectives(tagName, directiveName, syntax, fullMatch,
 				existingDirectives, restriction, collector);
 	}
 

@@ -21,6 +21,7 @@ import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
@@ -40,7 +41,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import tern.angular.AngularType;
-import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveHelper;
 import tern.angular.modules.DirectiveParameter;
@@ -73,7 +73,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			CompletionProposalInvocationContext context) {
 		// Check if project has angular nature
 		IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
-		if (DOMUtils.hasAngularNature(element) && !DOMUtils.isAngularDirective(element)) {
+		if (DOMUtils.hasAngularNature(element)
+				&& !DOMUtils.isAngularDirective(element)) {
 			// completion for directive with 'A' restriction : completion for
 			// attribute name with angular directive (ex :
 			// ng-app)
@@ -86,12 +87,16 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					.getAngularDirectives(
 							element instanceof Element ? (Element) element
 									: null, attr);
-
-			IProject project = DOMUtils.getFile(attr).getProject();
+			AngularProject project = null;
+			try {
+				project = AngularProject.getAngularProject(DOMUtils.getFile(
+						attr).getProject());
+			} catch (CoreException e) {
+			}
 			// Starts directives completion.
-			AngularModulesManager.getInstance().collectDirectives(project,
-					tagName, directiveName, false, existingDirectives,
-					Restriction.A, new IDirectiveCollector() {
+			project.collectDirectives(tagName, directiveName, false,
+					existingDirectives, Restriction.A,
+					new IDirectiveCollector() {
 
 						@Override
 						public void add(Directive directive, String name) {
@@ -204,11 +209,15 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		// with 'C' restrict.
 		String matchingString = "";// attr.getValue();
 
-		IProject project = DOMUtils.getFile(attr).getProject();
+		AngularProject project = null;
+		try {
+			project = AngularProject.getAngularProject(DOMUtils.getFile(attr)
+					.getProject());
+		} catch (CoreException e) {
+		}
 		// Starts directives completion.
-		AngularModulesManager.getInstance().collectDirectives(project, null,
-				matchingString, false, null, Restriction.C,
-				new IDirectiveCollector() {
+		project.collectDirectives(null, matchingString, false, null,
+				Restriction.C, new IDirectiveCollector() {
 
 					@Override
 					public void add(Directive directive, String name) {
@@ -441,11 +450,16 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
 		if (DOMUtils.hasAngularNature(node)) {
 			// completion for directive with 'E' restriction.
-			IProject project = DOMUtils.getFile(node).getProject();
 			String directiveName = contentAssistRequest.getMatchString();
-			AngularModulesManager.getInstance().collectDirectives(project,
-					DirectiveHelper.ANY_TAG, directiveName, false, null,
-					Restriction.E, new IDirectiveCollector() {
+
+			AngularProject project = null;
+			try {
+				project = AngularProject.getAngularProject(DOMUtils.getFile(
+						node).getProject());
+			} catch (CoreException e) {
+			}
+			project.collectDirectives(DirectiveHelper.ANY_TAG, directiveName,
+					false, null, Restriction.E, new IDirectiveCollector() {
 
 						@Override
 						public void add(Directive directive, String name) {
