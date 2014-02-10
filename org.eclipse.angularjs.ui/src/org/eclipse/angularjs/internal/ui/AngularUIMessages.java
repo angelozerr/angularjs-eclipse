@@ -55,6 +55,19 @@ public final class AngularUIMessages extends NLS {
 	public static String HTMLAngularHyperLink_text;
 	public static String HTMLAngularHyperLink_typeLabel;
 
+	// Preferences
+	public static String DirectivesPropertyPage_desc;
+	public static String DirectivesPropertyPage_useOriginalName_label;
+	public static String DirectivesPropertyPage_startsWithLabel_text;
+	public static String DirectivesPropertyPage_startsWithNothing_label;
+	public static String DirectivesPropertyPage_startsWithX_label;
+	public static String DirectivesPropertyPage_startsWithData_label;
+	public static String DirectivesPropertyPage_delimiterLabel_text;
+	public static String DirectivesPropertyPage_colonDelimiter_label;
+	public static String DirectivesPropertyPage_minusDelimiter_label;
+	public static String DirectivesPropertyPage_underscoreDelimiter_label;
+	public static String DirectivesPropertyPage_directiveTestLabel_text;
+	
 	private AngularUIMessages() {
 	}
 

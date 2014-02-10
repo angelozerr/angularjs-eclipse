@@ -94,7 +94,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			} catch (CoreException e) {
 			}
 			// Starts directives completion.
-			project.collectDirectives(tagName, directiveName, false,
+			project.collectDirectives(tagName, directiveName,
 					existingDirectives, Restriction.A,
 					new IDirectiveCollector() {
 
@@ -216,8 +216,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		} catch (CoreException e) {
 		}
 		// Starts directives completion.
-		project.collectDirectives(null, matchingString, false, null,
-				Restriction.C, new IDirectiveCollector() {
+		project.collectDirectives(null, matchingString, null, Restriction.C,
+				new IDirectiveCollector() {
 
 					@Override
 					public void add(Directive directive, String name) {
@@ -459,7 +459,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			} catch (CoreException e) {
 			}
 			project.collectDirectives(DirectiveHelper.ANY_TAG, directiveName,
-					false, null, Restriction.E, new IDirectiveCollector() {
+					null, Restriction.E, new IDirectiveCollector() {
 
 						@Override
 						public void add(Directive directive, String name) {

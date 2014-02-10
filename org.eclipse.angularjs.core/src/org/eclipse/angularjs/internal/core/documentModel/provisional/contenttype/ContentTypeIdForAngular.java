@@ -1,6 +1,6 @@
 package org.eclipse.angularjs.internal.core.documentModel.provisional.contenttype;
 
-import org.eclipse.angularjs.internal.core.AngularCorePlugin;
+import org.eclipse.angularjs.core.AngularCorePlugin;
 
 public class ContentTypeIdForAngular {
 	/**

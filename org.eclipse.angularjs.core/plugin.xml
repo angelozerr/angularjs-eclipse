@@ -72,5 +72,13 @@
 		<content-type
         id="org.eclipse.angularjs.core.angularsource">
 		</content-type>
-	</extension>	
+	</extension>
+	
+	<!-- Preferences initialization -->
+	<extension
+		point="org.eclipse.core.runtime.preferences">
+		<initializer
+			class="org.eclipse.angularjs.internal.core.preferences.AngularCorePreferenceInitializer" />
+	</extension>
+	
 </plugin>        

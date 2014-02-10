@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Angelo ZERR.
+ * Copyright (c) 2014 Angelo ZERR.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.angularjs.internal.core.AngularCorePlugin;
 import org.eclipse.angularjs.internal.core.Trace;
+import org.eclipse.angularjs.internal.core.preferences.AngularCorePreferencesSupport;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -26,7 +26,7 @@ import org.eclipse.core.runtime.Status;
 
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
-import tern.angular.modules.DirectiveSyntax;
+import tern.angular.modules.IDirectiveSyntax;
 import tern.angular.modules.IDirectiveCollector;
 import tern.angular.modules.Restriction;
 import tern.eclipse.ide.core.IDETernProject;
@@ -36,7 +36,7 @@ import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
  * Angular project.
  * 
  */
-public class AngularProject {
+public class AngularProject implements IDirectiveSyntax {
 
 	private static final QualifiedName ANGULAR_PROJECT = new QualifiedName(
 			AngularCorePlugin.PLUGIN_ID + ".sessionprops", "AngularProject");
@@ -46,8 +46,6 @@ public class AngularProject {
 	private final Map<ITernScriptPath, List<BaseModel>> folders;
 
 	private final CustomAngularModulesRegistry customDirectives;
-
-	private DirectiveSyntax syntax;
 
 	AngularProject(IProject project) throws CoreException {
 		this.project = project;
@@ -121,16 +119,54 @@ public class AngularProject {
 				tagName, name);
 	}
 
-	public DirectiveSyntax getDirectiveSyntax() {
-		return syntax;
+	public void collectDirectives(String tagName, String directiveName,
+			List<Directive> existingDirectives, Restriction restriction,
+			IDirectiveCollector collector) {
+		AngularModulesManager.getInstance()
+				.collectDirectives(project, tagName, directiveName, this,
+						existingDirectives, restriction, collector);
+
 	}
 
-	public void collectDirectives(String tagName, String directiveName,
-			boolean fullMatch, List<Directive> existingDirectives,
-			Restriction restriction, IDirectiveCollector collector) {
-		AngularModulesManager.getInstance().collectDirectives(project, tagName,
-				directiveName, syntax, fullMatch, existingDirectives,
-				restriction, collector);
+	@Override
+	public boolean isUseOriginalName() {
+		return AngularCorePreferencesSupport.getInstance()
+				.isDirectiveUseOriginalName(project);
+	}
 
+	@Override
+	public boolean isStartsWithNothing() {
+		return AngularCorePreferencesSupport.getInstance()
+				.isDirectiveStartsWithNothing(project);
+	}
+
+	@Override
+	public boolean isStartsWithX() {
+		return AngularCorePreferencesSupport.getInstance()
+				.isDirectiveStartsWithX(project);
+	}
+
+	@Override
+	public boolean isStartsWithData() {
+		return AngularCorePreferencesSupport.getInstance()
+				.isDirectiveStartsWithData(project);
+	}
+
+	@Override
+	public boolean isColonDelimiter() {
+		return AngularCorePreferencesSupport.getInstance()
+				.isDirectiveColonDelimiter(project);
+	}
+
+	@Override
+	public boolean isMinusDelimiter() {
+		return AngularCorePreferencesSupport.getInstance()
+				.isDirectiveMinusDelimiter(project);
+	}
+
+	@Override
+	public boolean isUnderscoreDelimiter() {
+		return AngularCorePreferencesSupport.getInstance()
+				.isDirectiveUnderscoreDelimiter(project);
 	}
 }

@@ -1,13 +1,12 @@
 package org.eclipse.angularjs.internal.ui.properties;
 
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPropertyPage;
-
-import tern.eclipse.ide.core.IDETernProject;
 
 public abstract class AbstractAngularFieldEditorPropertyPage extends
 		FieldEditorPreferencePage implements IWorkbenchPropertyPage {
@@ -39,8 +38,8 @@ public abstract class AbstractAngularFieldEditorPropertyPage extends
 		this.element = element;
 	}
 
-	public IDETernProject getTernProject() throws CoreException {
-		return IDETernProject.getTernProject(getResource().getProject());
+	public AngularProject getAngularProject() throws CoreException {
+		return AngularProject.getAngularProject(getResource().getProject());
 	}
 
 	private IResource getResource() {
