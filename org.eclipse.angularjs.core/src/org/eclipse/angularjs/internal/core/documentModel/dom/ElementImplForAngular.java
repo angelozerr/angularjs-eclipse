@@ -24,11 +24,11 @@ import org.eclipse.wst.sse.core.internal.validate.ValidationAdapter;
 import org.eclipse.wst.xml.core.internal.document.ElementImpl;
 import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
+import tern.angular.modules.DirectiveParameter;
 
 /**
  * Represents elements in the dom model Angular.
@@ -124,11 +124,6 @@ public class ElementImplForAngular extends ElementStyleImpl implements
 	}
 
 	@Override
-	public boolean isAngularDirective() {
-		return getAngularDirective() != null;
-	}
-
-	@Override
 	public Directive getAngularDirective() {
 		if (angularDirectiveDirty) {
 			angularDirective = computeAngularDirective();
@@ -147,6 +142,12 @@ public class ElementImplForAngular extends ElementStyleImpl implements
 			return AngularModulesManager.getInstance().getDirective(project,
 					null, super.getTagName());
 		}
+	}
+
+	@Override
+	public DirectiveParameter getAngularDirectiveParameter() {
+		// element cannot be a directive parameter
+		return null;
 	}
 
 }

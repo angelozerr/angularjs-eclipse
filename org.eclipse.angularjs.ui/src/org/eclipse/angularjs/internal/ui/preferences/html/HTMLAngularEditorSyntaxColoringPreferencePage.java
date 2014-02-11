@@ -856,6 +856,7 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 			styles.add(IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
 			styles.add(IStyleConstantsForAngular.ANGULAR_EXPRESSION);
 			styles.add(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
+			styles.add(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME);
 			fStylePreferenceKeys = styles;
 		}
 		return fStylePreferenceKeys;
@@ -867,6 +868,7 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 			styles.add(IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
 			styles.add(IStyleConstantsForAngular.ANGULAR_EXPRESSION);
 			styles.add(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
+			styles.add(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME);
 			styles.add(IStyleConstantsXML.TAG_BORDER);
 			styles.add(IStyleConstantsXML.TAG_NAME);
 			styles.add(IStyleConstantsXML.TAG_ATTRIBUTE_NAME);

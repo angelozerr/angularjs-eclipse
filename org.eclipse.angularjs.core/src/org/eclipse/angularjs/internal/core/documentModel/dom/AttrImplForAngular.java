@@ -10,18 +10,16 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.core.documentModel.dom;
 
-import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import tern.angular.modules.AngularModulesManager;
+import tern.angular.modules.DOMDirectiveProvider;
 import tern.angular.modules.Directive;
+import tern.angular.modules.DirectiveParameter;
 
 /**
  * Represents attributes implementation in Angular dom model
@@ -29,8 +27,9 @@ import tern.angular.modules.Directive;
  */
 public class AttrImplForAngular extends AttrImpl implements IAngularDOMAttr {
 
-	private boolean angularDirectiveDirty = true;
+	private Boolean angularDirectiveDirty = true;
 	private Directive angularDirective;
+	private DirectiveParameter directiveParameter;
 
 	protected boolean isNestedLanguageOpening(String regionType) {
 		return regionType == AngularRegionContext.ANGULAR_EXPRESSION_OPEN;
@@ -45,36 +44,47 @@ public class AttrImplForAngular extends AttrImpl implements IAngularDOMAttr {
 	protected void setName(String name) {
 		super.setName(name);
 		// Attribute name changes, the angular directive should be re-computed.
-		angularDirectiveDirty = true;
-	}
-
-	@Override
-	public boolean isAngularDirective() {
-		return getAngularDirective() != null;
+		synchronized (angularDirectiveDirty) {
+			angularDirectiveDirty = true;
+		}
 	}
 
 	@Override
 	public Directive getAngularDirective() {
-		if (angularDirectiveDirty) {
-			angularDirective = computeAngularDirective();
-			angularDirectiveDirty = false;
-		}
+		computeIfNeeded();
 		return angularDirective;
 	}
 
+	public void computeIfNeeded() {
+		synchronized (angularDirectiveDirty) {
+			if (angularDirectiveDirty) {
+				// check if it's a angular directive.
+				angularDirective = computeAngularDirective();
+				if (angularDirective == null) {
+					// check if it's an angular directive parameter
+					directiveParameter = computeAngularDirectiveParameter();
+				}
+				angularDirectiveDirty = false;
+			}
+		}
+	}
+
 	private Directive computeAngularDirective() {
-		Element element = getOwnerElement();
-		if (element == null) {
-			return null;
-		}
 		IProject project = DOMUtils.getFile(this).getProject();
-		try {
-			return AngularProject.getAngularProject(project).getDirective(
-					element.getNodeName(), super.getName());
-		} catch (CoreException e) {
-			return AngularModulesManager.getInstance().getDirective(project,
-					element.getNodeName(), super.getName());
-		}
+		return DOMDirectiveProvider.getInstance().getAngularDirective(project,
+				this);
+	}
+
+	private DirectiveParameter computeAngularDirectiveParameter() {
+		IProject project = DOMUtils.getFile(this).getProject();
+		return DOMDirectiveProvider.getInstance().getAngularDirectiveParameter(
+				project, this);
+	}
+
+	@Override
+	public DirectiveParameter getAngularDirectiveParameter() {
+		computeIfNeeded();
+		return directiveParameter;
 	}
 
 }

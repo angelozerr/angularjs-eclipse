@@ -8,7 +8,6 @@ import org.eclipse.core.resources.IFile;
 import org.w3c.dom.Node;
 
 import tern.angular.AngularType;
-import tern.angular.modules.IDirectiveProvider;
 import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
@@ -18,8 +17,9 @@ public class AngularScopeHelper {
 	public static ITernScriptPath populateScope(Node element, IFile file,
 			AngularType angularType, TernAngularQuery query) throws Exception {
 		ITernScriptPath scriptPath = null;
-		HTMLTernAngularHelper.populateScope(element,
-				DOMSSEDirectiveProvider.getInstance(), query);
+		HTMLTernAngularHelper
+				.populateScope(element, DOMSSEDirectiveProvider.getInstance(),
+						file.getProject(), query);
 		AngularLinkResource info = null;
 		if (angularType != AngularType.module) {
 			// Check if query has module defined.

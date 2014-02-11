@@ -65,7 +65,8 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 						.getTernProject(project);
 				boolean isAttrValue = region.getOffset() > attr
 						.getNameRegionEndOffset();
-				Directive directive = DOMUtils.getAngularDirective(attr);
+				Directive directive = DOMUtils.getAngularDirective(project,
+						attr);
 				if (directive != null) {
 					if (isAttrValue) {
 						// Hyperlink on attr value

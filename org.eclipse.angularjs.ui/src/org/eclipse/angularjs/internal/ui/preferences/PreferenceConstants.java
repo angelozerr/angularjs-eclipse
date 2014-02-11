@@ -46,6 +46,12 @@ public class PreferenceConstants {
 		store.setDefault(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME,
 				styleValue);
 
+		styleValue = ColorHelper.findRGBString(registry,
+				IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME, 14, 140, 145)
+				+ JUSTBOLD;
+		store.setDefault(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME,
+				styleValue);
+		
 		// Defaults for the Typing preference page
 		store.setDefault(AngularUIPreferenceNames.TYPING_COMPLETE_END_EL, true);
 

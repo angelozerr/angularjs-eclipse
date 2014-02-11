@@ -51,13 +51,14 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			// Display Help of Angular Directive if it's an angular directive
 			// attribute
 			IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
-			Directive directive = DOMUtils.getAngularDirective(attr);
+			IProject project = DOMUtils.getFile(attr).getProject();
+			Directive directive = DOMUtils.getAngularDirective(project, attr);
 			if (directive != null) {
 				return directive.getHTMLDescription();
 			} else {
 				// Check if it's a directive parameter which is hovered.
 				DirectiveParameter parameter = DOMUtils
-						.getAngularDirectiveParameter(attr);
+						.getAngularDirectiveParameter(project, attr);
 				if (parameter != null) {
 					return parameter.getHTMLDescription();
 				}
@@ -74,15 +75,13 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			ITextRegion region) {
 		if (DOMUtils.hasAngularNature(xmlnode)) {
 			IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
-			Directive directive = DOMUtils.getAngularDirective(attr);
+			IFile file = DOMUtils.getFile(attr);
+			IProject project = file.getProject();
+			Directive directive = DOMUtils.getAngularDirective(project, attr);
 			if (directive != null) {
-
-				IFile file = DOMUtils.getFile(attr);
-				IProject eclipseProject = file.getProject();
 				try {
 					IDETernProject ternProject = AngularProject
-							.getTernProject(eclipseProject);
-
+							.getTernProject(project);
 					String help = find(attr, file, ternProject,
 							directive.getType());
 					if (!StringUtils.isEmpty(help)) {
@@ -102,10 +101,12 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeTagNameHelp(IDOMNode xmlnode, IDOMNode parentNode,
 			IStructuredDocumentRegion flatNode, ITextRegion region) {
 		// Display Help of Angular Directive if it's an angular directive
-		// attribute
+		// element
 		if (DOMUtils.hasAngularNature(xmlnode) && xmlnode instanceof Element) {
 			Element element = (Element) xmlnode;
-			Directive directive = DOMUtils.getAngularDirective(element);
+			IProject project = DOMUtils.getFile(xmlnode).getProject();
+			Directive directive = DOMUtils
+					.getAngularDirective(project, element);
 			if (directive != null) {
 				return directive.getHTMLDescription();
 			}

@@ -51,16 +51,16 @@ public class HTMLAngularContentValidator extends AbstractValidator {
 			for (int i = 0; i < map.getLength(); i++) {
 				IDOMAttr attr = (IDOMAttr) map.item(i);
 				if (attr.getValueRegionStartOffset() != 0) {
-					Directive directive = DOMUtils.getAngularDirective(attr);
+					IProject project = file.getProject();
+					Directive directive = DOMUtils.getAngularDirective(project,
+							attr);
 					if (directive != null) {
 						switch (directive.getType()) {
 						case module:
 						case controller:
-
-							IProject eclipseProject = file.getProject();
 							try {
 								IDETernProject ternProject = AngularProject
-										.getTernProject(eclipseProject);
+										.getTernProject(project);
 
 								boolean exists = find(attr, file, ternProject,
 										directive.getType());

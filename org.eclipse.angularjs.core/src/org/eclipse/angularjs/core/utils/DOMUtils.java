@@ -18,8 +18,8 @@ import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
-import org.eclipse.angularjs.core.documentModel.dom.IAngularDirectiveProvider;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -45,6 +45,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import tern.angular.modules.DOMDirectiveProvider;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
 
@@ -606,14 +607,12 @@ public class DOMUtils {
 	 * @return true if the given attribute is an angular directive (ex : ng-app)
 	 *         and false otherwise.
 	 */
-	public static boolean isAngularDirective(Attr attr) {
+	public static boolean isAngularDirective(IDOMAttr attr) {
 		if (attr == null) {
 			return false;
 		}
-		if ((attr instanceof IAngularDirectiveProvider)) {
-			return ((IAngularDirectiveProvider) attr).isAngularDirective();
-		}
-		return getAngularDirective(attr) != null;
+		IProject project = DOMUtils.getFile(attr).getProject();
+		return getAngularDirective(project, attr) != null;
 	}
 
 	/**
@@ -625,8 +624,9 @@ public class DOMUtils {
 	 * @return the angular {@link Directive} of the given attribute and null
 	 *         otherwise.
 	 */
-	public static Directive getAngularDirective(Attr attr) {
-		return DOMSSEDirectiveProvider.getInstance().getAngularDirective(attr);
+	public static Directive getAngularDirective(IProject project, Attr attr) {
+		return DOMSSEDirectiveProvider.getInstance().getAngularDirective(
+				project, attr);
 	}
 
 	/**
@@ -641,10 +641,11 @@ public class DOMUtils {
 	 * @return the {@link Directive} by the attribute region from the SSE DOM
 	 *         element {@link IDOMElement} anf null otherwise.
 	 */
-	public static Directive getAngularDirectiveAttr(IDOMNode element,
+	public static Directive getAngularDirectiveByRegion(IDOMNode element,
 			ITextRegion region) {
 		IDOMAttr attr = DOMUtils.getAttrByRegion(element, region);
-		return DOMUtils.getAngularDirective(attr);
+		IProject project = DOMUtils.getFile(element).getProject();
+		return DOMUtils.getAngularDirective(project, attr);
 	}
 
 	/**
@@ -660,30 +661,18 @@ public class DOMUtils {
 	 * @param element
 	 * @return
 	 */
-	public static List<Directive> getAngularDirectives(Element element,
-			Attr selectedAttr) {
-		if (element == null) {
-			return Collections.emptyList();
-		}
-		List<Directive> names = null;
-		NamedNodeMap attributes = element.getAttributes();
-		int length = attributes.getLength();
-		Attr attr = null;
-		for (int i = 0; i < length; i++) {
-			attr = (Attr) attributes.item(i);
-			if (selectedAttr == null || !selectedAttr.equals(attr)) {
-				Directive directive = getAngularDirective(attr);
-				if (directive != null) {
-					if (names == null) {
-						names = new ArrayList<Directive>();
-					}
-					names.add(directive);
-				}
-			}
-		}
-		return (List<Directive>) (names != null ? names : Collections
-				.emptyList());
-	}
+	/*
+	 * public static List<Directive> getAngularDirectives(Element element, Attr
+	 * selectedAttr) { if (element == null) { return Collections.emptyList(); }
+	 * List<Directive> names = null; NamedNodeMap attributes =
+	 * element.getAttributes(); int length = attributes.getLength(); Attr attr =
+	 * null; for (int i = 0; i < length; i++) { attr = (Attr)
+	 * attributes.item(i); if (selectedAttr == null ||
+	 * !selectedAttr.equals(attr)) { Directive directive =
+	 * getAngularDirective(attr); if (directive != null) { if (names == null) {
+	 * names = new ArrayList<Directive>(); } names.add(directive); } } } return
+	 * (List<Directive>) (names != null ? names : Collections .emptyList()); }
+	 */
 
 	/**
 	 * Returns true if the given element is an angular directive and false
@@ -694,14 +683,12 @@ public class DOMUtils {
 	 * @return true if the given attribute is an angular directive and false
 	 *         otherwise.
 	 */
-	public static boolean isAngularDirective(Element element) {
+	public static boolean isAngularDirective(IDOMElement element) {
 		if (element == null) {
 			return false;
 		}
-		if ((element instanceof IAngularDirectiveProvider)) {
-			return ((IAngularDirectiveProvider) element).isAngularDirective();
-		}
-		return getAngularDirective(element) != null;
+		IProject project = DOMUtils.getFile(element).getProject();
+		return getAngularDirective(project, element) != null;
 	}
 
 	/**
@@ -713,9 +700,44 @@ public class DOMUtils {
 	 * @return the angular {@link Directive} of the given attribute and null
 	 *         otherwise.
 	 */
-	public static Directive getAngularDirective(Element element) {
+	public static Directive getAngularDirective(IProject project,
+			Element element) {
 		return DOMSSEDirectiveProvider.getInstance().getAngularDirective(
-				element);
+				project, element);
+	}
+
+	/**
+	 * Returns true if the given attribute is an angular directive (ex : ng-app)
+	 * and false otherwise.
+	 * 
+	 * @param attr
+	 *            DOM attribute.
+	 * @return true if the given attribute is an angular directive (ex : ng-app)
+	 *         and false otherwise.
+	 */
+	public static boolean isAngularDirectiveParameter(IDOMAttr attr) {
+		if (attr == null) {
+			return false;
+		}
+		IProject project = DOMUtils.getFile(attr).getProject();
+		return getAngularDirectiveParameter(project, attr) != null;
+	}
+
+	/**
+	 * Returns the angular {@link Directive} of the given attribute and null
+	 * otherwise.
+	 * 
+	 * @param project
+	 * 
+	 * @param attr
+	 *            DOM attribute.
+	 * @return the angular {@link Directive} of the given attribute and null
+	 *         otherwise.
+	 */
+	public static DirectiveParameter getAngularDirectiveParameter(
+			IProject project, Attr attr) {
+		return DOMSSEDirectiveProvider.getInstance()
+				.getAngularDirectiveParameter(project, attr);
 	}
 
 	public static boolean hasAngularNature(IDOMNode element) {
@@ -726,23 +748,16 @@ public class DOMUtils {
 		return AngularProject.hasAngularNature(file.getProject());
 	}
 
-	public static DirectiveParameter getAngularDirectiveParameter(IDOMAttr attr) {
-		if (attr == null) {
-			return null;
-		}
-		List<Directive> existingDirectives = DOMUtils.getAngularDirectives(
-				attr.getOwnerElement(), attr);
-		if (existingDirectives != null) {
-			DirectiveParameter parameter = null;
-			for (Directive existingDirective : existingDirectives) {
-				parameter = existingDirective.getParameter(attr.getName());
-				if (parameter != null) {
-					return parameter;
-				}
-			}
-		}
-		return null;
-	}
+	/*
+	 * public static DirectiveParameter getAngularDirectiveParameter(IDOMAttr
+	 * attr) { if (attr == null) { return null; } List<Directive>
+	 * existingDirectives = DOMUtils.getAngularDirectives(
+	 * attr.getOwnerElement(), attr); if (existingDirectives != null) {
+	 * DirectiveParameter parameter = null; for (Directive existingDirective :
+	 * existingDirectives) { parameter =
+	 * existingDirective.getParameter(attr.getName()); if (parameter != null) {
+	 * return parameter; } } } return null; }
+	 */
 
 	public static boolean isAngularDirective(Node node) {
 		if (node == null) {
@@ -750,11 +765,30 @@ public class DOMUtils {
 		}
 		switch (node.getNodeType()) {
 		case Node.ATTRIBUTE_NODE:
-			return isAngularDirective((Attr) node);
+			return isAngularDirective((IDOMAttr) node);
 		case Node.ELEMENT_NODE:
-			return isAngularDirective((Element) node);
+			return isAngularDirective((IDOMElement) node);
 		}
 		return false;
+	}
+
+	public static Directive getAngularDirective(IProject project, Node node) {
+		if (node == null) {
+			return null;
+		}
+		switch (node.getNodeType()) {
+		case Node.ATTRIBUTE_NODE:
+			return getAngularDirective(project, (IDOMAttr) node);
+		case Node.ELEMENT_NODE:
+			return getAngularDirective(project, (IDOMElement) node);
+		}
+		return null;
+	}
+
+	public static List<Directive> getAngularDirectives(IProject project,
+			Element element, Attr attr) {
+		return DOMDirectiveProvider.getInstance().getAngularDirectives(project,
+				element, attr);
 	}
 
 }

@@ -102,6 +102,10 @@ public class LineStyleProviderForAngular extends LineStyleProviderForHTML
 							// directive as attribute
 							return (TextAttribute) getTextAttributes()
 									.get(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
+						} else if (DOMUtils.isAngularDirectiveParameter(attr)) {
+							// directive parameter
+							return (TextAttribute) getTextAttributes()
+									.get(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME);
 						}
 					} else {
 						if (parent instanceof Element
@@ -146,6 +150,7 @@ public class LineStyleProviderForAngular extends LineStyleProviderForHTML
 		addTextAttribute(IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
 		addTextAttribute(IStyleConstantsForAngular.ANGULAR_EXPRESSION);
 		addTextAttribute(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
+		addTextAttribute(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME);
 		super.loadColors();
 	}
 
@@ -163,6 +168,8 @@ public class LineStyleProviderForAngular extends LineStyleProviderForHTML
 				|| IStyleConstantsForAngular.ANGULAR_EXPRESSION
 						.equals(colorKey)
 				|| IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME
+						.equals(colorKey)
+				|| IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME
 						.equals(colorKey)) {
 			colorPreferences = getAngularColorPreferences();
 

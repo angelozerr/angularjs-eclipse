@@ -5,4 +5,5 @@ public interface IStyleConstantsForAngular {
 	public static final String ANGULAR_EXPRESSION_BORDER = "angularExpressionBorder";
 	public static final String ANGULAR_EXPRESSION = "angularExpression";
 	public static final String ANGULAR_DIRECTIVE_NAME = "directiveName";
+	public static final String ANGULAR_DIRECTIVE_PARAMETER_NAME = "directiveParameterName";
 }

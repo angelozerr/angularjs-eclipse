@@ -1,6 +1,7 @@
 package org.eclipse.angularjs.core.documentModel.dom;
 
 import tern.angular.modules.Directive;
+import tern.angular.modules.DirectiveParameter;
 
 public interface IAngularDirectiveProvider {
 
@@ -14,11 +15,11 @@ public interface IAngularDirectiveProvider {
 	Directive getAngularDirective();
 
 	/**
-	 * Returns true if the attribute is an angular directive (ex : ng-app) and
-	 * false otherwise.
+	 * Returns the angular {@link DirectiveParameter} of the attribute and null
+	 * otherwise.
 	 * 
-	 * @return true if the attribute is an angular directive (ex : ng-app) and
-	 *         false otherwise.
+	 * @return the angular {@link DirectiveParameter} of the attribute and null
+	 *         otherwise.
 	 */
-	boolean isAngularDirective();
+	DirectiveParameter getAngularDirectiveParameter();
 }
