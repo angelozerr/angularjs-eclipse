@@ -156,31 +156,30 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			// check if it's class attribute
 			IDOMAttr attr = DOMUtils.getAttrByRegion(element,
 					contentAssistRequest.getRegion());
-			if (CLASS_ATTR.equals(attr.getName())) {
-				addClassAttributeValueProposals(contentAssistRequest, attr);
+			// is angular directive attribute?
+			Directive directive = DOMUtils.getAngularDirectiveByRegion(element,
+					contentAssistRequest.getRegion());
+			AngularType angularType = directive != null ? directive.getType()
+					: null;
+			if (angularType != null) {
+				if (angularType.equals(AngularType.unknown)
+						|| angularType.equals(AngularType.repeat_expression))
+					angularType = AngularType.model;
+				int startIndex = contentAssistRequest.getMatchString()
+						.startsWith("\"") ? 1 : 0;
+				populateAngularProposals(contentAssistRequest, element,
+						angularType, startIndex);
 			} else {
-				// is angular directive attribute?
-				Directive directive = DOMUtils.getAngularDirectiveByRegion(
-						element, contentAssistRequest.getRegion());
-				AngularType angularType = directive != null ? directive
-						.getType() : null;
-				if (angularType != null) {
-					if (angularType.equals(AngularType.unknown)
-							|| angularType
-									.equals(AngularType.repeat_expression))
-						angularType = AngularType.model;
-					int startIndex = contentAssistRequest.getMatchString()
-							.startsWith("\"") ? 1 : 0;
+				// is angular expression inside attribute?
+				String matchingString = contentAssistRequest.getMatchString();
+				int index = matchingString.lastIndexOf("{{");
+				if (index != -1) {
 					populateAngularProposals(contentAssistRequest, element,
-							angularType, startIndex);
+							AngularType.model, index);
 				} else {
-					// is angular expression inside attribute?
-					String matchingString = contentAssistRequest
-							.getMatchString();
-					int index = matchingString.lastIndexOf("{{");
-					if (index != -1) {
-						populateAngularProposals(contentAssistRequest, element,
-								AngularType.model, index);
+					if (CLASS_ATTR.equals(attr.getName())) {
+						addClassAttributeValueProposals(contentAssistRequest,
+								attr);
 					}
 				}
 			}
