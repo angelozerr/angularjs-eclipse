@@ -69,6 +69,8 @@ import tern.server.protocol.completions.ITernCompletionCollector;
 public class HTMLAngularTagsCompletionProposalComputer extends
 		DefaultXMLCompletionProposalComputer {
 
+	private static final String CLASS_ATTR = "class";
+
 	@Override
 	protected void addAttributeNameProposals(
 			final ContentAssistRequest contentAssistRequest,
@@ -128,8 +130,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 										.getImage(ImageResource.IMG_DIRECTIVE);
 								addProposal(contentAssistRequest, name,
 										directive.getDirectiveValue(),
-										displayString, image,
-										additionalProposalInfo);
+										directive, displayString, image,
+										additionalProposalInfo, element);
 							}
 
 							@Override
@@ -154,7 +156,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			// check if it's class attribute
 			IDOMAttr attr = DOMUtils.getAttrByRegion(element,
 					contentAssistRequest.getRegion());
-			if ("class".equals(attr.getName())) {
+			if (CLASS_ATTR.equals(attr.getName())) {
 				addClassAttributeValueProposals(contentAssistRequest, attr);
 			} else {
 				// is angular directive attribute?
@@ -532,10 +534,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			DirectiveParameter parameter, IDOMNode element) {
 		// Add the directive parameter in the
 		// completion.
-		if (element.getNodeType() == Node.ELEMENT_NODE
-				&& element instanceof Element
-				&& ((Element) element).hasAttribute(parameter.getName())) {
-			// the attribute alrady exists, ignore it.
+		if (hasParameterAttribute(parameter, element)) {
 			return;
 		}
 
@@ -545,28 +544,55 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		String additionalProposalInfo = parameter.getHTMLDescription();
 		Image image = ImageResource.getImage(ImageResource.IMG_DIRECTIVE_PARAM);
 		addProposal(contentAssistRequest, parameter.getName(),
-				DirectiveValue.required, displayString, image,
-				additionalProposalInfo);
+				DirectiveValue.required, null, displayString, image,
+				additionalProposalInfo, element);
+	}
+
+	public boolean hasParameterAttribute(DirectiveParameter parameter,
+			IDOMNode element) {
+		if (element.getNodeType() == Node.ELEMENT_NODE
+				&& element instanceof Element
+				&& ((Element) element).hasAttribute(parameter.getName())) {
+			// the attribute alrady exists, ignore it.
+			return true;
+		}
+		return false;
 	}
 
 	private void addProposal(final ContentAssistRequest contentAssistRequest,
-			String name, DirectiveValue directiveValue, String displayString,
-			Image image, String additionalProposalInfo) {
-		String replacementString = directiveValue == DirectiveValue.none ? name
-				: name + "=\"\"";
+			String name, DirectiveValue directiveValue, Directive directive,
+			String displayString, Image image, String additionalProposalInfo,
+			IDOMNode element) {
+		StringBuilder replacementString = new StringBuilder(name);
+		if (directiveValue != DirectiveValue.none)
+			replacementString.append("=\"\"");
+
+		if (directive != null) {
+			Collection<DirectiveParameter> parameters = directive
+					.getParameters();
+			for (DirectiveParameter parameter : parameters) {
+				if (!parameter.isOptionnal()
+						&& !hasParameterAttribute(parameter, element)) {
+					replacementString.append(" ").append(parameter.getName())
+							.append("=\"\"");
+				}
+			}
+		}
+
 		int replacementOffset = contentAssistRequest
 				.getReplacementBeginPosition();
 		int replacementLength = contentAssistRequest.getReplacementLength();
-		int cursorPosition = getCursorPositionForProposedText(replacementString);
+		int cursorPosition = getCursorPositionForProposedText(replacementString
+				.toString());
 
 		IContextInformation contextInformation = null;
 
 		int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME;
 
 		ICompletionProposal proposal = new CustomCompletionProposal(
-				replacementString, replacementOffset, replacementLength,
-				cursorPosition, image, displayString, contextInformation,
-				additionalProposalInfo, relevance);
+				replacementString.toString(), replacementOffset,
+				replacementLength, cursorPosition, image, displayString,
+				contextInformation, additionalProposalInfo, relevance);
 		contentAssistRequest.addProposal(proposal);
 	}
 
