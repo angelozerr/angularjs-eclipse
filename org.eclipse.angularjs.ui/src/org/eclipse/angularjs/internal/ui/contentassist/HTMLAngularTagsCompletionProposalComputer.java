@@ -176,9 +176,9 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				if (index != -1) {
 					populateAngularProposals(contentAssistRequest, element,
 							AngularType.model, index);
-				} else {
+				} else {					
 					if (CLASS_ATTR.equals(attr.getName())) {
-						addClassAttributeValueProposals(contentAssistRequest,
+						addClassAttributeValueProposals(contentAssistRequest, context, 
 								attr);
 					}
 				}
@@ -188,11 +188,20 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 	}
 
 	public void addClassAttributeValueProposals(
-			final ContentAssistRequest contentAssistRequest, IDOMAttr attr) {
+			final ContentAssistRequest contentAssistRequest, CompletionProposalInvocationContext context, IDOMAttr attr) {
 		// completion on "class" attribute : completion on directive
 		// with 'C' restrict.
-		String matchingString = "";// attr.getValue();
-
+		
+		int documentPosition = context.getInvocationOffset();
+		int length = documentPosition - contentAssistRequest.getStartOffset();
+		String text = attr.getValue().substring(0, length - 1);
+		
+		final int index = text.lastIndexOf(";");
+		if (index != -1) {
+			text = text.substring(index+1, text.length());
+		}
+		
+		String matchingString = text.trim();
 		AngularProject project = null;
 		try {
 			project = AngularProject.getAngularProject(DOMUtils.getFile(attr)
@@ -234,6 +243,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 								.getReplacementBeginPosition();
 						int replacementLength = contentAssistRequest
 								.getReplacementLength();
+						if (index != -1) {
+							replacementOffset+=index;
+							replacementLength+=index;
+						}
 						int cursorPosition = getCursorPositionForProposedText(replacementString);
 
 						IContextInformation contextInformation = null;

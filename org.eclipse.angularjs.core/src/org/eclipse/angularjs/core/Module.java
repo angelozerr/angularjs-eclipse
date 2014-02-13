@@ -27,6 +27,7 @@ public class Module extends BaseModel implements ITernCompletionCollector,
 			TernAngularCompletionsQuery query = new TernAngularCompletionsQuery(
 					AngularType.controller);
 			query.addType(AngularType.directive);
+			query.addType(AngularType.filter);
 			query.getScope().setModule(super.getName());
 			query.setExpression("");
 			super.execute(query, this);

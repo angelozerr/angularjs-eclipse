@@ -45,6 +45,7 @@ public class ImageResource {
 	public static final String IMG_DIRECTIVE_PARAM = "directive_param";
 	public static final String IMG_CONTROLLER = "controller";
 	public static final String IMG_CONTROLLER_CHECKED = "controller_checked";
+	public static final String IMG_FILTER= "filter";
 	public static final String IMG_FOLDER = "folder";
 
 	public static final String IMG_ELCL_REFRESH = "refresh";
@@ -141,6 +142,7 @@ public class ImageResource {
 		registerImage(IMG_CONTROLLER, URL_OBJ + IMG_CONTROLLER + ".png");
 		registerImage(IMG_CONTROLLER_CHECKED, URL_OBJ + IMG_CONTROLLER_CHECKED
 				+ ".png");
+		registerImage(IMG_FILTER, URL_OBJ + IMG_FILTER + ".png");
 		registerImage(IMG_FOLDER, URL_OBJ + IMG_FOLDER + ".gif");
 
 		registerImage(IMG_ELCL_REFRESH, ELCL_OBJ + IMG_ELCL_REFRESH + ".gif");
