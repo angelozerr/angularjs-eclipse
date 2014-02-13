@@ -28,6 +28,9 @@ public class Module extends BaseModel implements ITernCompletionCollector,
 					AngularType.controller);
 			query.addType(AngularType.directive);
 			query.addType(AngularType.filter);
+			query.addType(AngularType.factory);
+			query.addType(AngularType.provider);
+			query.addType(AngularType.service);
 			query.getScope().setModule(super.getName());
 			query.setExpression("");
 			super.execute(query, this);

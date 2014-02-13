@@ -308,9 +308,12 @@ public class AngularExplorerView extends ViewPart implements
 	public void refreshTree(boolean updateLabels) {
 		if (!updateLabels) {
 			try {
-				AngularProject angularProject = AngularProject
-						.getAngularProject(getCurrentTernProject().getProject());
-				angularProject.cleanModel();
+				if (getCurrentTernProject() != null) {
+					AngularProject angularProject = AngularProject
+							.getAngularProject(getCurrentTernProject()
+									.getProject());
+					angularProject.cleanModel();
+				}
 			} catch (CoreException e) {
 
 			}

@@ -73,6 +73,12 @@ public class AngularExplorerLabelProvider extends TernScriptPathLabelProvider {
 					return ImageResource.getImage(ImageResource.IMG_DIRECTIVE);
 				case filter:
 					return ImageResource.getImage(ImageResource.IMG_FILTER);
+				case factory:
+					return ImageResource.getImage(ImageResource.IMG_FACTORY);
+				case provider:
+					return ImageResource.getImage(ImageResource.IMG_PROVIDER);
+				case service:
+					return ImageResource.getImage(ImageResource.IMG_SERVICE);
 				}
 
 			default:
