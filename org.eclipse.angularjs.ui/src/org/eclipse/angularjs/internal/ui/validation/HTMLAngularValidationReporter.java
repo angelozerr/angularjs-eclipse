@@ -54,17 +54,18 @@ public class HTMLAngularValidationReporter extends HTMLValidationReporter {
 	 */
 	private boolean isDirective(IProject project, String name, int targetType) {
 		Directive directive = AngularModulesManager.getInstance().getDirective(
-				project, null, name);
-		if (directive == null) {
-			return false;
-		}
+				project, null, name, getRestriction(targetType));
+		return (directive != null);
+	}
+
+	private Restriction getRestriction(int targetType) {
 		switch (targetType) {
 		case Node.ATTRIBUTE_NODE:
-			return directive.isMatch(Restriction.A);
+			return Restriction.A;
 		case Node.ELEMENT_NODE:
-			return directive.isMatch(Restriction.E);
+			return Restriction.E;
 		}
-		return false;
+		return null;
 	}
 
 }

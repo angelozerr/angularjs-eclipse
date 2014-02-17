@@ -27,8 +27,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import tern.angular.modules.AngularModulesManager;
+import tern.angular.modules.DOMDirectiveProvider;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
+import tern.angular.modules.Restriction;
 
 /**
  * Represents elements in the dom model Angular.
@@ -133,15 +135,9 @@ public class ElementImplForAngular extends ElementStyleImpl implements
 	}
 
 	private Directive computeAngularDirective() {
-
 		IProject project = DOMUtils.getFile(this).getProject();
-		try {
-			return AngularProject.getAngularProject(project).getDirective(null,
-					super.getTagName());
-		} catch (CoreException e) {
-			return AngularModulesManager.getInstance().getDirective(project,
-					null, super.getTagName());
-		}
+		return DOMDirectiveProvider.getInstance().getAngularDirective(project,
+				this);
 	}
 
 	@Override

@@ -41,6 +41,16 @@ public class HyperlinkUtils {
 		return new Region(regOffset, regLength);
 	}
 
+	public static IRegion getElementRegion(IDOMElement element) {
+		int endOffset;
+		if (element.hasEndTag() && element.isClosed())
+			endOffset = element.getStartEndOffset();
+		else
+			endOffset = element.getEndOffset();
+		return new Region(element.getStartOffset(), endOffset
+				- element.getStartOffset());
+	}
+
 	/**public static IRegion getHyperlinkRegion(Node node) {
 		if (node != null)
 			switch (node.getNodeType()) {

@@ -23,11 +23,11 @@ import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
-import org.w3c.dom.Node;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
 import tern.angular.AngularType;
 import tern.angular.modules.Directive;
-import tern.angular.modules.DirectiveHelper;
 import tern.eclipse.ide.core.IDETernProject;
 
 /**
@@ -44,60 +44,72 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 		}
 		IDocument document = textViewer.getDocument();
 		// Get the selected Node.
-		Node currentNode = DOMUtils.getNodeByOffset(document,
+		IDOMNode currentNode = DOMUtils.getNodeByOffset(document,
 				region.getOffset());
 		if (currentNode == null) {
 			return null;
 		}
-		// Get selected attribute
-		IDOMAttr attr = DOMUtils.getAttrByOffset(currentNode,
-				region.getOffset());
 
-		if (attr == null) {
-			return null;
-		}
-		IFile file = DOMUtils.getFile(attr);
+		IFile file = DOMUtils.getFile(currentNode);
 		IProject project = file.getProject();
 		if (IDETernProject.hasTernNature(project)) {
-			try {
-				IHyperlink hyperlink = null;
-				IDETernProject ternProject = AngularProject
-						.getTernProject(project);
-				boolean isAttrValue = region.getOffset() > attr
-						.getNameRegionEndOffset();
-				Directive directive = DOMUtils.getAngularDirective(project,
-						attr);
-				if (directive != null) {
-					if (isAttrValue) {
-						// Hyperlink on attr value
+			// Get selected attribute
+			IDOMAttr attr = DOMUtils.getAttrByOffset(currentNode,
+					region.getOffset());
 
-						// the attribute is directive, try to open the angular
-						// element controller, module, etc.
-						hyperlink = new HTMLAngularHyperLink(attr,
-								HyperlinkUtils.getValueRegion(attr), file,
-								ternProject, attr.getValue(),
-								directive.getType());
+			IDOMNode node = attr != null ? attr : currentNode;
+			Directive directive = DOMUtils.getAngularDirective(project, node);
+			if (directive != null) {
+				try {
+					IHyperlink hyperlink = null;
+					IDETernProject ternProject = AngularProject
+							.getTernProject(project);
+					if (attr != null) {
+						boolean isAttrValue = region.getOffset() > attr
+								.getNameRegionEndOffset();
+						if (isAttrValue) {
+							// Hyperlink on attr value
 
+							// the attribute is directive, try to open the
+							// angular
+							// element controller, module, etc.
+							hyperlink = new HTMLAngularHyperLink(attr.getOwnerElement(),
+									HyperlinkUtils.getValueRegion(attr), file,
+									ternProject, attr.getValue(),
+									directive.getType());
+
+						} else {
+							// Hyperlink on attr name, try to open the custom
+							// directive
+							if (directive.isCustom()) {
+								hyperlink = new HTMLAngularHyperLink(attr.getOwnerElement(),
+										HyperlinkUtils.getNameRegion(attr),
+										file, ternProject, directive.getName(),
+										AngularType.directive);
+							}
+						}
 					} else {
-						// Hyperlink on attr name, try to open the custom
+						// Hyperlink on element name, try to open the custom
 						// directive
 						if (directive.isCustom()) {
-							hyperlink = new HTMLAngularHyperLink(attr,
-									HyperlinkUtils.getNameRegion(attr), file,
-									ternProject, directive.getName(),
+							IDOMElement element =(IDOMElement)node;
+							hyperlink = new HTMLAngularHyperLink(element,
+									HyperlinkUtils.getElementRegion(element),
+									file, ternProject, directive.getName(),
 									AngularType.directive);
 						}
 					}
+					if (hyperlink != null) {
+						IHyperlink[] hyperlinks = new IHyperlink[1];
+						hyperlinks[0] = hyperlink;
+						return hyperlinks;
+					}
+				} catch (CoreException e) {
+					Trace.trace(Trace.WARNING, "Error while Angular hyperlink",
+							e);
 				}
-				if (hyperlink != null) {
-					IHyperlink[] hyperlinks = new IHyperlink[1];
-					hyperlinks[0] = hyperlink;
-					return hyperlinks;
-				}
-			} catch (CoreException e) {
-				Trace.trace(Trace.WARNING, "Error while Angular hyperlink", e);
-			}
 
+			}
 		}
 		return null;
 	}

@@ -114,9 +114,10 @@ public class AngularProject implements IDirectiveSyntax {
 		this.folders.clear();
 	}
 
-	public Directive getDirective(String tagName, String name) {
+	public Directive getDirective(String tagName, String name,
+			Restriction restriction) {
 		return AngularModulesManager.getInstance().getDirective(project,
-				tagName, name);
+				tagName, name, restriction);
 	}
 
 	public void collectDirectives(String tagName, String directiveName,
