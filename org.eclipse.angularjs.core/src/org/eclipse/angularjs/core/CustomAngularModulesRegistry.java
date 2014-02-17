@@ -47,9 +47,10 @@ public class CustomAngularModulesRegistry extends
 	}
 
 	@Override
-	public Directive getDirective(String tagName, String name) {
+	public Directive getDirective(String tagName, String name,
+			Restriction restriction) {
 		refreshIfNeeded();
-		return super.getDirective(tagName, name);
+		return super.getDirective(tagName, name, restriction);
 	}
 
 	@Override
