@@ -3,7 +3,7 @@ package org.eclipse.angularjs.internal.ui.contentassist;
 import org.eclipse.angularjs.core.utils.StringUtils;
 
 import tern.angular.AngularType;
-import tern.eclipse.jface.contentassist.TernCompletionProposal;
+import tern.eclipse.ide.ui.contentassist.JSTernCompletionProposal;
 import tern.server.ITernServer;
 
 /**
@@ -13,7 +13,7 @@ import tern.server.ITernServer;
  * @author azerr
  * 
  */
-public class AngularCompletionProposal extends TernCompletionProposal {
+public class AngularCompletionProposal extends JSTernCompletionProposal {
 
 	private final ITernServer ternServer;
 	private final Object completion;

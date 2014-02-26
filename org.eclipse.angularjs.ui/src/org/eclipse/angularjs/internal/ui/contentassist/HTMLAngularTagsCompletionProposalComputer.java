@@ -301,7 +301,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					if (isModuleOrController(angularType)) {
 						// in the case of "module", "controller" completion
 						// the value must replace the existing value.
-						String replacementString = "\"" + name + "\"";
+						String replacementString = "\"" + name;
 						int replacementLength = contentAssistRequest
 								.getReplacementLength();
 						int cursorPosition = getCursorPositionForProposedText(replacementString);
