@@ -15,7 +15,8 @@ Require-Bundle: org.eclipse.core.runtime,
  tern.core;bundle-version="1.0.0",
  tern.eclipse;bundle-version="1.0.0",
  tern.server.nodejs;bundle-version="1.0.0",
- tern.eclipse.ide.core;bundle-version="1.0.0"
+ tern.eclipse.ide.core;bundle-version="1.0.0",
+ org.eclipse.wst.validation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.angularjs.core.AngularCorePlugin
@@ -23,6 +24,7 @@ Export-Package: org.eclipse.angularjs.core,
  org.eclipse.angularjs.core.documentModel.dom,
  org.eclipse.angularjs.core.link,
  org.eclipse.angularjs.core.utils,
+ org.eclipse.angularjs.core.validation,
  org.eclipse.angularjs.internal.core.documentModel.handler,
  org.eclipse.angularjs.internal.core.documentModel.parser;x-friends:="org.eclipse.angularjs.core.tests",
  org.eclipse.angularjs.internal.core.documentModel.partitioner,

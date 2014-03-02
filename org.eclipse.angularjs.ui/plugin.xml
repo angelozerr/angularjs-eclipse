@@ -275,6 +275,7 @@
 		</validator>
 	</extension>
 
+	<!-- Partial Angular Validation for HTML file --> 
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="partial"
@@ -289,6 +290,7 @@
 		</validator>
 	</extension>	
 
+	<!-- Partial Angular Validation for JSP file -->
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="partial"
@@ -303,6 +305,7 @@
 		</validator>
 	</extension>	
 
+	<!-- Partial Angular Validation for HTML file opened with AngularJS Editor-->
 	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
 		<validator
 			scope="partial"
