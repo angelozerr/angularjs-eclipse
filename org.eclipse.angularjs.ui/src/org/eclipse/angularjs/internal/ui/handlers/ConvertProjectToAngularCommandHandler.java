@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2013 Angelo ZERR.
+ * Copyright (c) 2013, 2014 Angelo ZERR.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -76,9 +76,8 @@ public class ConvertProjectToAngularCommandHandler extends AbstractHandler {
 				List newNatures = new LinkedList();
 				String[] natures = projectDescription.getNatureIds();
 				for (int c = 0; c < natures.length; ++c) {
-					if (!natures[c].equals(AngularNature.ID)) {
-						newNatures.add(natures[c]);
-					} else if (!natures[c].equals(TernNature.ID)) {
+					if (!AngularNature.ID.equals(natures[c]) && 
+							!TernNature.ID.equals(natures[c])) {
 						newNatures.add(natures[c]);
 					}
 				}
