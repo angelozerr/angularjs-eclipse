@@ -176,10 +176,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				if (index != -1) {
 					populateAngularProposals(contentAssistRequest, element,
 							AngularType.model, index);
-				} else {					
+				} else {
 					if (CLASS_ATTR.equals(attr.getName())) {
-						addClassAttributeValueProposals(contentAssistRequest, context, 
-								attr);
+						addClassAttributeValueProposals(contentAssistRequest,
+								context, attr);
 					}
 				}
 			}
@@ -188,19 +188,20 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 	}
 
 	public void addClassAttributeValueProposals(
-			final ContentAssistRequest contentAssistRequest, CompletionProposalInvocationContext context, IDOMAttr attr) {
+			final ContentAssistRequest contentAssistRequest,
+			CompletionProposalInvocationContext context, IDOMAttr attr) {
 		// completion on "class" attribute : completion on directive
 		// with 'C' restrict.
-		
+
 		int documentPosition = context.getInvocationOffset();
 		int length = documentPosition - contentAssistRequest.getStartOffset();
 		String text = attr.getValue().substring(0, length - 1);
-		
+
 		final int index = text.lastIndexOf(";");
 		if (index != -1) {
-			text = text.substring(index+1, text.length());
+			text = text.substring(index + 1, text.length());
 		}
-		
+
 		String matchingString = text.trim();
 		AngularProject project = null;
 		try {
@@ -244,8 +245,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						int replacementLength = contentAssistRequest
 								.getReplacementLength();
 						if (index != -1) {
-							replacementOffset+=index;
-							replacementLength+=index;
+							replacementOffset += index;
+							replacementLength += index;
 						}
 						int cursorPosition = getCursorPositionForProposedText(replacementString);
 
@@ -295,21 +296,29 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						String origin, Object doc, int pos, Object completion,
 						ITernServer ternServer) {
 
-					AngularCompletionProposal proposal = new AngularCompletionProposal(
-							name, type, origin, doc, pos, completion,
-							ternServer, angularType, replacementOffset);
+					ICompletionProposal proposal = null;
 					if (isModuleOrController(angularType)) {
+
+						MarkupAngularCompletionProposal markupPproposal = new MarkupAngularCompletionProposal(
+								name, type, origin, doc, pos, completion,
+								ternServer, angularType, replacementOffset);
+
 						// in the case of "module", "controller" completion
 						// the value must replace the existing value.
-						String replacementString = "\"" + name;
+						String replacementString = "\"" + name + "\"";
 						int replacementLength = contentAssistRequest
 								.getReplacementLength();
-						int cursorPosition = getCursorPositionForProposedText(replacementString);
-						proposal.setReplacementString(replacementString);
-						proposal.setReplacementLength(replacementLength);
-						proposal.setCursorPosition(cursorPosition - 2);
-						proposal.setReplacementOffset(replacementOffset);
-						proposal.setImage(getImage(angularType));
+						int cursorPosition = getCursorPositionForProposedText(replacementString) - 2;
+						markupPproposal.setReplacementString(replacementString);
+						markupPproposal.setReplacementLength(replacementLength);
+						markupPproposal.setCursorPosition(cursorPosition);
+						markupPproposal.setReplacementOffset(replacementOffset);
+						markupPproposal.setImage(getImage(angularType));
+						proposal = markupPproposal;
+					} else {
+						proposal = new JSAngularCompletionProposal(name, type,
+								origin, doc, pos, completion, ternServer,
+								angularType, replacementOffset);
 					}
 					contentAssistRequest.addProposal(proposal);
 

@@ -13,12 +13,12 @@ import tern.server.ITernServer;
  * @author azerr
  * 
  */
-public class AngularCompletionProposal extends JSTernCompletionProposal {
+public class JSAngularCompletionProposal extends JSTernCompletionProposal {
 
 	private final ITernServer ternServer;
 	private final Object completion;
 
-	public AngularCompletionProposal(String name, String type, String origin,
+	public JSAngularCompletionProposal(String name, String type, String origin,
 			Object doc, int pos, Object completion, ITernServer server,
 			AngularType angularType, int startOffset) {
 		super(name, type, origin, doc, pos, startOffset);
