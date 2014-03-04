@@ -165,8 +165,9 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 				if (angularType.equals(AngularType.unknown)
 						|| angularType.equals(AngularType.repeat_expression))
 					angularType = AngularType.model;
-				int startIndex = contentAssistRequest.getMatchString()
-						.startsWith("\"") ? 1 : 0;
+				int startIndex = (contentAssistRequest.getMatchString()
+						.startsWith("\"") || contentAssistRequest
+						.getMatchString().startsWith("'")) ? 1 : 0;
 				populateAngularProposals(contentAssistRequest, element,
 						angularType, startIndex);
 			} else {
