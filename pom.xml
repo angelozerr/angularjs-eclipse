@@ -9,6 +9,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<tycho-version>0.19.0</tycho-version>
 	</properties>
+	<licenses>
+		<license>
+			<name>Eclipse Public License</name>
+			<url>http://www.eclipse.org/legal/epl-v10.html</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 	<modules>
 		<module>org.eclipse.angularjs.core</module>
 		<module>org.eclipse.angularjs.core.tests</module>
@@ -48,6 +55,18 @@
 							<arch>x86_64</arch>
 						</environment>
 					</environments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.9.0</version>
+				<configuration>
+					<basedir>${basedir}</basedir>
+					<header>license.txt</header>
+					<includes>
+						<include>src/**/*.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>
