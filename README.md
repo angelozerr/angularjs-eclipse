@@ -11,6 +11,13 @@ AngularJS Eclipse is based on [tern.java](https://github.com/angelozerr/tern.jav
 
 If you start with AngularJS Eclipse, please read [Getting Started](https://github.com/angelozerr/angularjs-eclipse/wiki/Getting-Started).
 
+# Installation
+
+AngularJS Eclipse is developped/tested with Eclipse Kepler. It is adwiced to use Kepler (even if AngularJS Eclipse could work with older version of Eclipse).
+
+It's not yet an official release, but if you wish to test the snapshot version of AngularJS Eclipse, you can install it with the Eclipse Update site 
+http://oss.opensagres.fr/angularjs-eclipse/1.0.0-SNAPSHOT/.
+
 # AngularJS Configuration
 
 Before opening your HTML files (to see AngulaJS synt), you must  convert your project to AngularJS Project : 
@@ -36,13 +43,6 @@ See [HTML features](https://github.com/angelozerr/angularjs-eclipse/wiki/HTML-Fe
 # Javascript Editor
 
 See [Javascript features](https://github.com/angelozerr/angularjs-eclipse/wiki/Javascript-Features) and [Tern Eclipse IDE](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE) for more informations.
-
-# Installation
-
-AngularJS Eclipse is developped with Eclipse Kepler. It is adwiced to use Kepler (even if AngularJS Eclipse could work with older version of Eclipse).
-
-If you wish to test the snapshot version of AngularJS Eclipse, you can install it with the Eclipse Update site 
-http://oss.opensagres.fr/angularjs-eclipse/1.0.0-SNAPSHOT/ but it's not an official release.
 
 # Build
 
