@@ -54,7 +54,7 @@ public class BaseModel {
 	}
 
 	public IProject getProject() {
-		return scriptPath.getResource().getProject();
+		return scriptPath.getOwnerProject();
 	}
 
 	protected void execute(TernAngularCompletionsQuery query,

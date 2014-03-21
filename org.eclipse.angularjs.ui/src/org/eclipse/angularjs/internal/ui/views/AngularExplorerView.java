@@ -370,7 +370,7 @@ public class AngularExplorerView extends ViewPart implements
 	 */
 	private IStatus openFile(IFile file, String filename, Long start, Long end) {
 		if (file == null && filename != null) {
-			file = getCurrentTernProject().getProject().getFile(filename);
+			file = getCurrentTernProject().getFileManager().getFile(filename);
 		}
 		if (file == null) {
 			return new Status(
