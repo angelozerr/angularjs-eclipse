@@ -10,8 +10,8 @@
  */
 package org.eclipse.angularjs.internal.ui.views;
 
-import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.AngularElement;
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.IDefinitionAware;
 import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
@@ -20,6 +20,7 @@ import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.views.actions.GoToDefinitionAction;
 import org.eclipse.angularjs.internal.ui.views.actions.LinkToControllerAction;
 import org.eclipse.angularjs.internal.ui.views.actions.RefreshExplorerAction;
+import org.eclipse.angularjs.internal.ui.views.actions.TerminateTernServerAction;
 import org.eclipse.angularjs.internal.ui.views.actions.UnLinkToControllerAction;
 import org.eclipse.angularjs.internal.ui.views.viewers.AngularExplorerContentProvider;
 import org.eclipse.angularjs.internal.ui.views.viewers.AngularExplorerLabelProvider;
@@ -60,6 +61,8 @@ import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.IScriptResource;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.utils.EditorUtils;
+import tern.server.ITernServer;
+import tern.server.ITernServerListener;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
 /**
@@ -67,13 +70,14 @@ import tern.server.protocol.definition.ITernDefinitionCollector;
  * 
  */
 public class AngularExplorerView extends ViewPart implements
-		ISelectionListener, ITernDefinitionCollector {
+		ISelectionListener, ITernDefinitionCollector, ITernServerListener {
 
 	private IWorkbenchPart currentEditor;
 	private IDETernProject currentTernProject;
 	private IResource currentResource;
 	private TreeViewer viewer;
 
+	private TerminateTernServerAction terminateAction;
 	private LinkToControllerAction linkAction;
 	private UnLinkToControllerAction unLinkAction;
 	private GoToDefinitionAction openAction;
@@ -197,12 +201,12 @@ public class AngularExplorerView extends ViewPart implements
 	public void registerActions() {
 		IToolBarManager manager = getViewSite().getActionBars()
 				.getToolBarManager();
-
+		this.terminateAction = new TerminateTernServerAction(this);
+		manager.add(terminateAction);
 		this.linkAction = new LinkToControllerAction(this);
 		manager.add(linkAction);
 		this.unLinkAction = new UnLinkToControllerAction(this);
 		manager.add(unLinkAction);
-
 		this.openAction = new GoToDefinitionAction(this);
 		manager.add(openAction);
 		this.refreshAction = new RefreshExplorerAction(this);
@@ -244,6 +248,7 @@ public class AngularExplorerView extends ViewPart implements
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (part.equals(this) || part.equals(currentEditor))
 			return;
+		this.terminateAction.setEnabled(false);
 		currentEditor = part;
 		if (part != null && part instanceof IEditorPart) {
 			currentResource = null;
@@ -253,15 +258,24 @@ public class AngularExplorerView extends ViewPart implements
 						.getAdapter(IResource.class);
 				if (resource != null) {
 					IProject project = resource.getProject();
-					if (IDETernProject.hasTernNature(project)) {
+					if (AngularProject.hasAngularNature(project)) {
 						try {
 							IDETernProject ternProject = IDETernProject
 									.getTernProject(project);
-							boolean refresh = !ternProject
+							boolean projectChanged = !ternProject
 									.equals(currentTernProject);
+							if (projectChanged) {
+								ternProject.addServerListener(this);
+								if (currentTernProject != null) {
+									currentTernProject
+											.removeServerListener(this);
+								}
+							}
 							currentTernProject = ternProject;
+							this.terminateAction.setEnabled(!currentTernProject
+									.isTernServerDisposed());
 							currentResource = resource;
-							if (refresh) {
+							if (projectChanged) {
 								// refresh
 								viewer.setInput(currentTernProject
 										.getScriptPaths());
@@ -284,6 +298,9 @@ public class AngularExplorerView extends ViewPart implements
 		super.dispose();
 		getSite().getWorkbenchWindow().getPartService()
 				.removePartListener(partListener);
+		if (currentTernProject != null) {
+			currentTernProject.removeServerListener(this);
+		}
 	}
 
 	public IResource getCurrentResource() {
@@ -397,4 +414,15 @@ public class AngularExplorerView extends ViewPart implements
 	public void setDefinition(String filename, Long start, Long end) {
 		tryToOpenFile(null, filename, start, end);
 	}
+
+	@Override
+	public void onStart(ITernServer server) {
+		terminateAction.setEnabled(true);
+	}
+
+	@Override
+	public void onStop(ITernServer server) {
+		terminateAction.setEnabled(false);
+	}
+
 }
