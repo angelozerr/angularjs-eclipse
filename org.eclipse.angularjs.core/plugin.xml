@@ -100,6 +100,7 @@
                <fileext caseSensitive="false" ext="htm"/>
                <fileext caseSensitive="false" ext="htpl"/>
                <fileext caseSensitive="false" ext="wml"/>
+               <fileext caseSensitive="false" ext="ejs"/>
             </rules>
          </include>
          <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
