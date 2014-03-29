@@ -15,7 +15,7 @@ If you start with AngularJS Eclipse, please read [Getting Started](https://githu
 
 # Installation
 
-AngularJS Eclipse is developped/tested with Eclipse Kepler. It is adwiced to use Kepler (even if AngularJS Eclipse could work with older version of Eclipse).
+AngularJS Eclipse is developped/tested with Eclipse Kepler. It is adwised to use Kepler (even if AngularJS Eclipse could work with older version of Eclipse).
 
 It's not yet an official release, but if you wish to test the snapshot version of AngularJS Eclipse, you can install it with the Eclipse Update site 
 http://oss.opensagres.fr/angularjs-eclipse/1.0.0-SNAPSHOT/.
