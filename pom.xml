@@ -1,5 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.opensagres.agnularjs</groupId>
 	<artifactId>angularjs-eclipse</artifactId>
@@ -69,6 +74,15 @@
 					</includes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+          		<artifactId>tycho-compiler-plugin</artifactId>
+          		<version>${tycho-version}</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -89,4 +103,27 @@
 			<layout>p2</layout>
 		</repository>
 	</repositories>
+	<scm>
+		<url>https://github.com/angelozerr/angularjs-eclipse</url>
+		<connection>scm:git:https://github.com/angelozerr/angularjs-eclipse.git</connection>
+		<developerConnection>scm:git:https://github.com/angelozerr/angularjs-eclipse.git</developerConnection>
+	</scm>
+	<profiles>
+		<profile>
+			<!-- release profile (see parent pom) -->
+			<id>sonatype-oss-release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.eclipse.tycho</groupId>
+						<artifactId>tycho-packaging-plugin</artifactId>
+						<version>${tycho-version}</version>
+						<configuration>
+						<strictVersions>false</strictVersions>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
