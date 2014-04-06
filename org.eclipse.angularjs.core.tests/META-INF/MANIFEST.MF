@@ -5,6 +5,6 @@ Bundle-SymbolicName: org.eclipse.angularjs.core.tests
 Bundle-Version: 0.1.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.11.0",
- org.eclipse.angularjs.core;bundle-version="0.1.0",
+ org.eclipse.angularjs.core;bundle-version="0.1.1",
  org.eclipse.wst.xml.core;bundle-version="1.1.800",
  org.eclipse.wst.sse.core;bundle-version="1.1.800"
