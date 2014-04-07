@@ -17,8 +17,14 @@ If you start with AngularJS Eclipse, please read [Getting Started](https://githu
 
 AngularJS Eclipse is developped/tested with Eclipse Kepler. It is adwised to use Kepler (even if AngularJS Eclipse could work with older version of Eclipse).
 
-It's not yet an official release, but if you wish to test the snapshot version of AngularJS Eclipse, you can install it with the Eclipse Update site 
-http://oss.opensagres.fr/angularjs-eclipse/1.0.0-SNAPSHOT/.
+AngularJS Eclipse provides 2 Update Site for install it :
+
+ * use http://oss.opensagres.fr/angularjs-eclipse/0.1.0/ if you wish ito nstall the last release of AngularJS Eclipse.
+ * use http://oss.opensagres.fr/angularjs-eclipse/0.1.1-SNAPSHOT/ if you wish to install the current version of AngularJS Eclipse which is not released.
+
+IMPORTANT : if you had installed the http://oss.opensagres.fr/angularjs-eclipse/1.0.0-SNAPSHOT/, please uninstall it before installing AngularJS Eclipse, otherwise Eclipse update site will not install AngularjS Eclipse.
+
+See [Installation - Update Site](https://github.com/angelozerr/angularjs-eclipse/wiki/Installation---Update-Site) for more informations.
 
 # AngularJS Configuration
 
