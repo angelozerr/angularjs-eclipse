@@ -10,12 +10,10 @@
  */
 package org.eclipse.angularjs.internal.core.documentModel.dom;
 
-import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMElement;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
@@ -26,11 +24,9 @@ import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.DOMDirectiveProvider;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
-import tern.angular.modules.Restriction;
 
 /**
  * Represents elements in the dom model Angular.
