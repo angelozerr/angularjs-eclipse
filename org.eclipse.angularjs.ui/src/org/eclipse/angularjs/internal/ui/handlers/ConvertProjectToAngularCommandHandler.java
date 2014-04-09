@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.TernNature;
 
 /**
@@ -52,6 +53,8 @@ public class ConvertProjectToAngularCommandHandler extends AbstractHandler {
 			public IStatus runInWorkspace(IProgressMonitor monitor)
 					throws CoreException {
 
+				boolean adoptedToTern = IDETernProject.hasTernNature(project);
+				
 				IProjectDescription projectDescription = project
 						.getDescription();
 
@@ -81,8 +84,9 @@ public class ConvertProjectToAngularCommandHandler extends AbstractHandler {
 						newNatures.add(natures[c]);
 					}
 				}
+				if (!adoptedToTern) // Add Tern Nature only if the project is not adopted
+					newNatures.add(TernNature.ID);
 				newNatures.add(AngularNature.ID);
-				newNatures.add(TernNature.ID);
 
 				projectDescription.setNatureIds((String[]) newNatures
 						.toArray(new String[newNatures.size()]));
