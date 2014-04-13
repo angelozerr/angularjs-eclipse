@@ -26,8 +26,8 @@ import org.eclipse.core.runtime.Status;
 
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
-import tern.angular.modules.IDirectiveSyntax;
 import tern.angular.modules.IDirectiveCollector;
+import tern.angular.modules.IDirectiveSyntax;
 import tern.angular.modules.Restriction;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
