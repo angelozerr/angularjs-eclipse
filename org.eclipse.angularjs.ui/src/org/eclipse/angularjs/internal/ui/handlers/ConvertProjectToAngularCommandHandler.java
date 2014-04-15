@@ -78,13 +78,19 @@ public class ConvertProjectToAngularCommandHandler extends AbstractHandler {
 				// Configure natures:
 				List newNatures = new LinkedList();
 				String[] natures = projectDescription.getNatureIds();
+				boolean recreateTernNature = false;
 				for (int c = 0; c < natures.length; ++c) {
+					if (TernNature.ID.equals(natures[c])) {
+						recreateTernNature = true; 	// If Tern Nature exist on a project 
+													// it should be recreated for AngularJS project
+					}
+					
 					if (!AngularNature.ID.equals(natures[c]) && 
 							!TernNature.ID.equals(natures[c])) {
 						newNatures.add(natures[c]);
 					}
 				}
-				if (!adoptedToTern) // Add Tern Nature only if the project is not adopted
+				if (!adoptedToTern || recreateTernNature) // Add Tern Nature only if the project is not adopted
 					newNatures.add(TernNature.ID);
 				newNatures.add(AngularNature.ID);
 
