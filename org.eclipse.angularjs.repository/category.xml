@@ -6,7 +6,7 @@
    <feature url="features/tern.eclipse.macosx.cocoa.x86_64.feature_1.0.0.qualifier.jar" id="tern.eclipse.macosx.cocoa.x86_64.feature" version="0.2.0.qualifier">
       <category name="Tern - Embed Node.js"/>
    </feature>
-   <feature url="features/tern.eclipse.linux.gtk.x86.feature_1.0.0.qualifier.jar" id="tern.eclipse.linux.gtk.x86.feature" version="0.2.0.qualifier">
+   <feature url="features/tern.eclipse.linux.gtk.x86_64.feature_1.0.0.qualifier.jar" id="tern.eclipse.linux.gtk.x86_64.feature" version="0.2.0.qualifier">
       <category name="Tern - Embed Node.js"/>
    </feature>
    <feature url="features/tern-feature_1.0.0.qualifier.jar" id="tern-feature" version="0.2.0.qualifier">
@@ -21,6 +21,9 @@
    <feature url="features/tern-server-nodejs-feature_1.0.0.qualifier.jar" id="tern-server-nodejs-feature" version="0.2.0.qualifier">
       <category name="Tern IDE"/>
    </feature>
+   <feature url="features/tern.eclipse.ide.tools.feature_1.0.0.qualifier.jar" id="tern.eclipse.ide.tools.feature" version="0.2.0.qualifier">
+      <category name="Tern Tooling"/>
+   </feature>   
    <feature url="features/angularjs-eclipse-feature_1.0.0.qualifier.jar" id="angularjs-eclipse-feature" version="0.2.0.qualifier">
       <category name="AngularJS Eclipse Tooling"/>
    </feature>
@@ -31,4 +34,5 @@
       </description>
    </category-def>
    <category-def name="Tern IDE" label="Tern IDE"/>
+   <category-def name="Tern Tooling" label="Tern Tooling"/>   
 </site>
