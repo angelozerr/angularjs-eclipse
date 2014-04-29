@@ -47,4 +47,4 @@ See [Javascript features](https://github.com/angelozerr/angularjs-eclipse/wiki/J
 
 # Build
 
-See cloudbees job: https://opensagres.ci.cloudbees.com/job/angularjs-eclipse/
+AngularJS Eclipse is build with this [cloudbees job](https://opensagres.ci.cloudbees.com/job/angularjs-eclipse/).
