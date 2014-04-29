@@ -28,5 +28,4 @@ Export-Package: org.eclipse.angularjs.core,org.eclipse.angularjs.core.
  ests",org.eclipse.angularjs.internal.core.documentModel.partitioner,o
  rg.eclipse.angularjs.internal.core.documentModel.provisional.contentt
  ype
-Import-Package: org.json.simple;version="1.1.1",
- org.json.simple.parser;version="1.1.1"
+Import-Package: com.eclipsesource.json
