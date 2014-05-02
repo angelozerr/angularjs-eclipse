@@ -18,13 +18,8 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
 import tern.TernProject;
-import tern.server.ITernPlugin;
 import tern.server.TernDef;
 import tern.server.TernPlugin;
-
-import com.eclipsesource.json.JsonArray;
-import com.eclipsesource.json.JsonObject;
-import com.eclipsesource.json.JsonValue;
 
 /**
  * AngularJS Nature.
@@ -39,24 +34,21 @@ public class AngularNature implements IProjectNature {
 
 	public void configure() throws CoreException {
 		boolean saveRequired = false;
-		
+
 		// Add "angular" plugin
-		TernProject ternProject = AngularProject.getTernProject(project);
-		if (!containsPlugin(ternProject, TernPlugin.angular)) {
+		TernProject<?> ternProject = AngularProject.getTernProject(project);
+		if (!ternProject.addPlugin(TernPlugin.angular)) {
 			saveRequired = true;
-			ternProject.addPlugin(TernPlugin.angular);
 		}
-		
+
 		// Add "browser" + "ecma5" JSON Type Def
-		if (!containsLib(ternProject, TernDef.browser.name())) {
+		if (!ternProject.addLib(TernDef.browser.name())) {
 			saveRequired = true;
-			ternProject.addLib(TernDef.browser.name());
 		}
-		if (!containsLib(ternProject, TernDef.ecma5.name())) {
+		if (!ternProject.addLib(TernDef.ecma5.name())) {
 			saveRequired = true;
-			ternProject.addLib(TernDef.ecma5.name());
 		}
-		
+
 		if (saveRequired) {
 			try {
 				ternProject.save();
@@ -67,22 +59,6 @@ public class AngularNature implements IProjectNature {
 		}
 	}
 
-	public boolean containsPlugin(TernProject ternProject, ITernPlugin plugin) {
-		JsonObject plugins = ternProject.getPlugins(); // No null can be returned here
-		return (plugins.get(plugin.getName()) != null);
-	}
-	
-	public boolean containsLib(TernProject ternProject, String libName) {
-		JsonArray libs = ternProject.getLibs();
-		if (libs != null) {
-			for (JsonValue lib : libs) {
-				if (lib.isString() && lib.asString().equals(libName))
-					return true;
-			}
-		}
-		return false;
-	}
-	
 	public void deconfigure() throws CoreException {
 		// Remove the nature-specific information here.
 	}
