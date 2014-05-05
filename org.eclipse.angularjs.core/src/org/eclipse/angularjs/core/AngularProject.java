@@ -20,7 +20,10 @@ import org.eclipse.angularjs.internal.core.Trace;
 import org.eclipse.angularjs.internal.core.preferences.AngularCorePreferencesSupport;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 
@@ -41,12 +44,16 @@ public class AngularProject implements IDirectiveSyntax {
 	private static final QualifiedName ANGULAR_PROJECT = new QualifiedName(
 			AngularCorePlugin.PLUGIN_ID + ".sessionprops", "AngularProject");
 
+	private static final String EXTENSION_ANGULAR_PROJECT_DESCRIBERS = "angularNatureAdapters";
+
 	private final IProject project;
 
 	private final Map<ITernScriptPath, List<BaseModel>> folders;
 
 	private final CustomAngularModulesRegistry customDirectives;
-
+	
+	private static List<String> angularNatureAdapters;
+	
 	AngularProject(IProject project) throws CoreException {
 		this.project = project;
 		this.folders = new HashMap<ITernScriptPath, List<BaseModel>>();
@@ -54,6 +61,7 @@ public class AngularProject implements IDirectiveSyntax {
 		AngularModulesManager.getInstance().addRegistry(project,
 				customDirectives);
 		project.setSessionProperty(ANGULAR_PROJECT, this);
+		ensureNatureIsConfigured();
 	}
 
 	public static AngularProject getAngularProject(IProject project)
@@ -92,11 +100,19 @@ public class AngularProject implements IDirectiveSyntax {
 	 */
 	public static boolean hasAngularNature(IProject project) {
 		try {
-			return project.hasNature(AngularNature.ID);
+			if (project.hasNature(AngularNature.ID))
+				return true;
+			
+			loadAngularProjectDescribers();
+			for (String adaptToNature : angularNatureAdapters) {
+				if (project.hasNature(adaptToNature)) {
+					return true;
+				}
+			}
 		} catch (CoreException e) {
 			Trace.trace(Trace.SEVERE, "Error angular nature", e);
-			return false;
 		}
+		return false;
 	}
 
 	public Collection<BaseModel> getFolders(ITernScriptPath scriptPath) {
@@ -169,5 +185,54 @@ public class AngularProject implements IDirectiveSyntax {
 	public boolean isUnderscoreDelimiter() {
 		return AngularCorePreferencesSupport.getInstance()
 				.isDirectiveUnderscoreDelimiter(project);
+	}
+	
+	private static void loadAngularProjectDescribers() {
+		if (angularNatureAdapters != null)
+			return;
+
+		Trace.trace(Trace.EXTENSION_POINT,
+				"->- Loading .angularProjectDescribers extension point ->-");
+
+		IExtensionRegistry registry = Platform.getExtensionRegistry();
+		IConfigurationElement[] cf = registry.getConfigurationElementsFor(
+				AngularCorePlugin.PLUGIN_ID, EXTENSION_ANGULAR_PROJECT_DESCRIBERS);
+		List<String> list = new ArrayList<String>(
+				cf.length);
+		addAngularNatureAdapters(cf, list);
+		angularNatureAdapters = list;
+
+		Trace.trace(Trace.EXTENSION_POINT,
+				"-<- Done loading .angularProjectDescribers extension point -<-");
+	}
+	
+	/**
+	 * Load the angular project describers.
+	 */
+	private static synchronized void addAngularNatureAdapters(
+			IConfigurationElement[] cf, List<String> list) {
+		for (IConfigurationElement ce : cf) {
+			try {
+				list.add(ce.getAttribute("id"));
+				Trace.trace(
+						Trace.EXTENSION_POINT,
+						"  Loaded project describer: "
+								+ ce.getAttribute("id"));
+			} catch (Throwable t) {
+				Trace.trace(
+						Trace.SEVERE,
+						"  Could not load project describers: "
+								+ ce.getAttribute("id"), t);
+			}
+		}
+	}
+	
+	private void ensureNatureIsConfigured() throws CoreException {
+		// Check if .tern-project is correctly configured for adapted nature
+		final AngularNature tempAngularNature = new AngularNature();
+		tempAngularNature.setProject(project);
+		if (!tempAngularNature.isConfigured()) {
+			tempAngularNature.configure();
+		}					
 	}
 }

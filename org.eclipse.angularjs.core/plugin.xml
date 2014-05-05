@@ -14,6 +14,9 @@
  -->
 <plugin>
 	
+	<extension-point id="angularNatureAdapters" name="%angularNatureAdapters.name"
+		schema="schema/angularNatureAdapters.exsd" />	
+	
  	<!-- Angular Content Type declaration -->
 	<extension
          point="org.eclipse.core.contenttype.contentTypes">
@@ -22,7 +25,9 @@
            default-charset="UTF-8"
            file-extensions="html,htm"
            name="%angularContentType"
-           id="angularsource">       
+           id="angularsource">
+           <describer
+				class="org.eclipse.angularjs.internal.core.content.AngularSourceContentDescriber" />       
      </content-type>     
    </extension>        
 
@@ -69,9 +74,6 @@
 				class="org.eclipse.angularjs.core.AngularNature">
 			</run>
 		</runtime>
-		<content-type
-        id="org.eclipse.angularjs.core.angularsource">
-		</content-type>
 	</extension>
 	
 	<!-- Preferences initialization -->

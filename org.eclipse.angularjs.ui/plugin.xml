@@ -14,6 +14,22 @@
  -->
 <plugin>
 	
+	<extension point="org.eclipse.ui.startup">
+        <startup
+            class="org.eclipse.angularjs.internal.ui.AngularUIStartup">
+        </startup>
+    </extension> 
+    
+	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			id="org.eclipse.angularjs.internal.ui.AngularNatureTester"
+			type="org.eclipse.core.resources.IResource"
+			namespace="org.eclipse.angularjs.ui"
+			properties="isAngularProject"
+			class="org.eclipse.angularjs.internal.ui.AngularNatureTester">
+		</propertyTester>
+	</extension>
+	
 	<!-- AngularJS Editor:-->
     <extension point="org.eclipse.ui.editors">
     	<editor class="org.eclipse.angularjs.internal.ui.editor.AngularStructuredEditor"    	
@@ -100,8 +116,7 @@
 						<adapt type="org.eclipse.core.resources.IProject">
 							<and>
 								<not>
-									<test property="org.eclipse.core.resources.projectNature"
-										  value="org.eclipse.angularjs.core.angularnature"/>
+									<test property="org.eclipse.angularjs.ui.isAngularProject" />
 								</not>
 							</and>
 						</adapt>
@@ -188,8 +203,7 @@
             id="org.eclipse.angularjs.internal.ui.properties.AngularMainPropertyPage">
          <enabledWhen>
 		     <adapt type="org.eclipse.core.resources.IProject">
-		          <test property="org.eclipse.core.resources.projectNature" 
-		          		value="org.eclipse.angularjs.core.angularnature"/>
+		     	  <test property="org.eclipse.angularjs.ui.isAngularProject" />
 		     </adapt>         
          </enabledWhen>
       </page>
@@ -200,8 +214,7 @@
             id="org.eclipse.angularjs.internal.ui.properties.DirectivesPropertyPage">
          <enabledWhen>
 		     <adapt type="org.eclipse.core.resources.IProject">
-		          <test property="org.eclipse.core.resources.projectNature" 
-		          		value="org.eclipse.angularjs.core.angularnature"/>
+		     	  <test property="org.eclipse.angularjs.ui.isAngularProject" />
 		     </adapt>         
          </enabledWhen>
       </page>      
