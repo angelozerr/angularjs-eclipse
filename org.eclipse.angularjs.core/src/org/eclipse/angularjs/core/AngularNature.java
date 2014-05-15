@@ -42,10 +42,10 @@ public class AngularNature implements IProjectNature {
 		}
 		
 		// Has "browser" + "ecma5" JSON Type Def?
-		if (!ternProject.hasLib(TernDef.browser.name())) {
+		if (!ternProject.hasLib(TernDef.browser)) {
 			return false;
 		}
-		if (!ternProject.hasLib(TernDef.ecma5.name())) {
+		if (!ternProject.hasLib(TernDef.ecma5)) {
 			return false;
 		}
 
@@ -62,11 +62,11 @@ public class AngularNature implements IProjectNature {
  		}
  		
  		// Add "browser" + "ecma5" JSON Type Def
- 		if (!ternProject.hasLib(TernDef.browser.name())) {
- 			ternProject.addLib(TernDef.browser.name());
+ 		if (!ternProject.hasLib(TernDef.browser)) {
+ 			ternProject.addLib(TernDef.browser);
  		}
- 		if (!ternProject.hasLib(TernDef.ecma5.name())) {
- 			ternProject.addLib(TernDef.ecma5.name());
+ 		if (!ternProject.hasLib(TernDef.ecma5)) {
+ 			ternProject.addLib(TernDef.ecma5);
  		}
  		
 		try {
