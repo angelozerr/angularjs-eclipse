@@ -3,7 +3,7 @@
   <parent>
     <groupId>fr.opensagres.agnularjs</groupId>
     <artifactId>angularjs-eclipse</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <version>0.2.0</version>
   </parent>
   <artifactId>angularjs-eclipse-feature</artifactId>
   <packaging>eclipse-feature</packaging>
