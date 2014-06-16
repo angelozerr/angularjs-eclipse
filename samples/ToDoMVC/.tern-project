@@ -1,0 +1,1 @@
+{"ide":{"scriptPaths":[{"path":"WebContent\/todo","type":"FOLDER"},{"path":"WebContent\/todo-require","type":"FOLDER"}]},"plugins":{"angular":"..\/","requirejs":"..\/"},"libs":["browser","ecma5"]}

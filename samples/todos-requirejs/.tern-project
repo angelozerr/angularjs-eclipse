@@ -1,0 +1,1 @@
+{"ide":{"scriptPaths":[{"type":"FOLDER","path":"WebContent/js"},{"type":"FILE","path":"angular-mock.js"}]},"plugins":{"angular":{},"requirejs":{"paths":{"angular":"../../angular-mock"},"baseURL":"WebContent/js"}},"libs":["browser","ecma5"]}
