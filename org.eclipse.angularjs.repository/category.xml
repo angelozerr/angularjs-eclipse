@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/tern.eclipse.win32.win32.x86.feature_0.0.0.qualifier.jar" id="tern.eclipse.win32.win32.x86.feature" version="0.0.0">
+   <feature id="tern.eclipse.win32.win32.x86.feature" version="0.0.0">
       <category name="Tern - Embed Node.js"/>
    </feature>
-   <feature url="features/tern.eclipse.win32.x86_64.feature_0.0.0.qualifier.jar" id="tern.eclipse.win32.x86_64.feature" version="0.0.0">
+   <feature  id="tern.eclipse.win32.x86_64.feature" version="0.0.0">
       <category name="Tern - Embed Node.js"/>
    </feature>   
-   <feature url="features/tern.eclipse.macosx.cocoa.x86_64.feature_0.0.0.qualifier.jar" id="tern.eclipse.macosx.cocoa.x86_64.feature" version="0.0.0">
+   <feature  id="tern.eclipse.macosx.cocoa.x86_64.feature" version="0.0.0">
       <category name="Tern - Embed Node.js"/>
    </feature>
-   <feature url="features/tern.eclipse.linux.gtk.x86_64.feature_0.0.0.qualifier.jar" id="tern.eclipse.linux.gtk.x86_64.feature" version="0.0.0">
+   <feature  id="tern.eclipse.linux.gtk.x86_64.feature" version="0.0.0">
       <category name="Tern - Embed Node.js"/>
    </feature>
-   <feature url="features/tern-feature_0.0.0.qualifier.jar" id="tern-feature" version="0.0.0">
+   <feature  id="tern-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
-   <feature url="features/tern-jsdt-feature_0.0.0.qualifier.jar" id="tern-jsdt-feature" version="0.0.0">
+   <feature  id="tern-jsdt-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
-   <feature url="features/tern-server-rhino-feature_0.0.0.qualifier.jar" id="tern-server-rhino-feature" version="0.0.0">
+   <feature  id="tern-server-rhino-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
-   <feature url="features/tern-server-nodejs-feature_0.0.0.qualifier.jar" id="tern-server-nodejs-feature" version="0.0.0">
+   <feature  id="tern-server-nodejs-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
-   <feature url="features/tern.eclipse.ide.tools.feature_0.0.0.qualifier.jar" id="tern.eclipse.ide.tools.feature" version="0.0.0">
+   <feature  id="tern.eclipse.ide.tools.feature" version="0.0.0">
       <category name="Tern Tooling"/>
    </feature>
-   <feature url="features/angularjs-eclipse-feature_0.0.0.qualifier.jar" id="angularjs-eclipse-feature" version="0.0.0">
+   <feature  id="angularjs-eclipse-feature" version="0.0.0">
       <category name="AngularJS Eclipse Tooling"/>
    </feature>
    <category-def name="AngularJS Eclipse Tooling" label="AngularJS Eclipse Tooling"/>
