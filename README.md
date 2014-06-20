@@ -35,7 +35,7 @@ You will see that AngularJS directive + EL are highlighted, completion is availa
 
 ![AngulerJS Editor Overview](https://github.com/angelozerr/angularjs-eclipse/wiki/images/HTMLAngularEditorOverview.png)
 
-After [configuring tern server](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE-Node.js), completions, hover, validation, hyperlink are available for modules, controllers, angular expression : 
+After [configuring tern server](https://github.com/angelozerr/tern.java/wiki/Tern-Eclipse-IDE-Node.js), completions, hover, validation, hyperlink are available for modules, controllers, angular expression EL : 
 
 ![Completion for expression](https://github.com/angelozerr/angularjs-eclipse/wiki/images/HTMLAngularCompletionExpressionFn.png)
 
