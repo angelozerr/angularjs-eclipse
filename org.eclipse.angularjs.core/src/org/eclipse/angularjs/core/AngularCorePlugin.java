@@ -17,7 +17,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-import tern.metadata.TernFacetMetadataManager;
+import tern.metadata.TernModuleMetadataManager;
 import tern.server.nodejs.process.NodejsProcessManager;
 
 /**
@@ -48,7 +48,7 @@ public class AngularCorePlugin extends Plugin {
 		File ternCoreBaseDir = FileLocator.getBundleFile(Platform
 				.getBundle(tern.Activator.PLUGIN_ID));
 		NodejsProcessManager.getInstance().init(ternCoreBaseDir);
-		TernFacetMetadataManager.getInstance().init(ternCoreBaseDir);
+		TernModuleMetadataManager.getInstance().init(ternCoreBaseDir);
 	}
 
 	@Override
