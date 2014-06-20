@@ -35,6 +35,7 @@ import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.server.protocol.type.ValidationTernTypeCollector;
 
 public class HTMLAngularContentValidator extends AbstractValidator {
 

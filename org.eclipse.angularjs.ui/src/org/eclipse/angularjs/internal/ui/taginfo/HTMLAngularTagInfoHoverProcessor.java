@@ -27,10 +27,10 @@ import tern.angular.AngularType;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
 import tern.angular.protocol.TernAngularQuery;
+import tern.angular.protocol.type.HTMLAngularTernTypeCollector;
 import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
-import tern.server.protocol.completions.TernCompletionItem;
 import tern.server.protocol.type.ITernTypeCollector;
 import tern.utils.StringUtils;
 
@@ -122,29 +122,13 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 		ITernScriptPath scriptPath = AngularScopeHelper.populateScope(
 				attr.getOwnerElement(), file, angularType, query);
 
-		final StringBuilder help = new StringBuilder();
-		ITernTypeCollector collector = new ITernTypeCollector() {
-
-			@Override
-			public void setType(String name, String type, String origin) {
-				if (name != null) {
-
-					TernCompletionItem item = new TernCompletionItem(name,
-							type, origin);
-					help.append("<b>Angular ");
-					help.append(angularType.name());
-					help.append("</b><br/><br/><b>Signature : </b>");
-					help.append(item.getSignature());
-					help.append("<br/><b>Origin : </b>");
-					help.append(item.getOrigin());
-				}
-			}
-		};
+		HTMLAngularTernTypeCollector collector = new HTMLAngularTernTypeCollector(
+				angularType);
 		if (scriptPath != null) {
 			ternProject.request(query, query.getFiles(), scriptPath, collector);
 		} else {
 			ternProject.request(query, query.getFiles(), attr, file, collector);
 		}
-		return help.toString();
+		return collector.getInfo();
 	}
 }
