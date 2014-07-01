@@ -2,6 +2,7 @@ AngularJS Eclipse Plugin
 =================
 
 [![Build Status](https://secure.travis-ci.org/angelozerr/angularjs-eclipse.png)](http://travis-ci.org/angelozerr/angularjs-eclipse)
+[![Eclipse install](https://marketplace.eclipse.org/sites/all/modules/custom/marketplace/images/installbutton.png)](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1605088)
 
 AngularJS Eclipse Plugin extends Eclipse WTP to : 
 
