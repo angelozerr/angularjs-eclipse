@@ -15,14 +15,23 @@ import org.eclipse.angularjs.core.link.AngularLink;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.core.link.AngularLinkResource;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.w3c.dom.Node;
 
 import tern.angular.AngularType;
+import tern.angular.protocol.Controller;
 import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 
 public class AngularScopeHelper {
+
+	public static String getAngularValue(IDOMAttr attr, AngularType angularType) {
+		if (angularType == AngularType.controller) {
+			return Controller.getName(attr.getValue());
+		}
+		return attr.getValue();
+	}
 
 	public static ITernScriptPath populateScope(Node element, IFile file,
 			AngularType angularType, TernAngularQuery query) throws Exception {

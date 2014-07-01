@@ -10,6 +10,7 @@
  */
 package org.eclipse.angularjs.internal.ui.validation;
 
+import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.jface.text.BadLocationException;
@@ -24,7 +25,7 @@ import tern.angular.AngularType;
 public class ValidatorUtils {
 
 	public static LocalizedMessage createMessage(IDOMAttr attr, AngularType type) {
-		String textContent = attr.getValue();
+		String textContent = AngularScopeHelper.getAngularValue(attr, type);
 		int start = attr.getValueRegionStartOffset();
 		return createMessage(attr, start, textContent, type);
 	}

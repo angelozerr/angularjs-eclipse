@@ -13,6 +13,7 @@ package org.eclipse.angularjs.internal.ui.hyperlink;
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.core.utils.HyperlinkUtils;
+import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -73,16 +74,19 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 							// the attribute is directive, try to open the
 							// angular
 							// element controller, module, etc.
-							hyperlink = new HTMLAngularHyperLink(attr.getOwnerElement(),
+							hyperlink = new HTMLAngularHyperLink(
+									attr.getOwnerElement(),
 									HyperlinkUtils.getValueRegion(attr), file,
-									ternProject, attr.getValue(),
+									ternProject, AngularScopeHelper.getAngularValue(attr,
+											directive.getType()),
 									directive.getType());
 
 						} else {
 							// Hyperlink on attr name, try to open the custom
 							// directive
 							if (directive.isCustom()) {
-								hyperlink = new HTMLAngularHyperLink(attr.getOwnerElement(),
+								hyperlink = new HTMLAngularHyperLink(
+										attr.getOwnerElement(),
 										HyperlinkUtils.getNameRegion(attr),
 										file, ternProject, directive.getName(),
 										AngularType.directive);
@@ -92,7 +96,7 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 						// Hyperlink on element name, try to open the custom
 						// directive
 						if (directive.isCustom()) {
-							IDOMElement element =(IDOMElement)node;
+							IDOMElement element = (IDOMElement) node;
 							hyperlink = new HTMLAngularHyperLink(element,
 									HyperlinkUtils.getElementRegion(element),
 									file, ternProject, directive.getName(),

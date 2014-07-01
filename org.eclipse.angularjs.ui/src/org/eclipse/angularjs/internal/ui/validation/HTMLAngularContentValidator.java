@@ -111,7 +111,9 @@ public class HTMLAngularContentValidator extends AbstractValidator {
 			Exception {
 
 		TernAngularQuery query = new TernAngularTypeQuery(angularType);
-		query.setExpression(attr.getValue());
+		query.setExpression(AngularScopeHelper.getAngularValue(attr,
+				angularType));
+
 		ITernScriptPath scriptPath = AngularScopeHelper.populateScope(
 				attr.getOwnerElement(), file, angularType, query);
 
