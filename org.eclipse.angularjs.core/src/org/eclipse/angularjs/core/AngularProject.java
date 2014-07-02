@@ -51,9 +51,9 @@ public class AngularProject implements IDirectiveSyntax {
 	private final Map<ITernScriptPath, List<BaseModel>> folders;
 
 	private final CustomAngularModulesRegistry customDirectives;
-	
+
 	private static List<String> angularNatureAdapters;
-	
+
 	AngularProject(IProject project) throws CoreException {
 		this.project = project;
 		this.folders = new HashMap<ITernScriptPath, List<BaseModel>>();
@@ -99,18 +99,20 @@ public class AngularProject implements IDirectiveSyntax {
 	 *         "org.eclipse.angularjs.core.angularnature" and false otherwise.
 	 */
 	public static boolean hasAngularNature(IProject project) {
-		try {
-			if (project.hasNature(AngularNature.ID))
-				return true;
-			
-			loadAngularProjectDescribers();
-			for (String adaptToNature : angularNatureAdapters) {
-				if (project.hasNature(adaptToNature)) {
+		if (project.isAccessible()) {
+			try {
+				if (project.hasNature(AngularNature.ID))
 					return true;
+
+				List<String> angularNatureAdapters = getAngularNatureAdapters();
+				for (String adaptToNature : angularNatureAdapters) {
+					if (project.hasNature(adaptToNature)) {
+						return true;
+					}
 				}
+			} catch (CoreException e) {
+				Trace.trace(Trace.SEVERE, "Error angular nature", e);
 			}
-		} catch (CoreException e) {
-			Trace.trace(Trace.SEVERE, "Error angular nature", e);
 		}
 		return false;
 	}
@@ -186,8 +188,8 @@ public class AngularProject implements IDirectiveSyntax {
 		return AngularCorePreferencesSupport.getInstance()
 				.isDirectiveUnderscoreDelimiter(project);
 	}
-	
-	private static void loadAngularProjectDescribers() {
+
+	private synchronized static void loadAngularProjectDescribers() {
 		if (angularNatureAdapters != null)
 			return;
 
@@ -196,16 +198,16 @@ public class AngularProject implements IDirectiveSyntax {
 
 		IExtensionRegistry registry = Platform.getExtensionRegistry();
 		IConfigurationElement[] cf = registry.getConfigurationElementsFor(
-				AngularCorePlugin.PLUGIN_ID, EXTENSION_ANGULAR_PROJECT_DESCRIBERS);
-		List<String> list = new ArrayList<String>(
-				cf.length);
+				AngularCorePlugin.PLUGIN_ID,
+				EXTENSION_ANGULAR_PROJECT_DESCRIBERS);
+		List<String> list = new ArrayList<String>(cf.length);
 		addAngularNatureAdapters(cf, list);
 		angularNatureAdapters = list;
 
 		Trace.trace(Trace.EXTENSION_POINT,
 				"-<- Done loading .angularProjectDescribers extension point -<-");
 	}
-	
+
 	/**
 	 * Load the angular project describers.
 	 */
@@ -214,10 +216,8 @@ public class AngularProject implements IDirectiveSyntax {
 		for (IConfigurationElement ce : cf) {
 			try {
 				list.add(ce.getAttribute("id"));
-				Trace.trace(
-						Trace.EXTENSION_POINT,
-						"  Loaded project describer: "
-								+ ce.getAttribute("id"));
+				Trace.trace(Trace.EXTENSION_POINT,
+						"  Loaded project describer: " + ce.getAttribute("id"));
 			} catch (Throwable t) {
 				Trace.trace(
 						Trace.SEVERE,
@@ -226,13 +226,21 @@ public class AngularProject implements IDirectiveSyntax {
 			}
 		}
 	}
-	
+
+	private static List<String> getAngularNatureAdapters() {
+		if (angularNatureAdapters == null) {
+			loadAngularProjectDescribers();
+		}
+		return angularNatureAdapters;
+	}
+
 	private void ensureNatureIsConfigured() throws CoreException {
 		// Check if .tern-project is correctly configured for adapted nature
 		final AngularNature tempAngularNature = new AngularNature();
 		tempAngularNature.setProject(project);
 		if (!tempAngularNature.isConfigured()) {
 			tempAngularNature.configure();
-		}					
+		}
 	}
+
 }
