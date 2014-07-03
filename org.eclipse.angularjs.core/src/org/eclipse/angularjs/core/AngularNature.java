@@ -32,15 +32,16 @@ public class AngularNature implements IProjectNature {
 
 	private IProject project;
 
-	public boolean isConfigured() throws CoreException{
-		if (project == null) return false;
+	public boolean isConfigured() throws CoreException {
+		if (project == null)
+			return false;
 
 		// has "angular" plugin?
 		TernProject<?> ternProject = AngularProject.getTernProject(project);
 		if (!ternProject.hasPlugin(TernPlugin.angular)) {
 			return false;
 		}
-		
+
 		// Has "browser" + "ecma5" JSON Type Def?
 		if (!ternProject.hasLib(TernDef.browser)) {
 			return false;
@@ -53,30 +54,25 @@ public class AngularNature implements IProjectNature {
 	}
 
 	public void configure() throws CoreException {
-		if (isConfigured()) return;
+		if (isConfigured())
+			return;
 
- 		// Add "angular" plugin
- 		TernProject<?> ternProject = AngularProject.getTernProject(project);
- 		if (!ternProject.hasPlugin(TernPlugin.angular)) {
- 			ternProject.addPlugin(TernPlugin.angular);
- 		}
- 		
- 		// Add "browser" + "ecma5" JSON Type Def
- 		if (!ternProject.hasLib(TernDef.browser)) {
- 			ternProject.addLib(TernDef.browser);
- 		}
- 		if (!ternProject.hasLib(TernDef.ecma5)) {
- 			ternProject.addLib(TernDef.ecma5);
- 		}
- 		
+		// Add "angular" plugin
+		TernProject<?> ternProject = AngularProject.getTernProject(project);
+		ternProject.addPlugin(TernPlugin.angular);
+
+		// Add "browser" + "ecma5" JSON Type Def
+		ternProject.addLib(TernDef.browser);
+		ternProject.addLib(TernDef.ecma5);
+
 		try {
-			ternProject.save();
+			ternProject.saveIfNeeded();
 		} catch (IOException e) {
 			Trace.trace(Trace.SEVERE,
 					"Error while configuring angular nature.", e);
- 		}
+		}
 	}
-	
+
 	public void deconfigure() throws CoreException {
 		// Remove the nature-specific information here.
 	}
