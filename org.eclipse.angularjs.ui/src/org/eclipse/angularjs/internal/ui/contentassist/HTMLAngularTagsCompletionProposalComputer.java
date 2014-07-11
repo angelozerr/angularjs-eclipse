@@ -19,6 +19,7 @@ import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionCon
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -29,13 +30,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
-import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -124,8 +123,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 								// Add the directive in the completion.
 								String displayString = name + " - "
 										+ directive.getModule().getName();
-								String additionalProposalInfo = directive
-										.getHTMLDescription();
+								String additionalProposalInfo = HTMLAngularPrinter
+										.getDirectiveInfo(directive);
 								Image image = ImageResource
 										.getImage(ImageResource.IMG_DIRECTIVE);
 								addProposal(contentAssistRequest, name,
@@ -220,8 +219,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						// Add the directive in the completion.
 						String displayString = name + " - "
 								+ directive.getModule().getName();
-						String additionalProposalInfo = directive
-								.getHTMLDescription();
+						String additionalProposalInfo = HTMLAngularPrinter
+								.getDirectiveInfo(directive);
 						Image image = ImageResource
 								.getImage(ImageResource.IMG_DIRECTIVE);
 						addProposal(contentAssistRequest, name,
@@ -255,7 +254,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 						int relevance = XMLRelevanceConstants.R_NONE;
 
-						ICompletionProposal proposal = new CustomCompletionProposal(
+						ICompletionProposal proposal = new HTMLAngularCompletionProposal(
 								replacementString, replacementOffset,
 								replacementLength, cursorPosition, image,
 								displayString, contextInformation,
@@ -293,15 +292,15 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
 				@Override
-				public void addProposal(String name, String type,
-						String origin, Object doc, int pos, Object completion,
+				public void addProposal(String name, String type, String doc,
+						String url, String origin, int pos, Object completion,
 						ITernServer ternServer) {
 
 					ICompletionProposal proposal = null;
 					if (isModuleOrController(angularType)) {
 
 						MarkupAngularCompletionProposal markupPproposal = new MarkupAngularCompletionProposal(
-								name, type, origin, doc, pos, completion,
+								name, type, doc, url, origin, pos, completion,
 								ternServer, angularType, replacementOffset);
 
 						// in the case of "module", "controller" completion
@@ -314,11 +313,12 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						markupPproposal.setReplacementLength(replacementLength);
 						markupPproposal.setCursorPosition(cursorPosition);
 						markupPproposal.setReplacementOffset(replacementOffset);
-						markupPproposal.setImage(getImage(angularType));
+						markupPproposal.setImage(HTMLAngularPrinter
+								.getImage(angularType));
 						proposal = markupPproposal;
 					} else {
 						proposal = new JSAngularCompletionProposal(name, type,
-								origin, doc, pos, completion, ternServer,
+								doc, url, origin, pos, completion, ternServer,
 								angularType, replacementOffset);
 					}
 					contentAssistRequest.addProposal(proposal);
@@ -474,8 +474,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 							// Add the directive in the completion.
 							String displayString = name + " - "
 									+ directive.getModule().getName();
-							String additionalProposalInfo = directive
-									.getHTMLDescription();
+							String additionalProposalInfo = HTMLAngularPrinter
+									.getDirectiveInfo(directive);
 							Image image = ImageResource
 									.getImage(ImageResource.IMG_DIRECTIVE);
 
@@ -525,7 +525,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 							int relevance = XMLRelevanceConstants.R_TAG_NAME;
 
-							ICompletionProposal proposal = new MarkupCompletionProposal(
+							ICompletionProposal proposal = new AngularMarkupCompletionProposal(
 									replacementString.toString(),
 									replacementOffset, replacementLength,
 									cursorPosition, image, displayString,
@@ -611,29 +611,11 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 		int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME;
 
-		ICompletionProposal proposal = new CustomCompletionProposal(
+		ICompletionProposal proposal = new HTMLAngularCompletionProposal(
 				replacementString.toString(), replacementOffset,
 				replacementLength, cursorPosition, image, displayString,
 				contextInformation, additionalProposalInfo, relevance);
 		contentAssistRequest.addProposal(proposal);
-	}
-
-	/**
-	 * Returns the image to use for completion according to teh given angular
-	 * type.
-	 * 
-	 * @param angularType
-	 * @return
-	 */
-	private static Image getImage(AngularType angularType) {
-		switch (angularType) {
-		case module:
-			return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
-		case controller:
-			return ImageResource.getImage(ImageResource.IMG_CONTROLLER);
-		default:
-			return null;
-		}
 	}
 
 }

@@ -49,8 +49,8 @@ public class Module extends BaseModel implements ITernCompletionCollector,
 	}
 
 	@Override
-	public void addProposal(String name, String type, String origin,
-			Object doc, int pos, Object completion, ITernServer ternServer) {
+	public void addProposal(String name, String type, String doc, String url,
+			String origin, int pos, Object completion, ITernServer ternServer) {
 		AngularType angularType = AngularType.get(ternServer.getText(
 				completion, "angularType"));
 		elements.add(new AngularElement(name, angularType, Module.this));

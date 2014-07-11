@@ -14,8 +14,10 @@ import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
@@ -27,11 +29,12 @@ import tern.angular.AngularType;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
 import tern.angular.protocol.TernAngularQuery;
-import tern.angular.protocol.type.HTMLAngularTernTypeCollector;
 import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
-import tern.server.protocol.type.ITernTypeCollector;
+import tern.eclipse.ide.ui.utils.HTMLTernPrinter;
+import tern.eclipse.jface.text.HoverControlCreator;
+import tern.eclipse.jface.text.PresenterControlCreator;
 import tern.utils.StringUtils;
 
 /**
@@ -39,6 +42,10 @@ import tern.utils.StringUtils;
  * 
  */
 public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor {
+
+	private IInformationControlCreator fHoverControlCreator;
+	private IInformationControlCreator fPresenterControlCreator;
+
 	public HTMLAngularTagInfoHoverProcessor() {
 		super();
 	}
@@ -54,7 +61,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			IProject project = DOMUtils.getFile(attr).getProject();
 			Directive directive = DOMUtils.getAngularDirective(project, attr);
 			if (directive != null) {
-				return directive.getHTMLDescription();
+				return HTMLAngularPrinter.getDirectiveInfo(directive);
 			} else {
 				// Check if it's a directive parameter which is hovered.
 				DirectiveParameter parameter = DOMUtils
@@ -65,8 +72,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			}
 		}
 		// Here the attribute is not a directive, display classic Help.
-		return super.computeTagAttNameHelp(xmlnode, parentNode, flatNode,
-				region);
+		return formatAsAdvancedHTML(super.computeTagAttNameHelp(xmlnode,
+				parentNode, flatNode, region));
 	}
 
 	@Override
@@ -93,8 +100,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				}
 			}
 		}
-		return super.computeTagAttValueHelp(xmlnode, parentNode, flatNode,
-				region);
+		return formatAsAdvancedHTML(super.computeTagAttValueHelp(xmlnode,
+				parentNode, flatNode, region));
 	}
 
 	@Override
@@ -108,10 +115,20 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			Directive directive = DOMUtils
 					.getAngularDirective(project, element);
 			if (directive != null) {
-				return directive.getHTMLDescription();
+				return HTMLAngularPrinter.getDirectiveInfo(directive);
 			}
 		}
-		return super.computeTagNameHelp(xmlnode, parentNode, flatNode, region);
+		return formatAsAdvancedHTML(super.computeTagNameHelp(xmlnode,
+				parentNode, flatNode, region));
+	}
+
+	private String formatAsAdvancedHTML(String html) {
+		if (StringUtils.isEmpty(html)) {
+			return html;
+		}
+		StringBuffer advancedHTML = new StringBuffer(html);
+		HTMLTernPrinter.endPage(advancedHTML);
+		return advancedHTML.toString();
 	}
 
 	private String find(IDOMAttr attr, IFile file, IDETernProject ternProject,
@@ -131,5 +148,20 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			ternProject.request(query, query.getFiles(), attr, file, collector);
 		}
 		return collector.getInfo();
+	}
+
+	@Override
+	public IInformationControlCreator getHoverControlCreator() {
+		if (fHoverControlCreator == null)
+			fHoverControlCreator = new HoverControlCreator(
+					getInformationPresenterControlCreator());
+		return fHoverControlCreator;
+	}
+
+	// @Override
+	public IInformationControlCreator getInformationPresenterControlCreator() {
+		if (fPresenterControlCreator == null)
+			fPresenterControlCreator = new PresenterControlCreator();
+		return fPresenterControlCreator;
 	}
 }

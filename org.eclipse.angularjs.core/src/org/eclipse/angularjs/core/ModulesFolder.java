@@ -41,8 +41,8 @@ public class ModulesFolder extends BaseModel implements
 	}
 
 	@Override
-	public void addProposal(String name, String type, String origin,
-			Object doc, int pos, Object completion, ITernServer ternServer) {
+	public void addProposal(String name, String type, String doc, String url,
+			String origin, int pos, Object completion, ITernServer ternServer) {
 		modules.add(new Module(name, getScriptPath()));
 	}
 }
