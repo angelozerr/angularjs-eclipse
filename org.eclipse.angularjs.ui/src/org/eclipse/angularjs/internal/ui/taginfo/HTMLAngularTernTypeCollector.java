@@ -13,6 +13,7 @@ package org.eclipse.angularjs.internal.ui.taginfo;
 import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 
 import tern.angular.AngularType;
+import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
 import tern.server.ITernServer;
 import tern.server.protocol.type.ITernTypeCollector;
 
@@ -20,14 +21,9 @@ import tern.server.protocol.type.ITernTypeCollector;
  * {@link ITernTypeCollector} implementation for HTML Angular type collector.
  *
  */
-public class HTMLAngularTernTypeCollector implements ITernTypeCollector {
+public class HTMLAngularTernTypeCollector extends HTMLTernTypeCollector {
 
-	private final AngularType angularType;
 	private String info;
-
-	public HTMLAngularTernTypeCollector(AngularType angularType) {
-		this.angularType = angularType;
-	}
 
 	@Override
 	public void setType(String type, boolean guess, String name,

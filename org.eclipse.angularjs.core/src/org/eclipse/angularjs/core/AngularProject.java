@@ -46,6 +46,9 @@ public class AngularProject implements IDirectiveSyntax {
 
 	private static final String EXTENSION_ANGULAR_PROJECT_DESCRIBERS = "angularNatureAdapters";
 
+	public static final String START_ANGULAR_EXPRESSION_TOKEN = "{{";
+	public static final String END_ANGULAR_EXPRESSION_TOKEN = "}}";
+	
 	private final IProject project;
 
 	private final Map<ITernScriptPath, List<BaseModel>> folders;

@@ -30,15 +30,17 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 	private final Node node;
 	private final IFile file;
 	private final String expression;
+	private Integer end;
 	private final AngularType angularType;
 
-	public HTMLAngularHyperLink(Node attr, IRegion region, IFile file,
-			IDETernProject ternProject, String expression,
+	public HTMLAngularHyperLink(Node node, IRegion region, IFile file,
+			IDETernProject ternProject, String expression, Integer end,
 			AngularType angularType) {
 		super(region, ternProject);
-		this.node = attr;
+		this.node = node;
 		this.file = file;
 		this.expression = expression;
+		this.end = end;
 		this.angularType = angularType;
 	}
 
@@ -48,8 +50,9 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 			TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
 					angularType);
 			query.setExpression(expression);
-			ITernScriptPath scriptPath = AngularScopeHelper.populateScope(
-					node, file, angularType, query);
+			query.setEnd(end);
+			ITernScriptPath scriptPath = AngularScopeHelper.populateScope(node,
+					file, angularType, query);
 			if (scriptPath != null) {
 				ternProject.request(query, query.getFiles(), scriptPath, this);
 			} else {

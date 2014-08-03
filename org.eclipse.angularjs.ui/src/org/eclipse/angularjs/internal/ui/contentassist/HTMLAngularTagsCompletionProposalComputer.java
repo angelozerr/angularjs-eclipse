@@ -172,7 +172,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			} else {
 				// is angular expression inside attribute?
 				String matchingString = contentAssistRequest.getMatchString();
-				int index = matchingString.lastIndexOf("{{");
+				int index = matchingString
+						.lastIndexOf(AngularProject.START_ANGULAR_EXPRESSION_TOKEN);
 				if (index != -1) {
 					populateAngularProposals(contentAssistRequest, element,
 							AngularType.model, index);
@@ -414,16 +415,20 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			String match = null;
 			int length = documentPosition - documentRegion.getStartOffset();
 			if (isXMLContent) {
-				// case for JSP
-				String text = documentRegion.getText().substring(0, length);
-				int startExprIndex = text.lastIndexOf("{{");
-				if (startExprIndex != -1) {
-					int endExprIndex = text.lastIndexOf("}}");
-					if (endExprIndex == -1 || endExprIndex < startExprIndex) {
-						// completion (for JSP) is done inside angular
-						// expression {{
-						match = text.substring(startExprIndex + 2,
-								text.length());
+				if (!DOMUtils.isAngularContentType(treeNode)) {
+					// case for JSP
+					String text = documentRegion.getText().substring(0, length);
+					int startExprIndex = text
+							.lastIndexOf(AngularProject.START_ANGULAR_EXPRESSION_TOKEN);
+					if (startExprIndex != -1) {
+						int endExprIndex = text
+								.lastIndexOf(AngularProject.END_ANGULAR_EXPRESSION_TOKEN);
+						if (endExprIndex == -1 || endExprIndex < startExprIndex) {
+							// completion (for JSP) is done inside angular
+							// expression {{
+							match = text.substring(startExprIndex + 2,
+									text.length());
+						}
 					}
 				}
 			} else {

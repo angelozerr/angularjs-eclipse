@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+AngularProject *  Copyright (c) 2013-2014 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package org.eclipse.angularjs.internal.core.documentModel.parser;
 
 import java.util.List;
 
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.wst.sse.core.internal.provisional.events.RegionChangedEvent;
 import org.eclipse.wst.sse.core.internal.provisional.events.StructuredDocumentEvent;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -45,9 +46,9 @@ public class AngularStructuredDocumentReParser extends
 		StructuredDocumentEvent result = super
 				.checkForCrossStructuredDocumentRegionSyntax();
 		if (result == null) {
-			result = checkForCriticalKey("{{"); //$NON-NLS-1$
+			result = checkForCriticalKey(AngularProject.START_ANGULAR_EXPRESSION_TOKEN); //$NON-NLS-1$
 			if (result == null)
-				result = checkForCriticalKey("}}"); //$NON-NLS-1$
+				result = checkForCriticalKey(AngularProject.END_ANGULAR_EXPRESSION_TOKEN); //$NON-NLS-1$
 
 		}
 		return result;

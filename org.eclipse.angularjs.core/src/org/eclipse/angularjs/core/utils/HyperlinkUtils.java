@@ -10,6 +10,7 @@
  */
 package org.eclipse.angularjs.core.utils;
 
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
@@ -81,4 +82,19 @@ public class HyperlinkUtils {
 			}
 		return null;
 	}**/
+	
+	public static String getExpressionContent(final String expr) {
+		String expression = expr;
+		if (expression
+				.startsWith(AngularProject.START_ANGULAR_EXPRESSION_TOKEN)) {
+			expression = expression.substring(
+					AngularProject.START_ANGULAR_EXPRESSION_TOKEN.length(),
+					expression.length());
+		}
+		if (expression.endsWith(AngularProject.END_ANGULAR_EXPRESSION_TOKEN)) {
+			expression = expression.substring(0, expression.length()
+					- AngularProject.END_ANGULAR_EXPRESSION_TOKEN.length());
+		}
+		return expression;
+	}
 }

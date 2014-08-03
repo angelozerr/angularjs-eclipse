@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
+import org.eclipse.angularjs.internal.core.documentModel.provisional.contenttype.ContentTypeIdForAngular;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -461,6 +462,18 @@ public class DOMUtils {
 
 		return txt.getNodeValue();
 	}
+	
+	/**
+	 * Returns true if if the given node is an Angular DOM and false otherwise.
+	 * 
+	 * @param node
+	 *            DOM node
+	 * @return true if if the given node is an Angular DOM and false otherwise.
+	 */
+	public static boolean isAngularContentType(IDOMNode node) {
+		return isContentTypeId(node,
+				ContentTypeIdForAngular.ContentTypeID_Angular);
+	}
 
 	/**
 	 * Returns the content type id of the SSE DOM Node.
@@ -473,24 +486,6 @@ public class DOMUtils {
 			return null;
 		}
 		return node.getModel().getContentTypeIdentifier();
-	}
-
-	/**
-	 * Returns true if content type id of the SSE DOM Node match a
-	 * contentTypeId.
-	 * 
-	 * @param node
-	 * @param contentTypeId
-	 * @return
-	 */
-	public static boolean isContentTypeId(IDOMNode selectedNode,
-			String[] contentTypeIds) {
-		for (int i = 0; i < contentTypeIds.length; i++) {
-			if (DOMUtils.isContentTypeId(selectedNode, contentTypeIds[i])) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**
@@ -649,32 +644,6 @@ public class DOMUtils {
 	}
 
 	/**
-	 * Returns the list of the angular attributes names of the given DOM
-	 * element.
-	 * 
-	 * <p>
-	 * <div id="xxx" ng-model="MyModel" />
-	 * 
-	 * will return the array ['ngModel']
-	 * </p>
-	 * 
-	 * @param element
-	 * @return
-	 */
-	/*
-	 * public static List<Directive> getAngularDirectives(Element element, Attr
-	 * selectedAttr) { if (element == null) { return Collections.emptyList(); }
-	 * List<Directive> names = null; NamedNodeMap attributes =
-	 * element.getAttributes(); int length = attributes.getLength(); Attr attr =
-	 * null; for (int i = 0; i < length; i++) { attr = (Attr)
-	 * attributes.item(i); if (selectedAttr == null ||
-	 * !selectedAttr.equals(attr)) { Directive directive =
-	 * getAngularDirective(attr); if (directive != null) { if (names == null) {
-	 * names = new ArrayList<Directive>(); } names.add(directive); } } } return
-	 * (List<Directive>) (names != null ? names : Collections .emptyList()); }
-	 */
-
-	/**
 	 * Returns true if the given element is an angular directive and false
 	 * otherwise.
 	 * 
@@ -747,17 +716,6 @@ public class DOMUtils {
 		}
 		return AngularProject.hasAngularNature(file.getProject());
 	}
-
-	/*
-	 * public static DirectiveParameter getAngularDirectiveParameter(IDOMAttr
-	 * attr) { if (attr == null) { return null; } List<Directive>
-	 * existingDirectives = DOMUtils.getAngularDirectives(
-	 * attr.getOwnerElement(), attr); if (existingDirectives != null) {
-	 * DirectiveParameter parameter = null; for (Directive existingDirective :
-	 * existingDirectives) { parameter =
-	 * existingDirective.getParameter(attr.getName()); if (parameter != null) {
-	 * return parameter; } } } return null; }
-	 */
 
 	public static boolean isAngularDirective(Node node) {
 		if (node == null) {
