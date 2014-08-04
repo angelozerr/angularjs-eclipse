@@ -10,10 +10,15 @@
  */
 package org.eclipse.angularjs.internal.core.documentModel.dom;
 
+import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMAttr;
+import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.core.utils.DOMUtils;
+import org.eclipse.angularjs.internal.core.Trace;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.xml.core.internal.document.AttrImpl;
 import org.w3c.dom.Document;
 
@@ -70,15 +75,29 @@ public class AttrImplForAngular extends AttrImpl implements IAngularDOMAttr {
 	}
 
 	private Directive computeAngularDirective() {
-		IProject project = DOMUtils.getFile(this).getProject();
-		return DOMDirectiveProvider.getInstance().getAngularDirective(project,
-				this);
+		try {
+			IProject project = DOMUtils.getFile(this).getProject();
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			return DOMDirectiveProvider.getInstance().getAngularDirective(
+					angularProject, this);
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
+		}
+		return null;
 	}
 
 	private DirectiveParameter computeAngularDirectiveParameter() {
-		IProject project = DOMUtils.getFile(this).getProject();
-		return DOMDirectiveProvider.getInstance().getAngularDirectiveParameter(
-				project, this);
+		try {
+			IProject project = DOMUtils.getFile(this).getProject();
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			return DOMDirectiveProvider.getInstance()
+					.getAngularDirectiveParameter(angularProject, this);
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
+		}
+		return null;
 	}
 
 	@Override

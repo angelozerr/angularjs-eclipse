@@ -10,8 +10,12 @@
  */
 package org.eclipse.angularjs.core.validation;
 
+import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.utils.DOMUtils;
+import org.eclipse.angularjs.internal.core.Trace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.html.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
@@ -20,6 +24,7 @@ import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 import org.w3c.dom.Node;
 
 import tern.angular.modules.AngularModulesManager;
+import tern.angular.modules.DOMDirectiveProvider;
 import tern.angular.modules.Directive;
 import tern.angular.modules.Restriction;
 
@@ -63,9 +68,15 @@ public class HTMLAngularValidationReporter extends HTMLValidationReporter {
 	 * @return
 	 */
 	private boolean isDirective(IProject project, String name, int targetType) {
-		Directive directive = AngularModulesManager.getInstance().getDirective(
-				project, null, name, getRestriction(targetType));
-		return (directive != null);
+		try {
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			return AngularModulesManager.getInstance().getDirective(
+					angularProject, null, name, getRestriction(targetType)) != null;
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
+		}
+		return false;
 	}
 
 	private Restriction getRestriction(int targetType) {

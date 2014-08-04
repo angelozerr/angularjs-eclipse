@@ -48,7 +48,7 @@ public class AngularProject implements IDirectiveSyntax {
 
 	public static final String START_ANGULAR_EXPRESSION_TOKEN = "{{";
 	public static final String END_ANGULAR_EXPRESSION_TOKEN = "}}";
-	
+
 	private final IProject project;
 
 	private final Map<ITernScriptPath, List<BaseModel>> folders;
@@ -61,8 +61,7 @@ public class AngularProject implements IDirectiveSyntax {
 		this.project = project;
 		this.folders = new HashMap<ITernScriptPath, List<BaseModel>>();
 		this.customDirectives = new CustomAngularModulesRegistry(project);
-		AngularModulesManager.getInstance().addRegistry(project,
-				customDirectives);
+		AngularModulesManager.getInstance().addRegistry(this, customDirectives);
 		project.setSessionProperty(ANGULAR_PROJECT, this);
 		ensureNatureIsConfigured();
 	}

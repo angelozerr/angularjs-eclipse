@@ -78,6 +78,9 @@ public class CustomAngularModulesRegistry extends
 				return;
 			}
 			synchronized (lock) {
+				if (!refreshDirectives) {
+					return;
+				}
 				super.clear();
 				IDETernProject ternProject = IDETernProject
 						.getTernProject(project);
