@@ -101,23 +101,44 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			IProject project = file.getProject();
 			Directive directive = AngularDOMUtils.getAngularDirective(project,
 					attr);
-			if (directive != null) {
-				try {
-					IDETernProject ternProject = AngularProject
-							.getTernProject(project);
+			try {
+				IDETernProject ternProject = AngularProject
+						.getTernProject(project);
+				if (directive != null) {
 					String expression = AngularScopeHelper.getAngularValue(
 							attr, directive.getType());
-					Integer end = documentPosition
+					Integer expressionOffset = documentPosition
 							- attr.getValueRegionStartOffset();
-					String help = find(attr, expression, end, file,
-							ternProject, directive.getType());
+					String help = computeHelp(attr, expression,
+							expressionOffset, file, ternProject,
+							directive.getType());
 					if (!StringUtils.isEmpty(help)) {
 						return help;
 					}
 
-				} catch (Exception e) {
-					Trace.trace(Trace.SEVERE, "Error while tern hover.", e);
+				} else {
+					AngularELRegion angularRegion = AngularRegionUtils
+							.getAngularELRegion(
+									DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE,
+									attr.getValue(),
+									attr.getValueRegionStartOffset() + 1,
+									documentPosition);
+					if (angularRegion != null) {
+						// angular expression inside attribute value
+						// <span class="done-{{todo.done}}"
+						String expression = angularRegion.getExpression();
+						int expressionOffset = angularRegion
+								.getExpressionOffset();
+						String help = computeHelp(attr, expression,
+								expressionOffset, file, ternProject,
+								AngularType.model);
+						if (!StringUtils.isEmpty(help)) {
+							return help;
+						}
+					}
 				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error while tern hover.", e);
 			}
 		}
 		return formatAsAdvancedHTML(super.computeTagAttValueHelp(xmlnode,
@@ -189,8 +210,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			if (angularRegion != null) {
 				String expression = angularRegion.getExpression();
 				int expressionOffset = angularRegion.getExpressionOffset() + 1;
-				return find(treeNode, expression, expressionOffset, file,
-						ternProject, AngularType.model);
+				return computeHelp(treeNode, expression, expressionOffset,
+						file, ternProject, AngularType.model);
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error while tern hover.", e);
@@ -226,7 +247,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 		return advancedHTML.toString();
 	}
 
-	private String find(Node domNode, String expression, Integer end,
+	private String computeHelp(Node domNode, String expression, Integer end,
 			IFile file, IDETernProject ternProject,
 			final AngularType angularType) throws Exception {
 
@@ -316,7 +337,10 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 										textViewer.getDocument(), offset);
 								IDOMAttr attr = DOMUtils.getAttrByOffset(
 										element, offset);
-								if (AngularDOMUtils.isAngularDirective(attr)) {
+								if (AngularDOMUtils.isAngularDirective(attr)
+										|| attr.getValue()
+												.contains(
+														AngularProject.START_ANGULAR_EXPRESSION_TOKEN)) {
 									return AngularELWordFinder.findWord(
 											textViewer.getDocument(), offset);
 								}

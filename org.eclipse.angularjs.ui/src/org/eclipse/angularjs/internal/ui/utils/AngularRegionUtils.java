@@ -36,57 +36,47 @@ public class AngularRegionUtils {
 
 	public static AngularELRegion getAngularELRegion(
 			IStructuredDocumentRegion documentRegion, int documentPosition) {
-
 		String regionType = documentRegion.getType();
-		int startOffset = documentPosition - documentRegion.getStartOffset();
+		String regionText = documentRegion.getText();
+		int regionStartOffset = documentRegion.getStartOffset();
+		return getAngularELRegion(regionType, regionText, regionStartOffset,
+				documentPosition);
+	}
+
+	public static AngularELRegion getAngularELRegion(String regionType,
+			String regionText, int regionStartOffset, int documentPosition) {
+		int startOffset = documentPosition - regionStartOffset;
 		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
 			// case for angular expression
 			int expressionOffset = startOffset
 					- AngularProject.START_ANGULAR_EXPRESSION_TOKEN.length();
-			String expression = HyperlinkUtils
-					.getExpressionContent(documentRegion.getText());
+			String expression = HyperlinkUtils.getExpressionContent(regionText);
 			return new AngularELRegion(expression, expressionOffset);
-		} else if (regionType == DOMRegionContext.XML_CONTENT) {
+		} else if (regionType == DOMRegionContext.XML_CONTENT
+				|| regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 			String expression = null;
-			String text = documentRegion.getText().substring(0, startOffset);
+			String text = regionText.substring(0, startOffset);
 			int startExprIndex = text
-					.indexOf(AngularProject.START_ANGULAR_EXPRESSION_TOKEN);
+					.lastIndexOf(AngularProject.START_ANGULAR_EXPRESSION_TOKEN);
 			if (startExprIndex != -1) {
-				int endExprIndex = documentRegion.getText().indexOf(
+				int endExprIndex = regionText.indexOf(
 						AngularProject.END_ANGULAR_EXPRESSION_TOKEN,
 						startOffset);
 				if (startExprIndex < endExprIndex) {
 					// completion (for JSP) is done inside angular
 					// expression {{
-					expression = documentRegion.getText().substring(
-							startExprIndex + 2, endExprIndex);
+					expression = regionText.substring(startExprIndex + 2,
+							endExprIndex);
 				}
 			}
 			if (expression != null) {
 				int expressionOffset = startOffset
+						- startExprIndex
 						- AngularProject.START_ANGULAR_EXPRESSION_TOKEN
-								.length();
+								.length() + 1;
 				return new AngularELRegion(expression, expressionOffset);
 			}
 		}
 		return null;
-		/*
-		 * return new AngularELRegion(expression, expressionOffset);
-		 * 
-		 * String match = null; int length = documentPosition -
-		 * documentRegion.getStartOffset(); if (isXMLContent) { if
-		 * (!AngularDOMUtils.isAngularContentType(treeNode)) { // case for JSP
-		 * String text = documentRegion.getText().substring(0, length); int
-		 * startExprIndex = text
-		 * .lastIndexOf(AngularProject.START_ANGULAR_EXPRESSION_TOKEN); if
-		 * (startExprIndex != -1) { int endExprIndex = text
-		 * .lastIndexOf(AngularProject.END_ANGULAR_EXPRESSION_TOKEN); if
-		 * (endExprIndex == -1 || endExprIndex < startExprIndex) { // completion
-		 * (for JSP) is done inside angular // expression {{ match =
-		 * text.substring(startExprIndex + 2, text.length()); } } } } else { //
-		 * case for HTML where regionType is an angular expression //
-		 * open/content. if (length > 1) { // here we have {{ match =
-		 * documentRegion.getText().substring(2, length); } } return null;
-		 */
 	}
 }
