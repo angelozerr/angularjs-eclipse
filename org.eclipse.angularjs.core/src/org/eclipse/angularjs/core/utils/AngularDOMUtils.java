@@ -1,12 +1,15 @@
 package org.eclipse.angularjs.core.utils;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
+import org.eclipse.angularjs.internal.core.Trace;
 import org.eclipse.angularjs.internal.core.documentModel.provisional.contenttype.ContentTypeIdForAngular;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
@@ -86,8 +89,15 @@ public class AngularDOMUtils {
 	 *         otherwise.
 	 */
 	public static Directive getAngularDirective(IProject project, Attr attr) {
-		return DOMSSEDirectiveProvider.getInstance().getAngularDirective(
-				project, attr);
+		try {
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			return DOMSSEDirectiveProvider.getInstance().getAngularDirective(
+					angularProject, attr);
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
+		}
+		return null;
 	}
 
 	/**
@@ -137,8 +147,15 @@ public class AngularDOMUtils {
 	 */
 	public static Directive getAngularDirective(IProject project,
 			Element element) {
-		return DOMSSEDirectiveProvider.getInstance().getAngularDirective(
-				project, element);
+		try {
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			return DOMSSEDirectiveProvider.getInstance().getAngularDirective(
+					angularProject, element);
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
+		}
+		return null;
 	}
 
 	/**
@@ -171,8 +188,15 @@ public class AngularDOMUtils {
 	 */
 	public static DirectiveParameter getAngularDirectiveParameter(
 			IProject project, Attr attr) {
-		return DOMSSEDirectiveProvider.getInstance()
-				.getAngularDirectiveParameter(project, attr);
+		try {
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			return DOMSSEDirectiveProvider.getInstance()
+					.getAngularDirectiveParameter(angularProject, attr);
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
+		}
+		return null;
 	}
 
 	public static boolean hasAngularNature(IDOMNode element) {
@@ -198,8 +222,15 @@ public class AngularDOMUtils {
 
 	public static List<Directive> getAngularDirectives(IProject project,
 			Element element, Attr attr) {
-		return DOMDirectiveProvider.getInstance().getAngularDirectives(project,
-				element, attr);
+		try {
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			return DOMSSEDirectiveProvider.getInstance().getAngularDirectives(
+					angularProject, element, attr);
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
+		}
+		return Collections.emptyList();
 	}
 
 }
