@@ -11,12 +11,14 @@
 package org.eclipse.angularjs.internal.ui.taginfo;
 
 import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.core.utils.DOMUtils;
-import org.eclipse.angularjs.core.utils.HyperlinkUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
+import org.eclipse.angularjs.internal.ui.AngularELWordFinder;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
-import org.eclipse.angularjs.internal.ui.JavaWordFinder;
 import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.angularjs.internal.ui.utils.AngularELRegion;
+import org.eclipse.angularjs.internal.ui.utils.AngularRegionUtils;
 import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -48,7 +50,6 @@ import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
 import tern.eclipse.ide.ui.utils.HTMLTernPrinter;
 import tern.eclipse.jface.text.HoverControlCreator;
 import tern.eclipse.jface.text.PresenterControlCreator;
-import tern.server.protocol.type.ITernTypeCollector;
 import tern.utils.StringUtils;
 
 /**
@@ -68,17 +69,18 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeTagAttNameHelp(IDOMNode xmlnode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
 			ITextRegion region) {
-		if (DOMUtils.hasAngularNature(xmlnode)) {
+		if (AngularDOMUtils.hasAngularNature(xmlnode)) {
 			// Display Help of Angular Directive if it's an angular directive
 			// attribute
 			IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
 			IProject project = DOMUtils.getFile(attr).getProject();
-			Directive directive = DOMUtils.getAngularDirective(project, attr);
+			Directive directive = AngularDOMUtils.getAngularDirective(project,
+					attr);
 			if (directive != null) {
 				return HTMLAngularPrinter.getDirectiveInfo(directive);
 			} else {
 				// Check if it's a directive parameter which is hovered.
-				DirectiveParameter parameter = DOMUtils
+				DirectiveParameter parameter = AngularDOMUtils
 						.getAngularDirectiveParameter(project, attr);
 				if (parameter != null) {
 					return parameter.getHTMLDescription();
@@ -93,11 +95,12 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeTagAttValueHelp(IDOMNode xmlnode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
 			ITextRegion region, int documentPosition) {
-		if (DOMUtils.hasAngularNature(xmlnode)) {
+		if (AngularDOMUtils.hasAngularNature(xmlnode)) {
 			IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
 			IFile file = DOMUtils.getFile(attr);
 			IProject project = file.getProject();
-			Directive directive = DOMUtils.getAngularDirective(project, attr);
+			Directive directive = AngularDOMUtils.getAngularDirective(project,
+					attr);
 			if (directive != null) {
 				try {
 					IDETernProject ternProject = AngularProject
@@ -160,13 +163,16 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 		if (region == null) {
 			return null;
 		}
-		String regionType = region.getType();
-		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
-			return computeAngularExpressionHelp((IDOMNode) treeNode,
-					parentNode, flatNode, region, documentPosition);
-		} else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
-			return computeTagAttValueHelp((IDOMNode) treeNode, parentNode,
-					flatNode, region, documentPosition);
+		if (AngularDOMUtils.hasAngularNature(parentNode)) {
+			String regionType = region.getType();
+			if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT
+					|| regionType == DOMRegionContext.XML_CONTENT) {
+				return computeAngularExpressionHelp((IDOMNode) treeNode,
+						parentNode, flatNode, region, documentPosition);
+			} else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
+				return computeTagAttValueHelp((IDOMNode) treeNode, parentNode,
+						flatNode, region, documentPosition);
+			}
 		}
 		return super.computeRegionHelp(treeNode, parentNode, flatNode, region);
 	}
@@ -174,23 +180,20 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeAngularExpressionHelp(IDOMNode treeNode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
 			ITextRegion region, int documentPosition) {
-		if (DOMUtils.hasAngularNature(treeNode)) {
-			IFile file = DOMUtils.getFile(treeNode);
-			try {
-				IDETernProject ternProject = IDETernProject.getTernProject(file
-						.getProject());
-				String expression = flatNode.getText();// DOMUtils.getNodeValue(treeNode);
-				expression = HyperlinkUtils.getExpressionContent(expression);
-				Integer end = documentPosition - flatNode.getStartOffset() + 1;
-				end = end
-						- AngularProject.START_ANGULAR_EXPRESSION_TOKEN
-								.length();
-				return find(treeNode, expression, end, file, ternProject,
-						AngularType.model);
-			} catch (Exception e) {
-				Trace.trace(Trace.SEVERE, "Error while tern hover.", e);
+		IFile file = DOMUtils.getFile(treeNode);
+		try {
+			IDETernProject ternProject = IDETernProject.getTernProject(file
+					.getProject());
+			AngularELRegion angularRegion = AngularRegionUtils
+					.getAngularELRegion(flatNode, documentPosition);
+			if (angularRegion != null) {
+				String expression = angularRegion.getExpression();
+				int expressionOffset = angularRegion.getExpressionOffset() + 1;
+				return find(treeNode, expression, expressionOffset, file,
+						ternProject, AngularType.model);
 			}
-
+		} catch (Exception e) {
+			Trace.trace(Trace.SEVERE, "Error while tern hover.", e);
 		}
 		return null;
 	}
@@ -200,11 +203,12 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			IStructuredDocumentRegion flatNode, ITextRegion region) {
 		// Display Help of Angular Directive if it's an angular directive
 		// element
-		if (DOMUtils.hasAngularNature(xmlnode) && xmlnode instanceof Element) {
+		if (AngularDOMUtils.hasAngularNature(xmlnode)
+				&& xmlnode instanceof Element) {
 			Element element = (Element) xmlnode;
 			IProject project = DOMUtils.getFile(xmlnode).getProject();
-			Directive directive = DOMUtils
-					.getAngularDirective(project, element);
+			Directive directive = AngularDOMUtils.getAngularDirective(project,
+					element);
 			if (directive != null) {
 				return HTMLAngularPrinter.getDirectiveInfo(directive);
 			}
@@ -292,8 +296,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			// attribute value
 			String regionType = region.getType();
 			if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
-				return JavaWordFinder
-						.findWord(textViewer.getDocument(), offset);
+				return AngularELWordFinder.findWord(textViewer.getDocument(),
+						offset);
 			}
 			if ((regionType == DOMRegionContext.XML_TAG_NAME)
 					|| (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
@@ -312,8 +316,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 										textViewer.getDocument(), offset);
 								IDOMAttr attr = DOMUtils.getAttrByOffset(
 										element, offset);
-								if (DOMUtils.isAngularDirective(attr)) {
-									return JavaWordFinder.findWord(
+								if (AngularDOMUtils.isAngularDirective(attr)) {
+									return AngularELWordFinder.findWord(
 											textViewer.getDocument(), offset);
 								}
 							}

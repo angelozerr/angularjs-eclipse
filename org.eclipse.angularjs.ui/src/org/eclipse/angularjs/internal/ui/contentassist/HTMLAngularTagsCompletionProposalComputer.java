@@ -14,11 +14,14 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.angularjs.internal.ui.utils.AngularELRegion;
+import org.eclipse.angularjs.internal.ui.utils.AngularRegionUtils;
 import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -76,9 +79,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			CompletionProposalInvocationContext context) {
 		// Check if project has angular nature
 		final IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
-		if (DOMUtils.hasAngularNature(element)) {
+		if (AngularDOMUtils.hasAngularNature(element)) {
 			IProject p = DOMUtils.getFile(element).getProject();
-			Directive directive = DOMUtils.getAngularDirective(p, element);
+			Directive directive = AngularDOMUtils.getAngularDirective(p,
+					element);
 			if (directive != null) {
 				// completion for directive parameters.
 				String paramName = contentAssistRequest.getMatchString();
@@ -103,7 +107,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						contentAssistRequest.getRegion());
 				// get angular attribute name of the element
 
-				final List<Directive> existingDirectives = DOMUtils
+				final List<Directive> existingDirectives = AngularDOMUtils
 						.getAngularDirectives(p,
 								element instanceof Element ? (Element) element
 										: null, attr);
@@ -151,13 +155,13 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			CompletionProposalInvocationContext context) {
 		// Check if project has angular nature
 		IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
-		if (DOMUtils.hasAngularNature(element)) {
+		if (AngularDOMUtils.hasAngularNature(element)) {
 			// check if it's class attribute
 			IDOMAttr attr = DOMUtils.getAttrByRegion(element,
 					contentAssistRequest.getRegion());
 			// is angular directive attribute?
-			Directive directive = DOMUtils.getAngularDirectiveByRegion(element,
-					contentAssistRequest.getRegion());
+			Directive directive = AngularDOMUtils.getAngularDirectiveByRegion(
+					element, contentAssistRequest.getRegion());
 			AngularType angularType = directive != null ? directive.getType()
 					: null;
 			if (angularType != null) {
@@ -404,18 +408,34 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		boolean isXMLContent = (regionType == DOMRegionContext.XML_CONTENT);
 		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_OPEN
 				|| regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT
-				|| (isXMLContent && DOMUtils.hasAngularNature(xmlnode))) {
+				|| (isXMLContent && AngularDOMUtils.hasAngularNature(xmlnode))) {
 
 			// completion for Angular expression {{}} inside text node.
 			int documentPosition = context.getInvocationOffset();
-			IStructuredDocumentRegion documentRegion = ContentAssistUtils
+			IStructuredDocumentRegion documentRegion = AngularRegionUtils
 					.getStructuredDocumentRegion(context.getViewer(),
 							documentPosition);
 
 			String match = null;
-			int length = documentPosition - documentRegion.getStartOffset();
+			AngularELRegion angularRegion = AngularRegionUtils
+					.getAngularELRegion(documentRegion, documentPosition);
+			if (angularRegion != null) {
+//				if (isXMLContent) {
+//					if (!AngularDOMUtils.isAngularContentType(treeNode)) {
+//						// case for JSP
+//						match = angularRegion.getExpression();
+//					}
+//				} else {
+//					// case for HTML where regionType is an angular expression
+//					// open/content.
+					match = angularRegion.getExpression().substring(0,
+							angularRegion.getExpressionOffset());
+				//}
+			}
+
+			/*int length = documentPosition - documentRegion.getStartOffset();
 			if (isXMLContent) {
-				if (!DOMUtils.isAngularContentType(treeNode)) {
+				if (!AngularDOMUtils.isAngularContentType(treeNode)) {
 					// case for JSP
 					String text = documentRegion.getText().substring(0, length);
 					int startExprIndex = text
@@ -438,7 +458,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					// here we have {{
 					match = documentRegion.getText().substring(2, length);
 				}
-			}
+			}*/
 			if (match != null) {
 				ContentAssistRequest contentAssistRequest = new ContentAssistRequest(
 						treeNode, treeNode.getParentNode(), documentRegion,
@@ -460,7 +480,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			final ContentAssistRequest contentAssistRequest, int childPosition,
 			CompletionProposalInvocationContext context) {
 		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
-		if (DOMUtils.hasAngularNature(node)) {
+		if (AngularDOMUtils.hasAngularNature(node)) {
 			// completion for directive with 'E' restriction.
 			String directiveName = contentAssistRequest.getMatchString();
 

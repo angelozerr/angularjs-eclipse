@@ -13,6 +13,7 @@ package org.eclipse.angularjs.internal.ui.validation;
 import java.io.IOException;
 
 import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.Trace;
@@ -59,8 +60,8 @@ public class HTMLAngularContentValidator extends AbstractValidator {
 					IDOMAttr attr = (IDOMAttr) map.item(i);
 					if (attr.getValueRegionStartOffset() != 0) {
 
-						Directive directive = DOMUtils.getAngularDirective(
-								project, attr);
+						Directive directive = AngularDOMUtils
+								.getAngularDirective(project, attr);
 						if (directive != null) {
 							switch (directive.getType()) {
 							case module:
