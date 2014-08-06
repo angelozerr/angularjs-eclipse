@@ -4,7 +4,7 @@ AngularJS Eclipse Plugin
 [![Build Status](https://secure.travis-ci.org/angelozerr/angularjs-eclipse.png)](http://travis-ci.org/angelozerr/angularjs-eclipse)
 [![Eclipse install](https://marketplace.eclipse.org/sites/all/modules/custom/marketplace/images/installbutton.png)](http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1605088)
 
-AngularJS Eclipse Plugin extends Eclipse WTP to : 
+AngularJS Eclipse Plugin extends Eclipse WTP to :
 
  * provides an HTML editor which supports AngularJS expression and directive. See [HTML features](https://github.com/angelozerr/angularjs-eclipse/wiki/HTML-Features) for more informations.
  * provides an [Angular Explorer](https://github.com/angelozerr/angularjs-eclipse/wiki/Angular-Explorer-View) view which displays modules, controllers of your project in a tree.
