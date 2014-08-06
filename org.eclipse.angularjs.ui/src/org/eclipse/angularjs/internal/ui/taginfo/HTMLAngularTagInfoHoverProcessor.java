@@ -23,6 +23,7 @@ import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
@@ -47,6 +48,7 @@ import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
+import tern.eclipse.ide.ui.utils.EditorUtils;
 import tern.eclipse.ide.ui.utils.HTMLTernPrinter;
 import tern.eclipse.jface.text.HoverControlCreator;
 import tern.eclipse.jface.text.PresenterControlCreator;
@@ -94,7 +96,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 
 	protected String computeTagAttValueHelp(IDOMNode xmlnode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
-			ITextRegion region, int documentPosition) {
+			ITextRegion region, IDocument document, int documentPosition) {
 		if (AngularDOMUtils.hasAngularNature(xmlnode)) {
 			IDOMAttr attr = DOMUtils.getAttrByRegion(xmlnode, region);
 			IFile file = DOMUtils.getFile(attr);
@@ -110,7 +112,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 					Integer expressionOffset = documentPosition
 							- attr.getValueRegionStartOffset();
 					String help = computeHelp(attr, expression,
-							expressionOffset, file, ternProject,
+							expressionOffset, file, document, ternProject,
 							directive.getType());
 					if (!StringUtils.isEmpty(help)) {
 						return help;
@@ -130,7 +132,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 						int expressionOffset = angularRegion
 								.getExpressionOffset();
 						String help = computeHelp(attr, expression,
-								expressionOffset, file, ternProject,
+								expressionOffset, file, document, ternProject,
 								AngularType.model);
 						if (!StringUtils.isEmpty(help)) {
 							return help;
@@ -149,7 +151,6 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	protected String computeHoverHelp(ITextViewer textViewer,
 			int documentPosition) {
 		String result = null;
-
 		IndexedRegion treeNode = ContentAssistUtils.getNodeAt(textViewer,
 				documentPosition);
 		if (treeNode == null) {
@@ -170,7 +171,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 					.getRegionAtCharacterOffset(documentPosition);
 			if (region != null) {
 				result = computeRegionHelp(treeNode, parentNode, flatNode,
-						region, documentPosition);
+						region, documentPosition, textViewer.getDocument());
 			}
 		}
 
@@ -179,7 +180,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 
 	protected String computeRegionHelp(IndexedRegion treeNode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
-			ITextRegion region, int documentPosition) {
+			ITextRegion region, int documentPosition, IDocument document) {
 		String result = null;
 		if (region == null) {
 			return null;
@@ -189,10 +190,11 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT
 					|| regionType == DOMRegionContext.XML_CONTENT) {
 				return computeAngularExpressionHelp((IDOMNode) treeNode,
-						parentNode, flatNode, region, documentPosition);
+						parentNode, flatNode, region, document,
+						documentPosition);
 			} else if (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 				return computeTagAttValueHelp((IDOMNode) treeNode, parentNode,
-						flatNode, region, documentPosition);
+						flatNode, region, document, documentPosition);
 			}
 		}
 		return super.computeRegionHelp(treeNode, parentNode, flatNode, region);
@@ -200,7 +202,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 
 	protected String computeAngularExpressionHelp(IDOMNode treeNode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
-			ITextRegion region, int documentPosition) {
+			ITextRegion region, IDocument document, int documentPosition) {
 		IFile file = DOMUtils.getFile(treeNode);
 		try {
 			IDETernProject ternProject = IDETernProject.getTernProject(file
@@ -211,7 +213,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				String expression = angularRegion.getExpression();
 				int expressionOffset = angularRegion.getExpressionOffset() + 1;
 				return computeHelp(treeNode, expression, expressionOffset,
-						file, ternProject, AngularType.model);
+						file, document, ternProject, AngularType.model);
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.SEVERE, "Error while tern hover.", e);
@@ -248,7 +250,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	}
 
 	private String computeHelp(Node domNode, String expression, Integer end,
-			IFile file, IDETernProject ternProject,
+			IFile file, IDocument document, IDETernProject ternProject,
 			final AngularType angularType) throws Exception {
 
 		TernAngularQuery query = new TernAngularTypeQuery(angularType);
@@ -260,8 +262,9 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 		if (scriptPath != null) {
 			ternProject.request(query, query.getFiles(), scriptPath, collector);
 		} else {
+
 			ternProject.request(query, query.getFiles(), domNode, file,
-					collector);
+					document, collector);
 		}
 		return collector.getInfo();
 	}

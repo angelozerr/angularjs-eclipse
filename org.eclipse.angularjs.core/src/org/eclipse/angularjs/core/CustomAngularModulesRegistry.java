@@ -157,9 +157,7 @@ public class CustomAngularModulesRegistry extends
 			return true;
 
 		case IResource.FILE:
-			if (FileUtils.isJSFile(resource) || FileUtils.isHTMLFile(resource)
-					|| FileUtils.isJSPFile(resource)
-					|| FileUtils.isPHPFile(resource)) {
+			if (FileUtils.isJSFile(resource) || FileUtils.isHTMLFile(resource)					) {
 				this.refreshDirectives = true;
 			}
 			return true;

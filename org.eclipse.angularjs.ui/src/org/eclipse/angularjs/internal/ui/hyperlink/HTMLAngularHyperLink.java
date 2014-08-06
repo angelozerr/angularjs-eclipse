@@ -13,6 +13,7 @@ package org.eclipse.angularjs.internal.ui.hyperlink;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.w3c.dom.Node;
 
@@ -29,16 +30,18 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 
 	private final Node node;
 	private final IFile file;
+	private final IDocument document;
 	private final String expression;
 	private Integer end;
 	private final AngularType angularType;
 
 	public HTMLAngularHyperLink(Node node, IRegion region, IFile file,
-			IDETernProject ternProject, String expression, Integer end,
-			AngularType angularType) {
+			IDocument document, IDETernProject ternProject, String expression,
+			Integer end, AngularType angularType) {
 		super(region, ternProject);
 		this.node = node;
 		this.file = file;
+		this.document = document;
 		this.expression = expression;
 		this.end = end;
 		this.angularType = angularType;
@@ -56,7 +59,8 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 			if (scriptPath != null) {
 				ternProject.request(query, query.getFiles(), scriptPath, this);
 			} else {
-				ternProject.request(query, query.getFiles(), node, file, this);
+				ternProject.request(query, query.getFiles(), node, file,
+						document, this);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

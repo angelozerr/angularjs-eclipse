@@ -46,6 +46,9 @@ public class AngularRegionUtils {
 	public static AngularELRegion getAngularELRegion(String regionType,
 			String regionText, int regionStartOffset, int documentPosition) {
 		int startOffset = documentPosition - regionStartOffset;
+		if (startOffset < 0) {
+			return null;
+		}
 		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
 			// case for angular expression
 			int expressionOffset = startOffset

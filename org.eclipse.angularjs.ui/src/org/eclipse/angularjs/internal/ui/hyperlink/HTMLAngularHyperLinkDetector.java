@@ -101,7 +101,8 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 								// angular element controller, module, mode.
 								hyperlink = new HTMLAngularHyperLink(
 										attr.getOwnerElement(), valueRegion,
-										file, ternProject,
+										file, textViewer.getDocument(),
+										ternProject,
 										AngularScopeHelper.getAngularValue(
 												attr, directive.getType()),
 										end, directive.getType());
@@ -114,9 +115,9 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 									hyperlink = new HTMLAngularHyperLink(
 											attr.getOwnerElement(),
 											HyperlinkUtils.getNameRegion(attr),
-											file, ternProject,
-											directive.getName(), end,
-											AngularType.directive);
+											file, textViewer.getDocument(),
+											ternProject, directive.getName(),
+											end, AngularType.directive);
 								}
 							}
 						} else {
@@ -127,8 +128,9 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 								hyperlink = new HTMLAngularHyperLink(element,
 										HyperlinkUtils
 												.getElementRegion(element),
-										file, ternProject, directive.getName(),
-										end, AngularType.directive);
+										file, textViewer.getDocument(),
+										ternProject, directive.getName(), end,
+										AngularType.directive);
 							}
 						}
 					} else {
@@ -166,8 +168,8 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 			String expression = angularRegion.getExpression();
 			int expressionOffset = angularRegion.getExpressionOffset();
 			return new HTMLAngularHyperLink(node, AngularELWordFinder.findWord(
-					document, documentPosition), file, ternProject, expression,
-					expressionOffset, AngularType.model);
+					document, documentPosition), file, document, ternProject,
+					expression, expressionOffset, AngularType.model);
 		}
 		return null;
 	}

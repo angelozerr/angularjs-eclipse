@@ -26,6 +26,7 @@ import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
@@ -172,7 +173,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						.startsWith("\"") || contentAssistRequest
 						.getMatchString().startsWith("'")) ? 1 : 0;
 				populateAngularProposals(contentAssistRequest, element,
-						angularType, startIndex);
+						context.getDocument(), angularType, startIndex);
 			} else {
 				// is angular expression inside attribute?
 				String matchingString = contentAssistRequest.getMatchString();
@@ -180,7 +181,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						.lastIndexOf(AngularProject.START_ANGULAR_EXPRESSION_TOKEN);
 				if (index != -1) {
 					populateAngularProposals(contentAssistRequest, element,
-							AngularType.model, index);
+							context.getDocument(), AngularType.model, index);
 				} else {
 					if (CLASS_ATTR.equals(attr.getName())) {
 						addClassAttributeValueProposals(contentAssistRequest,
@@ -272,7 +273,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 	private void populateAngularProposals(
 			final ContentAssistRequest contentAssistRequest, IDOMNode element,
-			final AngularType angularType, final Integer startIndex) {
+			IDocument document, final AngularType angularType,
+			final Integer startIndex) {
 		IFile file = DOMUtils.getFile(element);
 		IProject eclipseProject = file.getProject();
 		try {
@@ -336,7 +338,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						collector);
 			} else {
 				ternProject.request(query, query.getFiles(), element, file,
-						collector);
+						document, collector);
 			}
 
 		} catch (Exception e) {
@@ -420,52 +422,16 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			AngularELRegion angularRegion = AngularRegionUtils
 					.getAngularELRegion(documentRegion, documentPosition);
 			if (angularRegion != null) {
-//				if (isXMLContent) {
-//					if (!AngularDOMUtils.isAngularContentType(treeNode)) {
-//						// case for JSP
-//						match = angularRegion.getExpression();
-//					}
-//				} else {
-//					// case for HTML where regionType is an angular expression
-//					// open/content.
-					match = angularRegion.getExpression().substring(0,
-							angularRegion.getExpressionOffset());
-				//}
+				match = angularRegion.getExpression().substring(0,
+						angularRegion.getExpressionOffset());
 			}
-
-			/*int length = documentPosition - documentRegion.getStartOffset();
-			if (isXMLContent) {
-				if (!AngularDOMUtils.isAngularContentType(treeNode)) {
-					// case for JSP
-					String text = documentRegion.getText().substring(0, length);
-					int startExprIndex = text
-							.lastIndexOf(AngularProject.START_ANGULAR_EXPRESSION_TOKEN);
-					if (startExprIndex != -1) {
-						int endExprIndex = text
-								.lastIndexOf(AngularProject.END_ANGULAR_EXPRESSION_TOKEN);
-						if (endExprIndex == -1 || endExprIndex < startExprIndex) {
-							// completion (for JSP) is done inside angular
-							// expression {{
-							match = text.substring(startExprIndex + 2,
-									text.length());
-						}
-					}
-				}
-			} else {
-				// case for HTML where regionType is an angular expression
-				// open/content.
-				if (length > 1) {
-					// here we have {{
-					match = documentRegion.getText().substring(2, length);
-				}
-			}*/
 			if (match != null) {
 				ContentAssistRequest contentAssistRequest = new ContentAssistRequest(
 						treeNode, treeNode.getParentNode(), documentRegion,
 						completionRegion, documentPosition, 0, match);
 
 				populateAngularProposals(contentAssistRequest, treeNode,
-						AngularType.model, null);
+						context.getDocument(), AngularType.model, null);
 
 				return contentAssistRequest;
 			}

@@ -123,7 +123,8 @@ public class HTMLAngularContentValidator extends AbstractValidator {
 		if (scriptPath != null) {
 			ternProject.request(query, query.getFiles(), scriptPath, collector);
 		} else {
-			ternProject.request(query, query.getFiles(), attr, file, collector);
+			ternProject.request(query, query.getFiles(), attr, file,
+					getDocument(), collector);
 		}
 		return collector.isExists();
 	}
