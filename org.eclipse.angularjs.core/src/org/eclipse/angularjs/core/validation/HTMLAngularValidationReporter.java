@@ -69,10 +69,12 @@ public class HTMLAngularValidationReporter extends HTMLValidationReporter {
 	 */
 	private boolean isDirective(IProject project, String name, int targetType) {
 		try {
-			AngularProject angularProject = AngularProject
-					.getAngularProject(project);
-			return AngularModulesManager.getInstance().getDirective(
-					angularProject, null, name, getRestriction(targetType)) != null;
+			if (AngularProject.hasAngularNature(project)) {
+				AngularProject angularProject = AngularProject
+						.getAngularProject(project);
+				return AngularModulesManager.getInstance().getDirective(
+						angularProject, null, name, getRestriction(targetType)) != null;
+			}
 		} catch (CoreException e) {
 			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
 		}
