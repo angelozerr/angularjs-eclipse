@@ -10,10 +10,14 @@
  */
 package org.eclipse.angularjs.internal.core.documentModel.dom;
 
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.documentModel.dom.IAngularDOMElement;
+import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.core.utils.DOMUtils;
+import org.eclipse.angularjs.internal.core.Trace;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.wst.html.core.internal.document.ElementStyleImpl;
@@ -131,9 +135,16 @@ public class ElementImplForAngular extends ElementStyleImpl implements
 	}
 
 	private Directive computeAngularDirective() {
-		IProject project = DOMUtils.getFile(this).getProject();
-		return DOMDirectiveProvider.getInstance().getAngularDirective(project,
-				this);
+		try {
+			IProject project = DOMUtils.getFile(this).getProject();
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			return DOMDirectiveProvider.getInstance().getAngularDirective(
+					angularProject, this);
+		} catch (CoreException e) {
+			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
+		}
+		return null;
 	}
 
 	@Override

@@ -58,7 +58,7 @@
 			target="org.eclipse.angularjs.core.angularsource" />
   		<documentationTextHover
         	class="org.eclipse.angularjs.internal.ui.taginfo.HTMLAngularTagInfoHoverProcessor"
-        	target="org.eclipse.wst.html.HTML_DEFAULT">
+        	target="org.eclipse.wst.html.HTML_DEFAULT,org.eclipse.angularjs.ANGULAR_DEFAULT">
   		</documentationTextHover>			
 		<!--<provisionalConfiguration type="characterpairmatcher"
 			class="org.eclipse.angularjs.internal.ui.text.AngularDocumentRegionEdgeMatcher"

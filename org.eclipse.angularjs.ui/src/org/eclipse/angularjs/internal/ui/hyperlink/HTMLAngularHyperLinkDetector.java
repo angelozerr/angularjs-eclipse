@@ -11,10 +11,14 @@
 package org.eclipse.angularjs.internal.ui.hyperlink;
 
 import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.core.utils.HyperlinkUtils;
+import org.eclipse.angularjs.internal.ui.AngularELWordFinder;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.angularjs.internal.ui.utils.AngularELRegion;
+import org.eclipse.angularjs.internal.ui.utils.AngularRegionUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -23,9 +27,12 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.AbstractHyperlinkDetector;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
+import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.w3c.dom.Node;
 
 import tern.angular.AngularType;
 import tern.angular.modules.Directive;
@@ -53,69 +60,126 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 
 		IFile file = DOMUtils.getFile(currentNode);
 		IProject project = file.getProject();
-		if (IDETernProject.hasTernNature(project)) {
-			// Get selected attribute
-			IDOMAttr attr = DOMUtils.getAttrByOffset(currentNode,
-					region.getOffset());
+		IHyperlink hyperlink = null;
+		if (AngularProject.hasAngularNature(project)) {
+			try {
 
-			IDOMNode node = attr != null ? attr : currentNode;
-			Directive directive = DOMUtils.getAngularDirective(project, node);
-			if (directive != null) {
-				try {
-					IHyperlink hyperlink = null;
-					IDETernProject ternProject = AngularProject
-							.getTernProject(project);
-					if (attr != null) {
-						boolean isAttrValue = region.getOffset() > attr
-								.getNameRegionEndOffset();
-						if (isAttrValue) {
-							// Hyperlink on attr value
+				IStructuredDocumentRegion documentRegion = AngularRegionUtils
+						.getStructuredDocumentRegion(textViewer,
+								region.getOffset());
 
-							// the attribute is directive, try to open the
-							// angular
-							// element controller, module, etc.
-							hyperlink = new HTMLAngularHyperLink(
-									attr.getOwnerElement(),
-									HyperlinkUtils.getValueRegion(attr), file,
-									ternProject, AngularScopeHelper.getAngularValue(attr,
-											directive.getType()),
-									directive.getType());
+				IDETernProject ternProject = AngularProject
+						.getTernProject(project);
+				switch (currentNode.getNodeType()) {
+				case Node.TEXT_NODE:
+					hyperlink = createHyperlinkForExpression(
+							documentRegion.getType(), documentRegion.getText(),
+							documentRegion.getStartOffset(),
+							region.getOffset(), currentNode, document,
+							ternProject, file);
+					return createHyperlinks(hyperlink);
+				case Node.ELEMENT_NODE:
+					// Get selected attribute
+					IDOMAttr attr = DOMUtils.getAttrByOffset(currentNode,
+							region.getOffset());
 
+					IDOMNode node = attr != null ? attr : currentNode;
+					Directive directive = AngularDOMUtils.getAngularDirective(
+							project, node);
+					if (directive != null) {
+						Integer end = null;
+						if (attr != null) {
+							boolean isAttrValue = region.getOffset() > attr
+									.getNameRegionEndOffset();
+							if (isAttrValue) {
+								IRegion valueRegion = AngularELWordFinder
+										.findWord(document, region.getOffset());
+								// Hyperlink on attr value
+								end = region.getOffset()
+										- attr.getValueRegionStartOffset() - 1;
+								// the attribute is directive, try to open the
+								// angular element controller, module, mode.
+								hyperlink = new HTMLAngularHyperLink(
+										attr.getOwnerElement(), valueRegion,
+										file, textViewer.getDocument(),
+										ternProject,
+										AngularScopeHelper.getAngularValue(
+												attr, directive.getType()),
+										end, directive.getType());
+
+							} else {
+								// Hyperlink on attr name, try to open the
+								// custom
+								// directive
+								if (directive.isCustom()) {
+									hyperlink = new HTMLAngularHyperLink(
+											attr.getOwnerElement(),
+											HyperlinkUtils.getNameRegion(attr),
+											file, textViewer.getDocument(),
+											ternProject, directive.getName(),
+											end, AngularType.directive);
+								}
+							}
 						} else {
-							// Hyperlink on attr name, try to open the custom
+							// Hyperlink on element name, try to open the custom
 							// directive
 							if (directive.isCustom()) {
-								hyperlink = new HTMLAngularHyperLink(
-										attr.getOwnerElement(),
-										HyperlinkUtils.getNameRegion(attr),
-										file, ternProject, directive.getName(),
+								IDOMElement element = (IDOMElement) node;
+								hyperlink = new HTMLAngularHyperLink(element,
+										HyperlinkUtils
+												.getElementRegion(element),
+										file, textViewer.getDocument(),
+										ternProject, directive.getName(), end,
 										AngularType.directive);
 							}
 						}
 					} else {
-						// Hyperlink on element name, try to open the custom
-						// directive
-						if (directive.isCustom()) {
-							IDOMElement element = (IDOMElement) node;
-							hyperlink = new HTMLAngularHyperLink(element,
-									HyperlinkUtils.getElementRegion(element),
-									file, ternProject, directive.getName(),
-									AngularType.directive);
+						if (attr != null) {
+							boolean isAttrValue = region.getOffset() > attr
+									.getNameRegionEndOffset();
+							if (isAttrValue) {
+								// EL inside attribute
+								// <span class="done-{{todo.done}}"
+								hyperlink = createHyperlinkForExpression(
+										DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE,
+										attr.getValue(),
+										attr.getValueRegionStartOffset() + 1,
+										region.getOffset(),
+										(IDOMNode) attr.getOwnerElement(),
+										document, ternProject, file);
+							}
 						}
 					}
-					if (hyperlink != null) {
-						IHyperlink[] hyperlinks = new IHyperlink[1];
-						hyperlinks[0] = hyperlink;
-						return hyperlinks;
-					}
-				} catch (CoreException e) {
-					Trace.trace(Trace.WARNING, "Error while Angular hyperlink",
-							e);
 				}
-
+			} catch (CoreException e) {
+				Trace.trace(Trace.WARNING, "Error while Angular hyperlink", e);
 			}
+		}
+		return createHyperlinks(hyperlink);
+	}
+
+	private IHyperlink createHyperlinkForExpression(String regionType,
+			String regionText, int regionStartOffset, int documentPosition,
+			IDOMNode node, IDocument document, IDETernProject ternProject,
+			IFile file) {
+		AngularELRegion angularRegion = AngularRegionUtils.getAngularELRegion(
+				regionType, regionText, regionStartOffset, documentPosition);
+		if (angularRegion != null) {
+			String expression = angularRegion.getExpression();
+			int expressionOffset = angularRegion.getExpressionOffset();
+			return new HTMLAngularHyperLink(node, AngularELWordFinder.findWord(
+					document, documentPosition), file, document, ternProject,
+					expression, expressionOffset, AngularType.model);
 		}
 		return null;
 	}
 
+	private IHyperlink[] createHyperlinks(IHyperlink hyperlink) {
+		if (hyperlink != null) {
+			IHyperlink[] hyperlinks = new IHyperlink[1];
+			hyperlinks[0] = hyperlink;
+			return hyperlinks;
+		}
+		return null;
+	}
 }

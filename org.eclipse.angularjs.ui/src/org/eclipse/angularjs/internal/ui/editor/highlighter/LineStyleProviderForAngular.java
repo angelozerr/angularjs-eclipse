@@ -13,6 +13,7 @@ package org.eclipse.angularjs.internal.ui.editor.highlighter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.preferences.PreferenceConstants;
@@ -108,18 +109,19 @@ public class LineStyleProviderForAngular extends LineStyleProviderForHTML
 					if (type == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME) {
 						IDOMAttr attr = DOMUtils.getAttrByOffset(parent,
 								collection.getStart() + region.getStart());
-						if (DOMUtils.isAngularDirective(attr)) {
+						if (AngularDOMUtils.isAngularDirective(attr)) {
 							// directive as attribute
 							return (TextAttribute) getTextAttributes()
 									.get(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME);
-						} else if (DOMUtils.isAngularDirectiveParameter(attr)) {
+						} else if (AngularDOMUtils
+								.isAngularDirectiveParameter(attr)) {
 							// directive parameter
 							return (TextAttribute) getTextAttributes()
 									.get(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME);
 						}
 					} else {
 						if (parent instanceof Element
-								&& DOMUtils
+								&& AngularDOMUtils
 										.isAngularDirective((Element) parent)) {
 							// directive as element
 							return (TextAttribute) getTextAttributes()

@@ -14,14 +14,19 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.angularjs.internal.ui.utils.AngularELRegion;
+import org.eclipse.angularjs.internal.ui.utils.AngularRegionUtils;
+import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.contentassist.IContextInformation;
 import org.eclipse.swt.graphics.Image;
@@ -29,13 +34,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentReg
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
 import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
-import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.contentassist.ContentAssistRequest;
 import org.eclipse.wst.xml.ui.internal.contentassist.DefaultXMLCompletionProposalComputer;
-import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -77,9 +80,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			CompletionProposalInvocationContext context) {
 		// Check if project has angular nature
 		final IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
-		if (DOMUtils.hasAngularNature(element)) {
+		if (AngularDOMUtils.hasAngularNature(element)) {
 			IProject p = DOMUtils.getFile(element).getProject();
-			Directive directive = DOMUtils.getAngularDirective(p, element);
+			Directive directive = AngularDOMUtils.getAngularDirective(p,
+					element);
 			if (directive != null) {
 				// completion for directive parameters.
 				String paramName = contentAssistRequest.getMatchString();
@@ -104,7 +108,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						contentAssistRequest.getRegion());
 				// get angular attribute name of the element
 
-				final List<Directive> existingDirectives = DOMUtils
+				final List<Directive> existingDirectives = AngularDOMUtils
 						.getAngularDirectives(p,
 								element instanceof Element ? (Element) element
 										: null, attr);
@@ -124,8 +128,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 								// Add the directive in the completion.
 								String displayString = name + " - "
 										+ directive.getModule().getName();
-								String additionalProposalInfo = directive
-										.getHTMLDescription();
+								String additionalProposalInfo = HTMLAngularPrinter
+										.getDirectiveInfo(directive);
 								Image image = ImageResource
 										.getImage(ImageResource.IMG_DIRECTIVE);
 								addProposal(contentAssistRequest, name,
@@ -152,13 +156,13 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			CompletionProposalInvocationContext context) {
 		// Check if project has angular nature
 		IDOMNode element = (IDOMNode) contentAssistRequest.getNode();
-		if (DOMUtils.hasAngularNature(element)) {
+		if (AngularDOMUtils.hasAngularNature(element)) {
 			// check if it's class attribute
 			IDOMAttr attr = DOMUtils.getAttrByRegion(element,
 					contentAssistRequest.getRegion());
 			// is angular directive attribute?
-			Directive directive = DOMUtils.getAngularDirectiveByRegion(element,
-					contentAssistRequest.getRegion());
+			Directive directive = AngularDOMUtils.getAngularDirectiveByRegion(
+					element, contentAssistRequest.getRegion());
 			AngularType angularType = directive != null ? directive.getType()
 					: null;
 			if (angularType != null) {
@@ -169,14 +173,15 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						.startsWith("\"") || contentAssistRequest
 						.getMatchString().startsWith("'")) ? 1 : 0;
 				populateAngularProposals(contentAssistRequest, element,
-						angularType, startIndex);
+						context.getDocument(), angularType, startIndex);
 			} else {
 				// is angular expression inside attribute?
 				String matchingString = contentAssistRequest.getMatchString();
-				int index = matchingString.lastIndexOf("{{");
+				int index = matchingString
+						.lastIndexOf(AngularProject.START_ANGULAR_EXPRESSION_TOKEN);
 				if (index != -1) {
 					populateAngularProposals(contentAssistRequest, element,
-							AngularType.model, index);
+							context.getDocument(), AngularType.model, index);
 				} else {
 					if (CLASS_ATTR.equals(attr.getName())) {
 						addClassAttributeValueProposals(contentAssistRequest,
@@ -220,8 +225,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						// Add the directive in the completion.
 						String displayString = name + " - "
 								+ directive.getModule().getName();
-						String additionalProposalInfo = directive
-								.getHTMLDescription();
+						String additionalProposalInfo = HTMLAngularPrinter
+								.getDirectiveInfo(directive);
 						Image image = ImageResource
 								.getImage(ImageResource.IMG_DIRECTIVE);
 						addProposal(contentAssistRequest, name,
@@ -255,7 +260,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 						int relevance = XMLRelevanceConstants.R_NONE;
 
-						ICompletionProposal proposal = new CustomCompletionProposal(
+						ICompletionProposal proposal = new HTMLAngularCompletionProposal(
 								replacementString, replacementOffset,
 								replacementLength, cursorPosition, image,
 								displayString, contextInformation,
@@ -268,7 +273,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 	private void populateAngularProposals(
 			final ContentAssistRequest contentAssistRequest, IDOMNode element,
-			final AngularType angularType, final Integer startIndex) {
+			IDocument document, final AngularType angularType,
+			final Integer startIndex) {
 		IFile file = DOMUtils.getFile(element);
 		IProject eclipseProject = file.getProject();
 		try {
@@ -293,15 +299,15 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
 				@Override
-				public void addProposal(String name, String type,
-						String origin, Object doc, int pos, Object completion,
+				public void addProposal(String name, String type, String doc,
+						String url, String origin, int pos, Object completion,
 						ITernServer ternServer) {
 
 					ICompletionProposal proposal = null;
 					if (isModuleOrController(angularType)) {
 
 						MarkupAngularCompletionProposal markupPproposal = new MarkupAngularCompletionProposal(
-								name, type, origin, doc, pos, completion,
+								name, type, doc, url, origin, pos, completion,
 								ternServer, angularType, replacementOffset);
 
 						// in the case of "module", "controller" completion
@@ -314,11 +320,12 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						markupPproposal.setReplacementLength(replacementLength);
 						markupPproposal.setCursorPosition(cursorPosition);
 						markupPproposal.setReplacementOffset(replacementOffset);
-						markupPproposal.setImage(getImage(angularType));
+						markupPproposal.setImage(HTMLAngularPrinter
+								.getImage(angularType));
 						proposal = markupPproposal;
 					} else {
 						proposal = new JSAngularCompletionProposal(name, type,
-								origin, doc, pos, completion, ternServer,
+								doc, url, origin, pos, completion, ternServer,
 								angularType, replacementOffset);
 					}
 					contentAssistRequest.addProposal(proposal);
@@ -331,7 +338,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						collector);
 			} else {
 				ternProject.request(query, query.getFiles(), element, file,
-						collector);
+						document, collector);
 			}
 
 		} catch (Exception e) {
@@ -403,36 +410,20 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		boolean isXMLContent = (regionType == DOMRegionContext.XML_CONTENT);
 		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_OPEN
 				|| regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT
-				|| (isXMLContent && DOMUtils.hasAngularNature(xmlnode))) {
+				|| (isXMLContent && AngularDOMUtils.hasAngularNature(xmlnode))) {
 
 			// completion for Angular expression {{}} inside text node.
 			int documentPosition = context.getInvocationOffset();
-			IStructuredDocumentRegion documentRegion = ContentAssistUtils
+			IStructuredDocumentRegion documentRegion = AngularRegionUtils
 					.getStructuredDocumentRegion(context.getViewer(),
 							documentPosition);
 
 			String match = null;
-			int length = documentPosition - documentRegion.getStartOffset();
-			if (isXMLContent) {
-				// case for JSP
-				String text = documentRegion.getText().substring(0, length);
-				int startExprIndex = text.lastIndexOf("{{");
-				if (startExprIndex != -1) {
-					int endExprIndex = text.lastIndexOf("}}");
-					if (endExprIndex == -1 || endExprIndex < startExprIndex) {
-						// completion (for JSP) is done inside angular
-						// expression {{
-						match = text.substring(startExprIndex + 2,
-								text.length());
-					}
-				}
-			} else {
-				// case for HTML where regionType is an angular expression
-				// open/content.
-				if (length > 1) {
-					// here we have {{
-					match = documentRegion.getText().substring(2, length);
-				}
+			AngularELRegion angularRegion = AngularRegionUtils
+					.getAngularELRegion(documentRegion, documentPosition);
+			if (angularRegion != null) {
+				match = angularRegion.getExpression().substring(0,
+						angularRegion.getExpressionOffset());
 			}
 			if (match != null) {
 				ContentAssistRequest contentAssistRequest = new ContentAssistRequest(
@@ -440,7 +431,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						completionRegion, documentPosition, 0, match);
 
 				populateAngularProposals(contentAssistRequest, treeNode,
-						AngularType.model, null);
+						context.getDocument(), AngularType.model, null);
 
 				return contentAssistRequest;
 			}
@@ -455,7 +446,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			final ContentAssistRequest contentAssistRequest, int childPosition,
 			CompletionProposalInvocationContext context) {
 		IDOMNode node = (IDOMNode) contentAssistRequest.getNode();
-		if (DOMUtils.hasAngularNature(node)) {
+		if (AngularDOMUtils.hasAngularNature(node)) {
 			// completion for directive with 'E' restriction.
 			String directiveName = contentAssistRequest.getMatchString();
 
@@ -474,8 +465,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 							// Add the directive in the completion.
 							String displayString = name + " - "
 									+ directive.getModule().getName();
-							String additionalProposalInfo = directive
-									.getHTMLDescription();
+							String additionalProposalInfo = HTMLAngularPrinter
+									.getDirectiveInfo(directive);
 							Image image = ImageResource
 									.getImage(ImageResource.IMG_DIRECTIVE);
 
@@ -525,7 +516,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 							int relevance = XMLRelevanceConstants.R_TAG_NAME;
 
-							ICompletionProposal proposal = new MarkupCompletionProposal(
+							ICompletionProposal proposal = new AngularMarkupCompletionProposal(
 									replacementString.toString(),
 									replacementOffset, replacementLength,
 									cursorPosition, image, displayString,
@@ -611,29 +602,11 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 		int relevance = XMLRelevanceConstants.R_XML_ATTRIBUTE_NAME;
 
-		ICompletionProposal proposal = new CustomCompletionProposal(
+		ICompletionProposal proposal = new HTMLAngularCompletionProposal(
 				replacementString.toString(), replacementOffset,
 				replacementLength, cursorPosition, image, displayString,
 				contextInformation, additionalProposalInfo, relevance);
 		contentAssistRequest.addProposal(proposal);
-	}
-
-	/**
-	 * Returns the image to use for completion according to teh given angular
-	 * type.
-	 * 
-	 * @param angularType
-	 * @return
-	 */
-	private static Image getImage(AngularType angularType) {
-		switch (angularType) {
-		case module:
-			return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
-		case controller:
-			return ImageResource.getImage(ImageResource.IMG_CONTROLLER);
-		default:
-			return null;
-		}
 	}
 
 }

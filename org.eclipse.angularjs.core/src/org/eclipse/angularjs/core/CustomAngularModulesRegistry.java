@@ -78,6 +78,9 @@ public class CustomAngularModulesRegistry extends
 				return;
 			}
 			synchronized (lock) {
+				if (!refreshDirectives) {
+					return;
+				}
 				super.clear();
 				IDETernProject ternProject = IDETernProject
 						.getTernProject(project);
@@ -89,8 +92,9 @@ public class CustomAngularModulesRegistry extends
 
 							@Override
 							public void addProposal(String name, String type,
-									String origin, Object doc, int pos,
-									Object completion, ITernServer ternServer) {
+									String doc, String url, String origin,
+									int pos, Object completion,
+									ITernServer ternServer) {
 								String moduleName = ternServer.getText(
 										completion, "module");
 								if (!StringUtils.isEmpty(moduleName)) {
@@ -153,9 +157,7 @@ public class CustomAngularModulesRegistry extends
 			return true;
 
 		case IResource.FILE:
-			if (FileUtils.isJSFile(resource) || FileUtils.isHTMLFile(resource)
-					|| FileUtils.isJSPFile(resource)
-					|| FileUtils.isPHPFile(resource)) {
+			if (FileUtils.isJSFile(resource) || FileUtils.isHTMLFile(resource)					) {
 				this.refreshDirectives = true;
 			}
 			return true;

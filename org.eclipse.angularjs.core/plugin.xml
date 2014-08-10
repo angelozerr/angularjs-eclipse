@@ -108,5 +108,5 @@
          <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
       </validator>
    </extension>
-   	
+   	   	
 </plugin>        

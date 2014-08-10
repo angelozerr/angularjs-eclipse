@@ -10,17 +10,15 @@
  */
 package org.eclipse.angularjs.internal.ui.contentassist;
 
-import org.eclipse.angularjs.core.utils.StringUtils;
+import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 
 import tern.angular.AngularType;
 import tern.eclipse.ide.ui.contentassist.JSTernCompletionProposal;
 import tern.server.ITernServer;
 
 /**
- * Extrends Tern compeltion proposal for retrieve "module" and "controller"
- * information from the tern completion.
- * 
- * @author azerr
+ * Extrends Javacsript Tern completion proposal to display "module" and
+ * "controller" information from the tern completion.
  * 
  */
 public class JSAngularCompletionProposal extends JSTernCompletionProposal {
@@ -28,10 +26,10 @@ public class JSAngularCompletionProposal extends JSTernCompletionProposal {
 	private final ITernServer ternServer;
 	private final Object completion;
 
-	public JSAngularCompletionProposal(String name, String type, String origin,
-			Object doc, int pos, Object completion, ITernServer server,
-			AngularType angularType, int startOffset) {
-		super(name, type, origin, doc, pos, startOffset);
+	public JSAngularCompletionProposal(String name, String type, String doc,
+			String url, String origin, int pos, Object completion,
+			ITernServer server, AngularType angularType, int startOffset) {
+		super(name, type, doc, url, origin, pos, startOffset);
 		this.ternServer = server;
 		this.completion = completion;
 	}
@@ -40,39 +38,38 @@ public class JSAngularCompletionProposal extends JSTernCompletionProposal {
 	public String getAdditionalProposalInfo() {
 		String module = ternServer.getText(completion, "module");
 		String controller = ternServer.getText(completion, "controller");
-		StringBuilder s = null;
-		if (module != null) {
-			s = new StringBuilder("");
-			s.append("<b>Module</b>:");
-			s.append(module);
+		return HTMLAngularPrinter
+				.getAngularInfo(this, null, module, controller);
+	}
+
+	// @Override
+	protected String getAdditionalProposalInfoTitle() {
+		String module = ternServer.getText(completion, "module");
+		String controller = ternServer.getText(completion, "controller");
+
+		StringBuilder title = new StringBuilder(getName());
+		if (module != null || controller != null) {
+			title.append(" <small>in </small>");
 		}
 		if (controller != null) {
-			if (s == null) {
-				s = new StringBuilder("");
-			} else {
-				s.append("<br>");
+			title.append("<b>");
+			title.append(controller);
+			title.append("</b>");
+			title.append("<small> controller</small>");
+			if (module != null) {
+				title.append("<small> of </small>");
+				title.append("<b>");
+				title.append(module);
+				title.append("</b>");
+				title.append("<small> module</small>");
 			}
-			s.append("<b>Controller</b>:");
-			s.append(controller);
+		} else if (module != null) {
+			title.append("<b>");
+			title.append(module);
+			title.append("</b>");
+			title.append("<small> module</small>");
 		}
-		String origin = super.getOrigin();
-		if (!StringUtils.isEmpty(origin)) {
-			if (s == null) {
-				s = new StringBuilder("");
-			} else {
-				s.append("<br>");
-			}
-			s.append("<b>Origin</b>:");
-			s.append(origin);
-		}
-		String doc = super.getAdditionalProposalInfo();
-		if (s != null && doc != null) {
-			s.append("<br>");
-			s.append("<b>Documentation</b>:");
-			s.append("<br>");
-			s.append(doc);
-		}		
-		return s != null ? s.toString() : doc;
+		return title.toString();
 	}
 
 }
