@@ -17,6 +17,7 @@ import org.eclipse.wst.html.internal.validation.HTMLSourceValidator;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
+
 public class HTMLAngularSourceValidator extends HTMLSourceValidator {
 
 	@Override

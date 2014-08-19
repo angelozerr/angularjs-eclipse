@@ -24,6 +24,8 @@
 		<module>org.eclipse.angularjs.core</module>
 		<module>org.eclipse.angularjs.core.tests</module>
 		<module>org.eclipse.angularjs.ui</module>
+		<module>org.eclipse.angularjs.jsp.core</module>
+		<module>org.eclipse.angularjs.jsp.ui</module>
 		<module>org.eclipse.angularjs.repository</module>
 		<module>angularjs-eclipse-feature</module>
 	</modules>

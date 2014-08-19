@@ -10,10 +10,15 @@
  */
 package org.eclipse.angularjs.internal.ui.validation;
 
+import org.eclipse.angularjs.core.AngularCorePlugin;
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -26,8 +31,10 @@ import org.eclipse.wst.validation.internal.core.ValidationException;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidationContext;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
+import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
 
-public abstract class AbstractValidator implements IValidator, ISourceValidator {
+public abstract class AbstractValidator implements IValidator,
+		ISourceValidator, IValidatorJob {
 
 	private IDocument fDocument;
 
@@ -73,9 +80,12 @@ public abstract class AbstractValidator implements IValidator, ISourceValidator 
 			file = getFile(delta[0]);
 		}
 
-		IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument)
-				.getStructuredDocumentRegions();
-		validate(reporter, file, regions);
+		if (AngularProject.hasAngularNature(file.getProject())) {
+			// do angular validation only of project has angular nature
+			IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument)
+					.getStructuredDocumentRegions();
+			validate(reporter, file, regions);
+		}
 
 	}
 
@@ -152,5 +162,24 @@ public abstract class AbstractValidator implements IValidator, ISourceValidator 
 		if (file != null && file.exists())
 			return file;
 		return null;
+	}
+
+	@Override
+	public ISchedulingRule getSchedulingRule(IValidationContext helper) {
+		return null;
+	}
+
+	@Override
+	public IStatus validateInJob(IValidationContext helper, IReporter reporter)
+			throws ValidationException {
+		IStatus status = Status.OK_STATUS;
+		try {
+			validate(helper, reporter);
+		} catch (ValidationException e) {
+			Trace.trace(Trace.SEVERE, "Error while angular validation", e);
+			status = new Status(IStatus.ERROR, AngularCorePlugin.PLUGIN_ID,
+					IStatus.ERROR, e.getLocalizedMessage(), e);
+		}
+		return status;
 	}
 }

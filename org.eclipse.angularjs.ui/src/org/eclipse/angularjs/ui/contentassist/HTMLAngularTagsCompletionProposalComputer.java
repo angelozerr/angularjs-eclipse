@@ -8,7 +8,7 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui.contentassist;
+package org.eclipse.angularjs.ui.contentassist;
 
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +20,10 @@ import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionCon
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.angularjs.internal.ui.contentassist.AngularMarkupCompletionProposal;
+import org.eclipse.angularjs.internal.ui.contentassist.HTMLAngularCompletionProposal;
+import org.eclipse.angularjs.internal.ui.contentassist.JSAngularCompletionProposal;
+import org.eclipse.angularjs.internal.ui.contentassist.MarkupAngularCompletionProposal;
 import org.eclipse.angularjs.internal.ui.utils.AngularELRegion;
 import org.eclipse.angularjs.internal.ui.utils.AngularRegionUtils;
 import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;

@@ -8,20 +8,22 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.core.validation;
+package org.eclipse.angularjs.jsp.core.validation;
 
+import org.eclipse.angularjs.core.validation.AngularValidatorUtils;
+import org.eclipse.angularjs.jsp.org.eclipse.jst.jsp.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.wst.html.core.internal.validation.HTMLValidationReporter;
+//import org.eclipse.wst.html.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IValidator;
 
 /**
- * This class extends {@link HTMLValidationReporter} which reports HTML errors
- * (attributes which doesn't exists, etc) to ignore error for Angular
- * attribute/element (ng-app, custom directives, etc).
+ * This class extends {@link HTMLValidationReporter} which reports HTML errors (attributes
+ * which doesn't exists, etc) to ignore error for Angular attribute/element
+ * (ng-app, custom directives, etc).
  *
  */
 public class HTMLAngularValidationReporter extends HTMLValidationReporter {

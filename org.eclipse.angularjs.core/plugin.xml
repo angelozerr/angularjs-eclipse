@@ -88,15 +88,16 @@
   <!--======================================================================================-->
   <extension id="HTMLAngularValidator" name="%HTMLAngularValidator.name" point="org.eclipse.wst.validation.validatorV2">
       <validator
-            build="false"
+            build="true"
             class="org.eclipse.angularjs.core.validation.HTMLAngularValidator"
-            manual="false"
-            sourceid="org.eclipse.wst.html.ui.internal.validation.htmlsyntaxvalidator"
+            manual="true"
+            sourceid="org.eclipse.angularjs.ui.validation.htmlsyntaxvalidator,org.eclipse.angularjs.ui.validation.HTMLAngularContentValidator"
             version="1"
             markerId="org.eclipse.wst.html.core.validationMarker">
          <include>
             <rules>
                <contentType id="org.eclipse.wst.html.core.htmlsource"></contentType>
+               <contentType id="org.eclipse.angularjs.core.angularsource"></contentType>
                <fileext caseSensitive="false" ext="html"/>
                <fileext caseSensitive="false" ext="xhtml"/>
                <fileext caseSensitive="false" ext="htm"/>

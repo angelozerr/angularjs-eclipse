@@ -8,7 +8,7 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui.validation;
+package org.eclipse.angularjs.ui.validation;
 
 import java.io.IOException;
 
@@ -17,6 +17,8 @@ import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.Trace;
+import org.eclipse.angularjs.internal.ui.validation.AbstractValidator;
+import org.eclipse.angularjs.internal.ui.validation.ValidatorUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -44,46 +46,47 @@ public class HTMLAngularContentValidator extends AbstractValidator {
 	protected void doValidate(
 			IStructuredDocumentRegion structuredDocumentRegion,
 			IReporter reporter, IFile file, IStructuredModel model) {
+		validate(structuredDocumentRegion, reporter, file, model);
+	}
+
+	public void validate(IStructuredDocumentRegion structuredDocumentRegion,
+			IReporter reporter, IFile file, IStructuredModel model) {
 		IProject project = file.getProject();
-		if (AngularProject.hasAngularNature(project)) {
-			// do angular validation only of project has angular nature
-			if (isStartTag(structuredDocumentRegion)) {
-				IDOMNode node = DOMUtils.getNodeByOffset(model,
-						structuredDocumentRegion.getStartOffset());
-				if (node == null || node.getNodeType() != Node.ELEMENT_NODE) {
-					return;
-				}
+		if (isStartTag(structuredDocumentRegion)) {
+			IDOMNode node = DOMUtils.getNodeByOffset(model,
+					structuredDocumentRegion.getStartOffset());
+			if (node == null || node.getNodeType() != Node.ELEMENT_NODE) {
+				return;
+			}
 
-				IDOMElement element = (IDOMElement) node;
-				NamedNodeMap map = element.getAttributes();
-				for (int i = 0; i < map.getLength(); i++) {
-					IDOMAttr attr = (IDOMAttr) map.item(i);
-					if (attr.getValueRegionStartOffset() != 0) {
+			IDOMElement element = (IDOMElement) node;
+			NamedNodeMap map = element.getAttributes();
+			for (int i = 0; i < map.getLength(); i++) {
+				IDOMAttr attr = (IDOMAttr) map.item(i);
+				if (attr.getValueRegionStartOffset() != 0) {
 
-						Directive directive = AngularDOMUtils
-								.getAngularDirective(project, attr);
-						if (directive != null) {
-							switch (directive.getType()) {
-							case module:
-							case controller:
-								try {
-									IDETernProject ternProject = AngularProject
-											.getTernProject(project);
+					Directive directive = AngularDOMUtils.getAngularDirective(
+							project, attr);
+					if (directive != null) {
+						switch (directive.getType()) {
+						case module:
+						case controller:
+							try {
+								IDETernProject ternProject = AngularProject
+										.getTernProject(project);
 
-									boolean exists = find(attr, file,
-											ternProject, directive.getType());
-									if (!exists) {
-										reporter.addMessage(this,
-												ValidatorUtils.createMessage(
-														attr,
-														directive.getType()));
-									}
-								} catch (Exception e) {
-									Trace.trace(Trace.SEVERE,
-											"Error while tern validator.", e);
+								boolean exists = find(attr, file, ternProject,
+										directive.getType());
+								if (!exists) {
+									reporter.addMessage(this, ValidatorUtils
+											.createMessage(attr,
+													directive.getType()));
 								}
-								break;
+							} catch (Exception e) {
+								Trace.trace(Trace.SEVERE,
+										"Error while tern validator.", e);
 							}
+							break;
 						}
 					}
 				}

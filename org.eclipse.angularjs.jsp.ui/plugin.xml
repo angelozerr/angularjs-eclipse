@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
+###############################################################################
+# Copyright (c) 2013 Angelo Zerr and others.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#     Angelo Zerr <angelo.zerr@gmail.com> - Initial API and implementation 
+###############################################################################
+ -->
+<plugin>
+	      	
+	<!-- Angular UI Adapter factories					   						  				  -->
+	<!--
+		======================================================================================
+	-->
+	
+   <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">	
+	    <proposalComputer
+	          activate="false"
+	          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTags"
+	          class="org.eclipse.angularjs.ui.contentassist.HTMLAngularTagsCompletionProposalComputer"
+	          id="org.eclipse.angularjs.jsp.proposalComputer.htmlAngularTags">
+	       <contentType
+	             id="org.eclipse.jst.jsp.core.jspsource">
+	          <partitionType
+	                id="org.eclipse.wst.html.HTML_DEFAULT">
+	          </partitionType>
+	          <partitionType
+	                id="org.eclipse.angularjs.ANGULAR_DEFAULT">
+	          </partitionType>	          
+	       </contentType>	       	          	       
+	    </proposalComputer>
+	</extension>
+
+	<!--======================================================================================-->
+	<!-- As you type validation                                      						  -->
+	<!--======================================================================================-->
+
+	<!--======================================================================================-->
+	<!-- HTML (as you type) validation					   						  			  -->
+	<!--======================================================================================-->
+	
+	<!-- Extends JSPAngularContentSourceValidator -->
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="total"
+			class="org.eclipse.angularjs.jsp.internal.ui.validation.JSPAngularContentSourceValidator"
+			id="org.eclipse.angularjs.jsp.ui.validation.htmlsyntaxvalidator">
+			<contentTypeIdentifier
+				id="org.eclipse.jst.jsp.core.jspsource">
+				<partitionType id="org.eclipse.jst.jsp.JSP_DIRECTIVE"/>
+				<partitionType id="org.eclipse.jst.jsp.JSP_COMMENT"/>
+				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.html.HTML_DECLARATION"/>
+				<partitionType id="org.eclipse.wst.html.HTML_COMMENT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>
+	
+	<!-- Partial Angular Validation (Modules, Controllers) for JSP file -->
+	<extension point="org.eclipse.wst.sse.ui.sourcevalidation">
+		<validator
+			scope="partial"
+			class="org.eclipse.angularjs.ui.validation.HTMLAngularContentValidator"
+			id="org.eclipse.angularjs.jsp.ui.validation.HTMLAngularContentValidator">
+			<contentTypeIdentifier
+				id="org.eclipse.jst.jsp.core.jspsource">
+				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.xml.XML_DEFAULT"/>
+				<partitionType id="org.eclipse.wst.sse.ST_DEFAULT"/>
+			</contentTypeIdentifier>
+		</validator>
+	</extension>	
+
+</plugin>        
