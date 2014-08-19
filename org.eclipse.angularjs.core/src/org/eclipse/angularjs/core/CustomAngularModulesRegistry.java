@@ -48,7 +48,7 @@ public class CustomAngularModulesRegistry extends
 
 	public CustomAngularModulesRegistry(IProject project) {
 		this.project = project;
-		this.refreshDirectives = true;
+		clear();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(this);
 	}
 
@@ -157,11 +157,17 @@ public class CustomAngularModulesRegistry extends
 			return true;
 
 		case IResource.FILE:
-			if (FileUtils.isJSFile(resource) || FileUtils.isHTMLFile(resource)					) {
-				this.refreshDirectives = true;
+			if (FileUtils.isJSFile(resource) || FileUtils.isHTMLFile(resource)) {
+				clear();
 			}
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void clear() {
+		super.clear();
+		this.refreshDirectives = true;
 	}
 }

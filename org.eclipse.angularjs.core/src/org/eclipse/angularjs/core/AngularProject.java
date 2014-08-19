@@ -34,6 +34,8 @@ import tern.angular.modules.IDirectiveSyntax;
 import tern.angular.modules.Restriction;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.server.ITernServer;
+import tern.server.TernServerAdapter;
 
 /**
  * Angular project.
@@ -52,18 +54,22 @@ public class AngularProject implements IDirectiveSyntax {
 	private final IProject project;
 
 	private final Map<ITernScriptPath, List<BaseModel>> folders;
-
-	private final CustomAngularModulesRegistry customDirectives;
-
 	private static List<String> angularNatureAdapters;
 
 	AngularProject(IProject project) throws CoreException {
 		this.project = project;
 		this.folders = new HashMap<ITernScriptPath, List<BaseModel>>();
-		this.customDirectives = new CustomAngularModulesRegistry(project);
+		final CustomAngularModulesRegistry customDirectives = new CustomAngularModulesRegistry(
+				project);
 		AngularModulesManager.getInstance().addRegistry(this, customDirectives);
 		project.setSessionProperty(ANGULAR_PROJECT, this);
 		ensureNatureIsConfigured();
+		getTernProject(project).addServerListener(new TernServerAdapter() {
+			@Override
+			public void onStop(ITernServer server) {
+				customDirectives.clear();
+			}
+		});
 	}
 
 	public static AngularProject getAngularProject(IProject project)
