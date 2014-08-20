@@ -12,10 +12,10 @@ package org.eclipse.angularjs.internal.ui.taginfo;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.utils.AngularDOMUtils;
+import org.eclipse.angularjs.core.utils.AngularScopeHelper;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.AngularELWordFinder;
-import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.angularjs.internal.ui.utils.AngularELRegion;
 import org.eclipse.angularjs.internal.ui.utils.AngularRegionUtils;

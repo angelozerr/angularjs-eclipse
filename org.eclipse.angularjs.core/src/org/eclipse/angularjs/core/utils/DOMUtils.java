@@ -11,6 +11,7 @@
 package org.eclipse.angularjs.core.utils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,13 +22,17 @@ import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.internal.core.documentModel.provisional.contenttype.ContentTypeIdForAngular;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.wst.html.core.internal.Logger;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -35,6 +40,7 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Attr;
@@ -579,6 +585,49 @@ public class DOMUtils {
 			return (Element) node;
 		}
 		return null;
+	}
+
+	public static IDOMModel getModel(IProject project, IFile file) {
+		if (project == null || file == null)
+			return null;
+		if (!file.exists())
+			return null;
+		// if (!canHandle(file))
+		// return null;
+
+		IModelManager manager = StructuredModelManager.getModelManager();
+		if (manager == null)
+			return null;
+
+		IStructuredModel model = null;
+		try {
+			file.refreshLocal(IResource.DEPTH_ZERO, new NullProgressMonitor());
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+		try {
+			try {
+				model = manager.getModelForRead(file);
+			} catch (UnsupportedEncodingException ex) {
+				// retry ignoring META charset for invalid META charset
+				// specification
+				// recreate input stream, because it is already partially read
+				model = manager.getModelForRead(file, new String(), null);
+			}
+		} catch (UnsupportedEncodingException ex) {
+		} catch (IOException ex) {
+		} catch (CoreException e) {
+			Logger.logException(e);
+		}
+
+		if (model == null)
+			return null;
+		if (!(model instanceof IDOMModel)) {
+			if (model != null)
+				model.releaseFromRead();
+			return null;
+		}
+		return (IDOMModel) model;
 	}
 
 }

@@ -10,7 +10,7 @@
  */
 package org.eclipse.angularjs.internal.ui.hyperlink;
 
-import org.eclipse.angularjs.internal.ui.AngularScopeHelper;
+import org.eclipse.angularjs.core.utils.AngularScopeHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.text.IDocument;

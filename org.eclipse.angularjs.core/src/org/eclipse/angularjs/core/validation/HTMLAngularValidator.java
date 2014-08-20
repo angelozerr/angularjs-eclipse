@@ -11,8 +11,12 @@
 package org.eclipse.angularjs.core.validation;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.html.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.html.core.internal.validation.HTMLValidator;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
@@ -29,22 +33,6 @@ public class HTMLAngularValidator extends HTMLValidator {
 			IFile file, IDOMModel model) {
 		return new HTMLAngularValidationReporter(this, reporter, file, model);
 	}
-	
-	/*
-	static boolean shouldValidate(IFile file) {
-		IResource resource = file;
-		do {
-			if (resource.isDerived()
-					|| resource.isTeamPrivateMember()
-					|| !resource.isAccessible()
-					|| (resource.getName().charAt(0) == '.' && resource
-							.getType() == IResource.FOLDER)) {
-				return false;
-			}
-			resource = resource.getParent();
-		} while ((resource.getType() & IResource.PROJECT) == 0);
-		return true;
-	}
 
 	@Override
 	public ValidationResult validate(IResource resource, int kind,
@@ -53,43 +41,10 @@ public class HTMLAngularValidator extends HTMLValidator {
 				.validate(resource, kind, state, monitor);
 		if (result != null) {
 			IReporter reporter = result.getReporter(monitor);
-			validateFile(reporter, (IFile) resource, result);
+			ValidatorUtils.validateFile(reporter, (IFile) resource,
+					result, this);
 		}
-		// if (resource.getType() != IResource.FILE)
-		// return null;
-		// ValidationResult result = new ValidationResult();
-		// IReporter reporter = result.getReporter(monitor);
-		// validateFile(null, reporter, (IFile) resource, result);
 		return result;
 	}
 
-	private void validateFile(IReporter reporter, IFile file,
-			ValidationResult result) {
-		if (AngularProject.hasAngularNature(file.getProject())) {
-			if ((reporter != null) && (reporter.isCancelled() == true)) {
-				throw new OperationCanceledException();
-			}
-			if (!shouldValidate(file)) {
-				return;
-			}
-			IDOMModel model = getModel(file.getProject(), file);
-			if (model == null)
-				return;
-			IStructuredDocumentRegion[] regions = ((IStructuredDocument) model
-					.getStructuredDocument()).getStructuredDocumentRegions();
-			validate(reporter, file, model, regions);
-		}
-	}
-
-	private void validate(IReporter reporter, IFile file, IDOMModel model,
-			IStructuredDocumentRegion[] regions) {
-		for (int i = 0; i < regions.length; i++) {
-			validate(regions[i], reporter, file, model);
-		}
-	}
-
-	private void validate(IStructuredDocumentRegion structuredDocumentRegion,
-			IReporter reporter, IFile file, IDOMModel model) {
-		System.err.println("error");
-	}*/
 }

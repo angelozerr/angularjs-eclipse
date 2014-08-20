@@ -10,7 +10,7 @@
  */
 package org.eclipse.angularjs.jsp.core.validation;
 
-import org.eclipse.angularjs.core.validation.AngularValidatorUtils;
+import org.eclipse.angularjs.core.validation.ValidatorUtils;
 import org.eclipse.angularjs.jsp.org.eclipse.jst.jsp.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,7 +38,7 @@ public class HTMLAngularValidationReporter extends HTMLValidationReporter {
 
 	@Override
 	public void report(ErrorInfo info) {
-		if (!AngularValidatorUtils.isIgnoreError(info, project)) {
+		if (!ValidatorUtils.isIgnoreError(info, project)) {
 			// report the error
 			super.report(info);
 		}

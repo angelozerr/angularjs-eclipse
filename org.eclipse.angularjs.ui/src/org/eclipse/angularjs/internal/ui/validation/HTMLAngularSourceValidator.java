@@ -13,11 +13,17 @@ package org.eclipse.angularjs.internal.ui.validation;
 import org.eclipse.angularjs.core.validation.HTMLAngularValidationReporter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.html.core.internal.validation.HTMLValidationReporter;
+import org.eclipse.wst.html.core.internal.validation.HTMLValidator;
 import org.eclipse.wst.html.internal.validation.HTMLSourceValidator;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 
-
+/**
+ * This class extends {@link HTMLSourceValidator} which validates HTML content
+ * (attributes which doesn't exists, etc) when user is typing, to ignore error
+ * for Angular attribute/element (ng-app, custom directives, etc).
+ *
+ */
 public class HTMLAngularSourceValidator extends HTMLSourceValidator {
 
 	@Override
@@ -25,5 +31,5 @@ public class HTMLAngularSourceValidator extends HTMLSourceValidator {
 			IFile file, IDOMModel model) {
 		return new HTMLAngularValidationReporter(this, reporter, file, model);
 	}
-	
+
 }

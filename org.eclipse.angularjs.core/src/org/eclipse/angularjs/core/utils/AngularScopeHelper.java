@@ -8,7 +8,7 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui;
+package org.eclipse.angularjs.core.utils;
 
 import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.link.AngularLink;
@@ -24,6 +24,10 @@ import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 
+/**
+ * Angular scope helper.
+ *
+ */
 public class AngularScopeHelper {
 
 	public static String getAngularValue(IDOMAttr attr, AngularType angularType) {

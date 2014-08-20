@@ -10,9 +10,18 @@
  */
 package org.eclipse.angularjs.jsp.core.validation;
 
+import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.validation.ValidatorUtils;
 import org.eclipse.angularjs.jsp.org.eclipse.jst.jsp.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.angularjs.jsp.org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.validation.ValidationResult;
+import org.eclipse.wst.validation.ValidationState;
 //import org.eclipse.wst.html.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
@@ -32,4 +41,18 @@ public class JSPAngularContentValidator extends JSPContentValidator {
 			IFile file, IDOMModel model) {
 		return new HTMLAngularValidationReporter(this, reporter, file, model);
 	}
+
+	@Override
+	public ValidationResult validate(IResource resource, int kind,
+			ValidationState state, IProgressMonitor monitor) {
+		ValidationResult result = super
+				.validate(resource, kind, state, monitor);
+		if (result != null) {
+			IReporter reporter = result.getReporter(monitor);
+			ValidatorUtils.validateFile(reporter, (IFile) resource,
+					result, this);
+		}
+		return result;
+	}
+
 }

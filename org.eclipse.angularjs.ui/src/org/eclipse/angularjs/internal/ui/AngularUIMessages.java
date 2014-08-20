@@ -36,9 +36,6 @@ public final class AngularUIMessages extends NLS {
 	public static String AngularTyping_Auto_Complete;
 	public static String AngularTyping_Close_EL;
 
-	// Validation
-	public static String Validation_AngularElementNotFound;
-
 	// Angular Explorer View
 	public static String GoToDefinitionAction_text;
 	public static String GoToDefinitionAction_tooltip;

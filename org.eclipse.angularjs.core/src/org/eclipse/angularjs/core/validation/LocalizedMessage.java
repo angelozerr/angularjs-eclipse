@@ -8,7 +8,7 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui.validation;
+package org.eclipse.angularjs.core.validation;
 
 import java.util.Locale;
 

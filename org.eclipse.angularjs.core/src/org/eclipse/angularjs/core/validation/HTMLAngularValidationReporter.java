@@ -36,7 +36,7 @@ public class HTMLAngularValidationReporter extends HTMLValidationReporter {
 
 	@Override
 	public void report(ErrorInfo info) {
-		if (!AngularValidatorUtils.isIgnoreError(info, project)) {
+		if (!ValidatorUtils.isIgnoreError(info, project)) {
 			// report the error
 			super.report(info);
 		}

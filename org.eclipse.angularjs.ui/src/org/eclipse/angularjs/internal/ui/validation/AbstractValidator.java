@@ -81,7 +81,7 @@ public abstract class AbstractValidator implements IValidator,
 		}
 
 		if (AngularProject.hasAngularNature(file.getProject())) {
-			// do angular validation only of project has angular nature
+			// do angular validation only if project has angular nature
 			IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument)
 					.getStructuredDocumentRegions();
 			validate(reporter, file, regions);
