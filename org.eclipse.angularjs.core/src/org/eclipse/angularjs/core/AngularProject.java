@@ -142,7 +142,7 @@ public class AngularProject implements IDirectiveSyntax {
 
 	public Directive getDirective(String tagName, String name,
 			Restriction restriction) {
-		return AngularModulesManager.getInstance().getDirective(project,
+		return AngularModulesManager.getInstance().getDirective(this,
 				tagName, name, restriction);
 	}
 
@@ -150,7 +150,7 @@ public class AngularProject implements IDirectiveSyntax {
 			List<Directive> existingDirectives, Restriction restriction,
 			IDirectiveCollector collector) {
 		AngularModulesManager.getInstance()
-				.collectDirectives(project, tagName, directiveName, this,
+				.collectDirectives(this, tagName, directiveName, this,
 						existingDirectives, restriction, collector);
 
 	}
