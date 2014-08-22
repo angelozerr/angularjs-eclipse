@@ -1,4 +1,4 @@
-package org.eclipse.angularjs.internal.ui.utils;
+package org.eclipse.angularjs.core.utils;
 
 public class AngularELRegion {
 

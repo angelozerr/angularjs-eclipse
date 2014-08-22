@@ -12,13 +12,14 @@ package org.eclipse.angularjs.internal.ui.hyperlink;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.utils.AngularDOMUtils;
+import org.eclipse.angularjs.core.utils.AngularELRegion;
+import org.eclipse.angularjs.core.utils.AngularRegionUtils;
 import org.eclipse.angularjs.core.utils.AngularScopeHelper;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.core.utils.HyperlinkUtils;
 import org.eclipse.angularjs.internal.ui.AngularELWordFinder;
 import org.eclipse.angularjs.internal.ui.Trace;
-import org.eclipse.angularjs.internal.ui.utils.AngularELRegion;
-import org.eclipse.angularjs.internal.ui.utils.AngularRegionUtils;
+import org.eclipse.angularjs.internal.ui.utils.DOMUIUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -64,7 +65,7 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 		if (AngularProject.hasAngularNature(project)) {
 			try {
 
-				IStructuredDocumentRegion documentRegion = AngularRegionUtils
+				IStructuredDocumentRegion documentRegion = DOMUIUtils
 						.getStructuredDocumentRegion(textViewer,
 								region.getOffset());
 

@@ -21,7 +21,8 @@ import tern.server.ITernServer;
  * "controller" information from the tern completion.
  * 
  */
-public class JSAngularCompletionProposal extends JSTernCompletionProposal {
+public class JSAngularCompletionProposal extends JSTernCompletionProposal
+		/*implements IRelevanceCompletionProposal*/ {
 
 	private final ITernServer ternServer;
 	private final Object completion;
@@ -72,4 +73,8 @@ public class JSAngularCompletionProposal extends JSTernCompletionProposal {
 		return title.toString();
 	}
 
+	/*@Override
+	public int getRelevance() {
+		return 1000000;
+	}*/
 }

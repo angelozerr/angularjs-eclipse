@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.utils.AngularDOMUtils;
+import org.eclipse.angularjs.core.utils.AngularELRegion;
+import org.eclipse.angularjs.core.utils.AngularRegionUtils;
 import org.eclipse.angularjs.core.utils.AngularScopeHelper;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
@@ -24,8 +26,7 @@ import org.eclipse.angularjs.internal.ui.contentassist.AngularMarkupCompletionPr
 import org.eclipse.angularjs.internal.ui.contentassist.HTMLAngularCompletionProposal;
 import org.eclipse.angularjs.internal.ui.contentassist.JSAngularCompletionProposal;
 import org.eclipse.angularjs.internal.ui.contentassist.MarkupAngularCompletionProposal;
-import org.eclipse.angularjs.internal.ui.utils.AngularELRegion;
-import org.eclipse.angularjs.internal.ui.utils.AngularRegionUtils;
+import org.eclipse.angularjs.internal.ui.utils.DOMUIUtils;
 import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -37,7 +38,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.ui.contentassist.CompletionProposalInvocationContext;
-import org.eclipse.wst.sse.ui.internal.contentassist.ContentAssistUtils;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
@@ -418,7 +418,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 			// completion for Angular expression {{}} inside text node.
 			int documentPosition = context.getInvocationOffset();
-			IStructuredDocumentRegion documentRegion = AngularRegionUtils
+			IStructuredDocumentRegion documentRegion = DOMUIUtils
 					.getStructuredDocumentRegion(context.getViewer(),
 							documentPosition);
 
