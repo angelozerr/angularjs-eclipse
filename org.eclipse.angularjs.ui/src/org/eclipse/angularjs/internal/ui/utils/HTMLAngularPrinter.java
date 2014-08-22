@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.Image;
 
 import tern.angular.AngularType;
 import tern.angular.modules.Directive;
+import tern.angular.modules.DirectiveParameter;
 import tern.eclipse.ide.ui.TernUIPlugin;
 import tern.eclipse.ide.ui.utils.HTMLTernPrinter;
 import tern.server.protocol.completions.TernCompletionItem;
@@ -135,6 +136,47 @@ public class HTMLAngularPrinter {
 		return title.toString();
 	}
 
+	public static String getDirectiveParameterInfo(DirectiveParameter parameter) {
+		StringBuffer buffer = new StringBuffer();
+		String title = getTitle(parameter);
+		ImageDescriptor descriptor = ImageResource
+				.getImageDescriptor(ImageResource.IMG_DIRECTIVE_PARAM);
+		HTMLTernPrinter.startPage(buffer, title, descriptor);
+		// directive description
+		HTMLTernPrinter.addDocContent(buffer, parameter.getDescription());
+		HTMLTernPrinter
+				.addURLContent(buffer, parameter.getDirective().getURL());
+		HTMLTernPrinter.endPage(buffer);
+		return buffer.toString();
+	}
+
+	/**
+	 * Returns the title of the directive.
+	 * 
+	 * @param directive
+	 * @return
+	 */
+	private static String getTitle(DirectiveParameter parameter) {
+		StringBuilder title = new StringBuilder("");
+		title.append("<b>");
+		title.append(parameter.getName());
+		title.append("</b>");
+		title.append(" parameter in directive ");
+		title.append("<b>");
+		Directive directive = parameter.getDirective();
+		title.append(directive.getModule().getName());
+		title.append("#");
+		title.append(directive.getName());
+		title.append("</b>");
+		String description = directive.getDescription();
+		if (!StringUtils.isEmpty(description)) {
+			title.append("<br/>");
+			title.append("<br/>");
+			title.append(description);
+		}
+		return title.toString();
+	}
+
 	public static String getAngularInfo(TernCompletionItem item, Boolean guess,
 			String module, String controller) {
 		StringBuffer buffer = new StringBuffer();
@@ -210,4 +252,5 @@ public class HTMLAngularPrinter {
 			return null;
 		}
 	}
+
 }

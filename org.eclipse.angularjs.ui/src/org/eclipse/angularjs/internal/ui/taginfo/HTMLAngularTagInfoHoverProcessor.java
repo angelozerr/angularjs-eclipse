@@ -85,7 +85,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				DirectiveParameter parameter = AngularDOMUtils
 						.getAngularDirectiveParameter(project, attr);
 				if (parameter != null) {
-					return parameter.getHTMLDescription();
+					return HTMLAngularPrinter.getDirectiveParameterInfo(parameter);
 				}
 			}
 		}

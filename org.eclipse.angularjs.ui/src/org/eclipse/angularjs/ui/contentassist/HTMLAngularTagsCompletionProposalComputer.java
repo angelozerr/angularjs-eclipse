@@ -558,7 +558,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		Directive directive = parameter.getDirective();
 		String displayString = parameter.getName() + " - "
 				+ directive.getModule().getName() + "#" + directive.getName();
-		String additionalProposalInfo = parameter.getHTMLDescription();
+		String additionalProposalInfo = HTMLAngularPrinter
+				.getDirectiveParameterInfo(parameter);
 		Image image = ImageResource.getImage(ImageResource.IMG_DIRECTIVE_PARAM);
 		addProposal(contentAssistRequest, parameter.getName(),
 				DirectiveValue.required, null, displayString, image,
