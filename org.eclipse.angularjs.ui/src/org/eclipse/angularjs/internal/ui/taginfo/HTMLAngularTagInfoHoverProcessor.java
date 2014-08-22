@@ -322,6 +322,9 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
 				return AngularELWordFinder.findWord(textViewer.getDocument(),
 						offset);
+			} else if (DOMRegionContext.XML_CONTENT.equals(regionType)) {
+				return AngularELWordFinder.findWord(textViewer.getDocument(),
+						offset);
 			}
 			if ((regionType == DOMRegionContext.XML_TAG_NAME)
 					|| (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
