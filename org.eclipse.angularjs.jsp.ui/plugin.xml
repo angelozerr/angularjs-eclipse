@@ -92,6 +92,15 @@
  <extension
        point="org.eclipse.wst.sse.ui.semanticHighlighting">
     <highlighting
+          class="org.eclipse.angularjs.ui.style.DirectiveParameterSemanticHighlighting"
+          target="org.eclipse.jst.jsp.core.jspsource"
+          styleStringKey="directiveParameterName">
+    </highlighting>
+  </extension>
+  
+ <extension
+       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+    <highlighting
           class="org.eclipse.angularjs.ui.style.AngularExpressionSemanticHighlighting"
           target="org.eclipse.jst.jsp.core.jspsource"
           styleStringKey="angularExpression">

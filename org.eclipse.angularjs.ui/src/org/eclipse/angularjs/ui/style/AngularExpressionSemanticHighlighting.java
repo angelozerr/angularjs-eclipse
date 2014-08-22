@@ -13,6 +13,8 @@ package org.eclipse.angularjs.ui.style;
 import java.util.List;
 
 import org.eclipse.jface.text.Position;
+import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
+import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
 /**
  * Angular expression semantic highlighting used to highlight content of
@@ -39,4 +41,5 @@ public class AngularExpressionSemanticHighlighting extends
 				+ startExpression.length(), length));
 		return endIndex;
 	}
+
 }
