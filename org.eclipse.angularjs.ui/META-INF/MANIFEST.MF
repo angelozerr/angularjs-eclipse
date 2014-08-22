@@ -30,4 +30,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: com.eclipsesource.json
 Export-Package: org.eclipse.angularjs.ui.contentassist,
+ org.eclipse.angularjs.ui.style,
  org.eclipse.angularjs.ui.validation

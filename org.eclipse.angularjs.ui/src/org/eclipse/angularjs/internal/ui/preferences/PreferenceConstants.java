@@ -17,8 +17,17 @@ import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 
+/**
+ * Angular UI preferences constants.
+ *
+ */
 public class PreferenceConstants {
 
+	/**
+	 * Returns the Angular UI preferences store.
+	 * 
+	 * @return the Angular UI preferences store.
+	 */
 	public static IPreferenceStore getPreferenceStore() {
 		return AngularUIPlugin.getDefault().getPreferenceStore();
 	}
@@ -57,11 +66,19 @@ public class PreferenceConstants {
 				styleValue);
 
 		styleValue = ColorHelper.findRGBString(registry,
-				IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME, 14, 140, 145)
+				IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME, 14,
+				140, 145)
 				+ JUSTBOLD;
-		store.setDefault(IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME,
+		store.setDefault(
+				IStyleConstantsForAngular.ANGULAR_DIRECTIVE_PARAMETER_NAME,
 				styleValue);
-		
+
+		// Enable highlighting
+		store.setDefault(
+				AngularUIPreferenceNames.HIGHLIGHTING_DIRECTIVE_ENABLED, true); //$NON-NLS-1$
+		store.setDefault(
+				AngularUIPreferenceNames.HIGHLIGHTING_EXPRESSION_ENABLED, true); //$NON-NLS-1$
+
 		// Defaults for the Typing preference page
 		store.setDefault(AngularUIPreferenceNames.TYPING_COMPLETE_END_EL, true);
 
