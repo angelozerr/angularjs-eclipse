@@ -32,6 +32,12 @@ import org.w3c.dom.Node;
  * 
  * @author Roy, 2006
  */
+
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularModelNotifier implements XMLModelNotifier {
 
 	/* end: for debugging only */

@@ -18,6 +18,11 @@ import tern.angular.modules.DOMDirectiveProvider;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class DOMSSEDirectiveProvider extends DOMDirectiveProvider {
 
 	private static final DOMSSEDirectiveProvider INSTANCE = new DOMSSEDirectiveProvider();

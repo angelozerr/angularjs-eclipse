@@ -12,6 +12,11 @@ package org.eclipse.angularjs.internal.ui.editor;
 
 import org.eclipse.wst.sse.ui.StructuredTextEditor;
 
+/**
+ * 
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ */
+@Deprecated
 public class AngularStructuredEditor extends StructuredTextEditor {
 
 	public AngularStructuredEditor() {

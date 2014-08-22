@@ -24,6 +24,11 @@ import org.eclipse.wst.sse.core.internal.util.Debug;
 import org.eclipse.wst.xml.core.internal.parser.XMLSourceParser;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularSourceParser extends XMLSourceParser {
 
 	public static ThreadLocal<IResource> editFile = new ThreadLocal<IResource>();

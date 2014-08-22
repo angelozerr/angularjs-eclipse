@@ -19,6 +19,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class DOMDocumentForAngular extends DocumentStyleImpl {
 
 	public DOMDocumentForAngular() {

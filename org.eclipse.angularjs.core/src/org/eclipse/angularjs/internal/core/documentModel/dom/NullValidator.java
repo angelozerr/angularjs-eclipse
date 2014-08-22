@@ -18,6 +18,11 @@ import org.eclipse.wst.xml.core.internal.validate.ValidationComponent;
  * NullValidator class is intended to be a replacement of null for
  * ValidationComponent type.
  */
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class NullValidator extends ValidationComponent {
 
 	public NullValidator() {

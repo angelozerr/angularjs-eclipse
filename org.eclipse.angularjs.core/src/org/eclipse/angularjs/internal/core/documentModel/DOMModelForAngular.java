@@ -23,6 +23,11 @@ import org.w3c.dom.Document;
 /*
  * The AngularModel will support both the DOM style interface and AngularJS expression specific API's.
  */
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class DOMModelForAngular extends DOMStyleModelImpl {
 
 	/*

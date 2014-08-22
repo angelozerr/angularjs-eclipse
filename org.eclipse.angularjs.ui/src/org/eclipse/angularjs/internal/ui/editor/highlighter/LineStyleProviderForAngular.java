@@ -35,7 +35,9 @@ import org.w3c.dom.Element;
 
 /**
  * Coloring mechanism for Freemarker partitions
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
  */
+@Deprecated
 public class LineStyleProviderForAngular extends LineStyleProviderForHTML
 		implements LineStyleProvider {
 

@@ -36,6 +36,12 @@ import tern.angular.modules.DirectiveParameter;
  * Represents elements in the dom model Angular.
  * 
  */
+
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class ElementImplForAngular extends ElementStyleImpl implements
 		IAdaptable, IAngularDOMElement {
 

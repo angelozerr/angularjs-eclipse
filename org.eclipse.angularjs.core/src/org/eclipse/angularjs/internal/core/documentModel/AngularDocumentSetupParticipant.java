@@ -13,6 +13,11 @@ package org.eclipse.angularjs.internal.core.documentModel;
 import org.eclipse.core.filebuffers.IDocumentSetupParticipant;
 import org.eclipse.jface.text.IDocument;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularDocumentSetupParticipant implements IDocumentSetupParticipant {
 
 	public void setup(IDocument document) {

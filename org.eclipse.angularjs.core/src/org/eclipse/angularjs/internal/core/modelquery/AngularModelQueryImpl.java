@@ -14,6 +14,10 @@ import org.eclipse.wst.common.uriresolver.internal.provisional.URIResolver;
 import org.eclipse.wst.html.core.internal.modelquery.HTMLModelQueryImpl;
 import org.eclipse.wst.xml.core.internal.contentmodel.util.CMDocumentCache;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
 @Deprecated
 public class AngularModelQueryImpl extends HTMLModelQueryImpl {
 

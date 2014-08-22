@@ -21,7 +21,6 @@
  *******************************************************************************/
 package org.eclipse.angularjs.internal.core.content.xpl;
 
-
 import java.io.InputStream;
 import java.io.Reader;
 import java.lang.reflect.Field;
@@ -43,197 +42,207 @@ import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 /**
  * Utility methods useful for
  * {@link org.eclipse.core.runtime.content.IContentDescriber} implementations.
+ * 
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
  */
+@Deprecated
 @SuppressWarnings("restriction")
 public class ContentDescriberUtilities {
 
-  /**
-   * Returns an {@link IFile} for the file backing an input stream. This method
-   * is tailored to work with
-   * {@link org.eclipse.core.runtime.content.IContentDescriber}, using it
-   * elsewhere will likely not work.
-   * 
-   * @return the filename, or null if it could not be determined
-   */
-  public static IFile resolveFileFromInputStream(
-      InputStream contentInputStream) {
-    try {
-  
-      if (!(contentInputStream instanceof LazyInputStream)) {
-        return null;
-      }
-  
-      Class<?> c = contentInputStream.getClass();
-  
-      Field in = c.getDeclaredField("in");
-      in.setAccessible(true);
-      Object lazyFileInputStreamObj = in.get(contentInputStream);
-  
-      if (lazyFileInputStreamObj == null) {
-        return null;
-      }
-  
-      if (!Class.forName(
-          "org.eclipse.core.internal.resources.ContentDescriptionManager$LazyFileInputStream").isAssignableFrom(
-          lazyFileInputStreamObj.getClass())) {
-        return null;
-      }
-  
-      Field target = lazyFileInputStreamObj.getClass().getDeclaredField(
-          "target");
-      target.setAccessible(true);
-      Object fileStoreObj = target.get(lazyFileInputStreamObj);
-      if (fileStoreObj == null) {
-        return null;
-      }
-  
-      if (!(fileStoreObj instanceof IFileStore)) {
-        return null;
-      }
-  
-      IFileStore fileStore = (IFileStore) fileStoreObj;
-  
-      String name = fileStore.getName();
-  
-      if (name == null || name.length() == 0) {
-        return null;
-      }
-  
-      IFile[] files = ResourcesPlugin.getWorkspace().getRoot().findFilesForLocationURI(
-          fileStore.toURI());
-      return files.length > 0 ? files[0] : null;
-  
-    } catch (Throwable e) {
-      // Ignore on purpose
-    }
-  
-    return null;
-  }
+	/**
+	 * Returns an {@link IFile} for the file backing an input stream. This
+	 * method is tailored to work with
+	 * {@link org.eclipse.core.runtime.content.IContentDescriber}, using it
+	 * elsewhere will likely not work.
+	 * 
+	 * @return the filename, or null if it could not be determined
+	 */
+	public static IFile resolveFileFromInputStream(
+			InputStream contentInputStream) {
+		try {
 
-  /**
-   * Gets an {@link IFile} for the file backing a reader. This method is
-   * tailored to work with
-   * {@link org.eclipse.core.runtime.content.IContentDescriber}, using it
-   * elsewhere will likely not work.
-   * 
-   * @return the filename, or null if it could not be determined
-   */
-  public static IFile resolveFileFromReader(Reader reader) {
-    try {
-  
-      if (!(reader instanceof LazyReader)) {
-        return null;
-      }
-  
-      Class<?> c = reader.getClass();
-  
-      Field in = c.getDeclaredField("in");
-      in.setAccessible(true);
-      Object documentReaderObj = in.get(reader);
-  
-      if (documentReaderObj == null) {
-        return null;
-      }
-  
-      if (!Class.forName("org.eclipse.core.internal.filebuffers.DocumentReader").isAssignableFrom(
-          documentReaderObj.getClass())) {
-        return null;
-      }
-  
-      Field documentField = documentReaderObj.getClass().getDeclaredField(
-          "fDocument");
-      documentField.setAccessible(true);
-      Object documentObj = documentField.get(documentReaderObj);
-      if (documentObj == null) {
-        return null;
-      }
-  
-      if (!(documentObj instanceof IDocument)) {
-        return null;
-      }
-  
-      IDocument document = (IDocument) documentObj;
-      return resolveFile(document);
-  
-    } catch (Throwable e) {
-      // Ignore on purpose
-    }
-  
-    return null;
-  }
-  
-  //
-  // The following code is copied from com.google.gdt.eclipse.core.SseUtilities
-  //
-  
-  /**
-   * Resolves the file that is associated with the given document.
-   * 
-   * @return an IFile pointing to the file in the workspace, or null if one
-   *         could not be resolved.
-   */
-  private static IFile resolveFile(IDocument document) {
-    IStructuredModel model = StructuredModelManager.getModelManager().getExistingModelForRead(
-        document);
-    try {
-      return resolveFile(model);
-    } finally {
-      model.releaseFromRead();
-    }
-  }
+			if (!(contentInputStream instanceof LazyInputStream)) {
+				return null;
+			}
 
-  /**
-   * Resolves the file that is associted with the given model.
-   * 
-   * @return an IFile pointing to the file in the workspace, or null if one
-   *         could not be resolved.
-   */
-  private static IFile resolveFile(IStructuredModel model) {
-    return (IFile) getResource(new Path(model.getBaseLocation()));
-  }
-  
-  //
-  // The following code is copied from com.google.gdt.eclipse.core.ResourceUtils
-  //
-  
-  /**
-   * Returns a resource for the given absolute or workspace-relative path.
-   * <p>
-   * If the path has a device (e.g. c:\ on Windows), it will be tried as an
-   * absolute path. Otherwise, it is first tried as a workspace-relative path,
-   * and failing that an absolute path.
-   * 
-   * @param path the absolute or workspace-relative path to a resource
-   * @return the resource, or null
-   */
-  private static IResource getResource(IPath path) {
-    IResource res = null;
-    if (path != null) {
-      IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-      if (path.getDevice() == null) {
-        // try searching relative to the workspace first
-        res = root.findMember(path);
-      }
+			Class<?> c = contentInputStream.getClass();
 
-      if (res == null) {
-        // look for files
-        IFile[] files = root.findFilesForLocation(path);
-        // Check for accessibility since for directories, the above will return
-        // a non-accessible IFile
-        if (files.length > 0 && files[0].isAccessible()) {
-          res = files[0];
-        }
-      }
+			Field in = c.getDeclaredField("in");
+			in.setAccessible(true);
+			Object lazyFileInputStreamObj = in.get(contentInputStream);
 
-      if (res == null) {
-        // look for folders
-        IContainer[] containers = root.findContainersForLocation(path);
-        if (containers.length > 0) {
-          res = containers[0];
-        }
-      }
-    }
-    return res;
-  }
+			if (lazyFileInputStreamObj == null) {
+				return null;
+			}
+
+			if (!Class
+					.forName(
+							"org.eclipse.core.internal.resources.ContentDescriptionManager$LazyFileInputStream")
+					.isAssignableFrom(lazyFileInputStreamObj.getClass())) {
+				return null;
+			}
+
+			Field target = lazyFileInputStreamObj.getClass().getDeclaredField(
+					"target");
+			target.setAccessible(true);
+			Object fileStoreObj = target.get(lazyFileInputStreamObj);
+			if (fileStoreObj == null) {
+				return null;
+			}
+
+			if (!(fileStoreObj instanceof IFileStore)) {
+				return null;
+			}
+
+			IFileStore fileStore = (IFileStore) fileStoreObj;
+
+			String name = fileStore.getName();
+
+			if (name == null || name.length() == 0) {
+				return null;
+			}
+
+			IFile[] files = ResourcesPlugin.getWorkspace().getRoot()
+					.findFilesForLocationURI(fileStore.toURI());
+			return files.length > 0 ? files[0] : null;
+
+		} catch (Throwable e) {
+			// Ignore on purpose
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets an {@link IFile} for the file backing a reader. This method is
+	 * tailored to work with
+	 * {@link org.eclipse.core.runtime.content.IContentDescriber}, using it
+	 * elsewhere will likely not work.
+	 * 
+	 * @return the filename, or null if it could not be determined
+	 */
+	public static IFile resolveFileFromReader(Reader reader) {
+		try {
+
+			if (!(reader instanceof LazyReader)) {
+				return null;
+			}
+
+			Class<?> c = reader.getClass();
+
+			Field in = c.getDeclaredField("in");
+			in.setAccessible(true);
+			Object documentReaderObj = in.get(reader);
+
+			if (documentReaderObj == null) {
+				return null;
+			}
+
+			if (!Class.forName(
+					"org.eclipse.core.internal.filebuffers.DocumentReader")
+					.isAssignableFrom(documentReaderObj.getClass())) {
+				return null;
+			}
+
+			Field documentField = documentReaderObj.getClass()
+					.getDeclaredField("fDocument");
+			documentField.setAccessible(true);
+			Object documentObj = documentField.get(documentReaderObj);
+			if (documentObj == null) {
+				return null;
+			}
+
+			if (!(documentObj instanceof IDocument)) {
+				return null;
+			}
+
+			IDocument document = (IDocument) documentObj;
+			return resolveFile(document);
+
+		} catch (Throwable e) {
+			// Ignore on purpose
+		}
+
+		return null;
+	}
+
+	//
+	// The following code is copied from
+	// com.google.gdt.eclipse.core.SseUtilities
+	//
+
+	/**
+	 * Resolves the file that is associated with the given document.
+	 * 
+	 * @return an IFile pointing to the file in the workspace, or null if one
+	 *         could not be resolved.
+	 */
+	private static IFile resolveFile(IDocument document) {
+		IStructuredModel model = StructuredModelManager.getModelManager()
+				.getExistingModelForRead(document);
+		try {
+			return resolveFile(model);
+		} finally {
+			model.releaseFromRead();
+		}
+	}
+
+	/**
+	 * Resolves the file that is associted with the given model.
+	 * 
+	 * @return an IFile pointing to the file in the workspace, or null if one
+	 *         could not be resolved.
+	 */
+	private static IFile resolveFile(IStructuredModel model) {
+		return (IFile) getResource(new Path(model.getBaseLocation()));
+	}
+
+	//
+	// The following code is copied from
+	// com.google.gdt.eclipse.core.ResourceUtils
+	//
+
+	/**
+	 * Returns a resource for the given absolute or workspace-relative path.
+	 * <p>
+	 * If the path has a device (e.g. c:\ on Windows), it will be tried as an
+	 * absolute path. Otherwise, it is first tried as a workspace-relative path,
+	 * and failing that an absolute path.
+	 * 
+	 * @param path
+	 *            the absolute or workspace-relative path to a resource
+	 * @return the resource, or null
+	 */
+	private static IResource getResource(IPath path) {
+		IResource res = null;
+		if (path != null) {
+			IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+			if (path.getDevice() == null) {
+				// try searching relative to the workspace first
+				res = root.findMember(path);
+			}
+
+			if (res == null) {
+				// look for files
+				IFile[] files = root.findFilesForLocation(path);
+				// Check for accessibility since for directories, the above will
+				// return
+				// a non-accessible IFile
+				if (files.length > 0 && files[0].isAccessible()) {
+					res = files[0];
+				}
+			}
+
+			if (res == null) {
+				// look for folders
+				IContainer[] containers = root.findContainersForLocation(path);
+				if (containers.length > 0) {
+					res = containers[0];
+				}
+			}
+		}
+		return res;
+	}
 
 }

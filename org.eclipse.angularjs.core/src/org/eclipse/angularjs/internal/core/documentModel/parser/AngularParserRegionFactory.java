@@ -18,7 +18,11 @@ import org.eclipse.wst.xml.core.internal.parser.regions.XMLParserRegionFactory;
  * 
  * This region factory is very specific to the parser output, and the specific
  * implementation classes for various regions.
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
  */
+@Deprecated
 public class AngularParserRegionFactory extends XMLParserRegionFactory {
 	public AngularParserRegionFactory() {
 		super();

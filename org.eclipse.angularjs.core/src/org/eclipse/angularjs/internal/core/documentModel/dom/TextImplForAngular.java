@@ -20,6 +20,11 @@ import org.w3c.dom.Document;
  * Represents attributes implementation in Angular dom model
  * 
  */
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class TextImplForAngular extends TextImpl implements IAdaptable {
 
 	protected TextImplForAngular() {

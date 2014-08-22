@@ -13,6 +13,11 @@ package org.eclipse.angularjs.core.documentModel.dom;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public interface IAngularDirectiveProvider {
 
 	/**

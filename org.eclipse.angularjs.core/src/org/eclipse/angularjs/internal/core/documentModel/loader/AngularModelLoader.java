@@ -16,6 +16,11 @@ import org.eclipse.wst.sse.core.internal.document.IDocumentLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularModelLoader extends HTMLModelLoader {
 
 	public IDocumentLoader getDocumentLoader() {

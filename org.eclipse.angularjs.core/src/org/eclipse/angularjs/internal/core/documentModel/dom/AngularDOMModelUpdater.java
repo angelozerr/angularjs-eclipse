@@ -14,6 +14,11 @@ import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionCon
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.document.XMLModelUpdater;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularDOMModelUpdater extends XMLModelUpdater {
 	public AngularDOMModelUpdater(DOMModelImpl model) {
 		super(model);

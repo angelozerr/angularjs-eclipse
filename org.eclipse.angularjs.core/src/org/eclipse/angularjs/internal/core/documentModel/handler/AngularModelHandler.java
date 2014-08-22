@@ -25,6 +25,11 @@ import org.eclipse.wst.sse.core.internal.provisional.IModelLoader;
  * manage JS completion in HTML file.
  * 
  */
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularModelHandler extends ModelHandlerForHTML {
 
 	/**

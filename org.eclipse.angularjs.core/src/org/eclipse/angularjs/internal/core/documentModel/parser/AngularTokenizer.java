@@ -48,6 +48,11 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
  * on 18/11/13 16:33 from the specification file
  * <tt>file:/C:/Documents and Settings/azerr/git/angularjs-eclipse/org.eclipse.angularjs.core/Resource/parserTools/highlighting/AngularTokenizer.jflex</tt>
  */
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularTokenizer implements BlockTokenizer, DOMRegionContext, AngularRegionContext {
 
   /** this character denotes the end of file */

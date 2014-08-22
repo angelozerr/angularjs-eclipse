@@ -25,6 +25,11 @@ import org.eclipse.wst.sse.core.internal.encoding.IResourceCharsetDetector;
  * 
  * @GINO: For now only support UTF-8
  */
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class FMResourceEncodingDetector implements IResourceCharsetDetector {
 
 	private static final String UTF_8 = "UTF-8"; //$NON-NLS-1$

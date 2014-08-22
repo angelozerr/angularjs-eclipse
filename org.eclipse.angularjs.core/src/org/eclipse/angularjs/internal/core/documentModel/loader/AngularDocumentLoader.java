@@ -39,6 +39,11 @@ import org.eclipse.wst.sse.core.internal.ltk.parser.RegionParser;
 import org.eclipse.wst.sse.core.internal.provisional.document.IEncodedDocument;
 import org.eclipse.wst.sse.core.internal.text.BasicStructuredDocument;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularDocumentLoader extends HTMLDocumentLoader {
 
 	private static final boolean DEBUG = false;

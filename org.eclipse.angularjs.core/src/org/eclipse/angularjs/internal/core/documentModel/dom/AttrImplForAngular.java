@@ -30,6 +30,11 @@ import tern.angular.modules.DirectiveParameter;
  * Represents attributes implementation in Angular dom model
  * 
  */
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AttrImplForAngular extends AttrImpl implements IAngularDOMAttr {
 
 	private Boolean angularDirectiveDirty = true;

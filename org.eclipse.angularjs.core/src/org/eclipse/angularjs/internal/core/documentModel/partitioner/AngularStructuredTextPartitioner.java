@@ -17,6 +17,11 @@ import org.eclipse.wst.html.core.internal.text.StructuredTextPartitionerForHTML;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 
+/**
+ * @deprecated Use AbstractXSLSemanticHighlighting and the SemanticHighlighting extension point
+ *
+ */
+@Deprecated
 public class AngularStructuredTextPartitioner extends
 		StructuredTextPartitionerForHTML {
 

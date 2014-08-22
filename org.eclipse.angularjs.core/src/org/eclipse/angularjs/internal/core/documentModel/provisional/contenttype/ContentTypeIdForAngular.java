@@ -12,6 +12,11 @@ package org.eclipse.angularjs.internal.core.documentModel.provisional.contenttyp
 
 import org.eclipse.angularjs.core.AngularCorePlugin;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class ContentTypeIdForAngular {
 	/**
 	 * The value of the contenttype id field must match what is specified in

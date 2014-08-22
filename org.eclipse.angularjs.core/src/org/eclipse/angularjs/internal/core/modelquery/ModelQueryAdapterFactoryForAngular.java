@@ -39,6 +39,10 @@ import org.eclipse.wst.xml.core.internal.ssemodelquery.ModelQueryAdapterImpl;
 /**
  * Creates a ModelQueryAdapter for HTML models
  */
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
 @Deprecated
 public class ModelQueryAdapterFactoryForAngular extends AbstractAdapterFactory {
 

@@ -16,6 +16,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.document.XMLModelParser;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularDOMModelParser extends XMLModelParser {
 
 	public static final String ANGULAR_TAG_NAME = "ANGULAR"; //$NON-NLS-1$

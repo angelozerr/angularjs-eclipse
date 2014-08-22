@@ -10,7 +10,11 @@
  */
 package org.eclipse.angularjs.internal.core.documentModel.parser;
 
-
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public interface AngularRegionContext {
 
 	public static final String ANGULAR_EXPRESSION_OPEN = "ANGULAR_EXPRESSION_OPEN";

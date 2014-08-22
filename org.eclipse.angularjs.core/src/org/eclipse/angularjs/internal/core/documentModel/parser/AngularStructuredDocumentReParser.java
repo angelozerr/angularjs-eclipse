@@ -20,6 +20,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredTextReParse
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.xml.core.internal.parser.XMLStructuredDocumentReParser;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularStructuredDocumentReParser extends
 		XMLStructuredDocumentReParser {
 

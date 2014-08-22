@@ -17,6 +17,11 @@ package org.eclipse.angularjs.internal.core.documentModel.parser;
  */
 import java.util.EmptyStackException;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class IntStack {
 	private int[] list = null;
 

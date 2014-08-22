@@ -16,7 +16,10 @@ import org.w3c.dom.Attr;
 /**
  * Angular DOM {@link Attr} API.
  * 
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
  */
+@Deprecated
 public interface IAngularDOMAttr extends IDOMAttr, IAngularDirectiveProvider {
 
 }

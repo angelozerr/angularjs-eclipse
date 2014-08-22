@@ -25,6 +25,11 @@ import org.eclipse.core.runtime.content.ITextContentDescriber;
 
 import tern.eclipse.ide.core.IDETernProject;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class AngularSourceContentDescriber implements ITextContentDescriber {
 	private static final QualifiedName[] EMPTY_OPTIONS = new QualifiedName[0];
 	

@@ -31,7 +31,7 @@
 	</extension>
 	
 	<!-- AngularJS Editor:-->
-    <extension point="org.eclipse.ui.editors">
+    <!--<extension point="org.eclipse.ui.editors">
     	<editor class="org.eclipse.angularjs.internal.ui.editor.AngularStructuredEditor"    	
     	        contributorClass="org.eclipse.angularjs.internal.ui.editor.ActionContributorForAngular"
                 default="true" 
@@ -41,9 +41,10 @@
                 symbolicFontName="org.eclipse.wst.sse.ui.textfont">
                 <contentTypeBinding contentTypeId="org.eclipse.angularjs.core.angularsource" />
                 </editor>
-     </extension>
+     </extension>-->
      
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+	   <!-- @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
 		<sourceViewerConfiguration
 			class="org.eclipse.angularjs.internal.ui.editor.configuration.AngularStructuredTextViewerConfiguration"
 			target="org.eclipse.angularjs.core.angularsource" />
@@ -55,22 +56,23 @@
 			target="org.eclipse.angularjs.core.angularsource" />
 		<provisionalConfiguration type="sourceeditingtexttools"
 			class="org.eclipse.wst.xml.ui.internal.provisional.XMLSourceEditingTextTools"
-			target="org.eclipse.angularjs.core.angularsource" />
+			target="org.eclipse.angularjs.core.angularsource" />-->
   		<documentationTextHover
         	class="org.eclipse.angularjs.internal.ui.taginfo.HTMLAngularTagInfoHoverProcessor"
-        	target="org.eclipse.wst.html.HTML_DEFAULT,org.eclipse.angularjs.ANGULAR_DEFAULT">
+        	target="org.eclipse.wst.html.HTML_DEFAULT">
   		</documentationTextHover>			
-		<!--<provisionalConfiguration type="characterpairmatcher"
+		<!--@deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+			<provisionalConfiguration type="characterpairmatcher"
 			class="org.eclipse.angularjs.internal.ui.text.AngularDocumentRegionEdgeMatcher"
 			target="org.eclipse.angularjs.core.angularsource" />-->
 		<!-- <provisionalConfiguration type="structuredtextfoldingprovider"
 			class="org.eclipse.angularjs.internal.ui.folding.AngularFoldingStructureProviderProxy"
-			target="org.eclipse.angularjs.core.angularsource" /> -->
+			target="org.eclipse.angularjs.core.angularsource" /> 
 		<provisionalDefinition type="spellingregions"
 			value="XML_COMMENT_TEXT, ANGULAR_EXPRESSION_CONTENT, XML_CONTENT" target="org.eclipse.angularjs.core.angularsource" />
 		<provisionalDefinition type="activecontexts"
 			value="org.eclipse.angularjs.core.angularsource" target="org.eclipse.angularjs.core.angularsource" />
-		
+		-->
 		<!--<provisionalConfiguration
 			type="org.eclipse.jface.text.quickassist.IQuickAssistProcessor"	
             class="org.eclipse.angularjs.internal.ui.text.correction.AngularCorrectionProcessor"
@@ -173,21 +175,7 @@
 	          category="org.eclipse.angularjs.html.preferences.editor"
 	          class="org.eclipse.angularjs.internal.ui.preferences.html.HTMLAngularTypingPreferencePage"
 	          id="org.eclipse.angularjs.html.preferences.editor.typing"
-	          name="%HTMLAngularTypingPreferencePage.name"/>	          
-	          
-	    <!-- Angular Folding preferences page -->	
-	    <!--<page
-          category="org.eclipse.angularjs.preferences.editor"
-          class="org.eclipse.angularjs.internal.ui.preferences.FreemarkerFoldingPreferencePage"
-          id="org.eclipse.angularjs.ui.editor.FreemarkerFolding"
-          name="%FreemarkerEditorFoldingPreferencePage.name"/>
-	    Freemarker Templates preferences page -->
-     	<!--<page
-              category="org.eclipse.angularjs.preferences.editor"
-              class="org.eclipse.angularjs.internal.ui.preferences.templates.FreemarkerCodeTemplatesPreferencePage"
-              id="org.eclipse.angularjs.preferences.templates"
-              name="%FreemarkerCodeTemplatesPreferencePage.name">
-     </page>-->	          
+	          name="%HTMLAngularTypingPreferencePage.name"/>	                   
    </extension>	
 		     
 	<extension point="org.eclipse.core.runtime.preferences">
@@ -224,12 +212,15 @@
 	<!--
 		======================================================================================
 	-->
+	
+	<!-- @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
 	<extension point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
 		<adapterFactoryDescription
 			class="org.eclipse.angularjs.internal.ui.editor.adapter.AdapterFactoryProviderForAngular">
 			<contentType id="org.eclipse.angularjs.core.angularsource" />
 		</adapterFactoryDescription>
 	</extension>
+	-->
 	
    <extension
        point="org.eclipse.wst.sse.ui.completionProposal">	
@@ -238,6 +229,7 @@
 	          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTags"
 	          class="org.eclipse.angularjs.ui.contentassist.HTMLAngularTagsCompletionProposalComputer"
 	          id="org.eclipse.angularjs.proposalComputer.htmlAngularTags">
+	       <!-- @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
   	       <contentType
 	             id="org.eclipse.angularjs.core.angularsource">
 	          <partitionType
@@ -247,14 +239,12 @@
 	                id="org.eclipse.angularjs.ANGULAR_DEFAULT">
 	          </partitionType>	          
 	       </contentType>
+	       -->
 	       <contentType
 	             id="org.eclipse.wst.html.core.htmlsource">
 	          <partitionType
 	                id="org.eclipse.wst.html.HTML_DEFAULT">
 	          </partitionType>
-	          <partitionType
-	                id="org.eclipse.angularjs.ANGULAR_DEFAULT">
-	          </partitionType>	          
 	       </contentType>	       	          	       
 	    </proposalComputer>
 	</extension>
@@ -269,7 +259,7 @@
 			class="org.eclipse.angularjs.internal.ui.validation.HTMLAngularSourceValidator"
 			id="org.eclipse.angularjs.ui.validation.htmlsyntaxvalidator">
 			<contentTypeIdentifier
-				id="org.eclipse.angularjs.core.angularsource">
+				id="org.eclipse.wst.html.core.htmlsource">
 				<partitionType id="org.eclipse.wst.html.HTML_DEFAULT"/>
 				<partitionType id="org.eclipse.wst.html.HTML_DECLARATION"/>
 				<partitionType id="org.eclipse.wst.html.HTML_COMMENT"/>
@@ -312,8 +302,43 @@
 			name="%HTMLAngularHyperLinkDetector.name"
 			targetId="org.eclipse.wst.html.core.htmlsource">
 		</hyperlinkDetector>		
-   </extension>			  	
+   	</extension>	
    
+   	<!--======================================================================================-->
+	<!-- Angular Highlighting                                      						      -->
+	<!--======================================================================================-->
+	
+	<extension
+	       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+	    <highlighting
+	          class="org.eclipse.angularjs.ui.style.DirectiveSemanticHighlighting"
+	          target="org.eclipse.wst.html.core.htmlsource"
+	          styleStringKey="directiveName">
+	    </highlighting>
+	 </extension>
+	 
+	 <extension
+	       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+	    <highlighting
+	          class="org.eclipse.angularjs.ui.style.AngularExpressionSemanticHighlighting"
+	          target="org.eclipse.wst.html.core.htmlsource"
+	          styleStringKey="angularExpression">
+	    </highlighting>
+	 </extension>
+	 
+	 <extension
+	       point="org.eclipse.wst.sse.ui.semanticHighlighting">
+	    <highlighting
+	          class="org.eclipse.angularjs.ui.style.AngularExpressionBorderSemanticHighlighting"
+	          target="org.eclipse.wst.html.core.htmlsource"
+	          styleStringKey="angularExpressionBorder">
+	    </highlighting>
+	 </extension>
+   
+   <!--======================================================================================-->
+	<!-- Angular View                                      						             -->
+	<!--======================================================================================-->
+	
    <extension
          point="org.eclipse.ui.views">
       <category

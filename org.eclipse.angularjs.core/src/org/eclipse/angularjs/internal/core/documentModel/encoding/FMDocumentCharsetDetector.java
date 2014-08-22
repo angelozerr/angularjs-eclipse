@@ -13,6 +13,11 @@ package org.eclipse.angularjs.internal.core.documentModel.encoding;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.document.IDocumentCharsetDetector;
 
+/**
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ *
+ */
+@Deprecated
 public class FMDocumentCharsetDetector extends FMResourceEncodingDetector
 		implements IDocumentCharsetDetector {
 

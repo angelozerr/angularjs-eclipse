@@ -25,6 +25,11 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.text.rules.StructuredTextPartitionerForXML;
 import org.eclipse.wst.xml.core.text.IXMLPartitions;
 
+/**
+ * 
+ * @deprecated see https://github.com/angelozerr/angularjs-eclipse/issues/84
+ */
+@Deprecated
 public class AngularStructuredTextViewerConfiguration extends
 		StructuredTextViewerConfigurationHTML {
 
