@@ -181,8 +181,15 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			} else {
 				// is angular expression inside attribute?
 				String matchingString = contentAssistRequest.getMatchString();
-				int index = matchingString
-						.lastIndexOf(AngularProject.START_ANGULAR_EXPRESSION_TOKEN);
+				String startSymbol = AngularProject.DEFAULT_START_SYMBOL;
+				try {
+					AngularProject angularProject = AngularProject
+							.getAngularProject(DOMUtils.getFile(element)
+									.getProject());
+					startSymbol = angularProject.getStartSymbol();
+				} catch (CoreException e) {
+				}
+				int index = matchingString.lastIndexOf(startSymbol);
 				if (index != -1) {
 					populateAngularProposals(contentAssistRequest, element,
 							context.getDocument(), AngularType.model, index);
@@ -424,7 +431,8 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 			String match = null;
 			AngularELRegion angularRegion = AngularRegionUtils
-					.getAngularELRegion(documentRegion, documentPosition);
+					.getAngularELRegion(documentRegion, documentPosition,
+							DOMUtils.getFile(treeNode).getProject());
 			if (angularRegion != null) {
 				match = angularRegion.getExpression().substring(0,
 						angularRegion.getExpressionOffset());

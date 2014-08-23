@@ -51,9 +51,9 @@ public class AngularStructuredDocumentReParser extends
 		StructuredDocumentEvent result = super
 				.checkForCrossStructuredDocumentRegionSyntax();
 		if (result == null) {
-			result = checkForCriticalKey(AngularProject.START_ANGULAR_EXPRESSION_TOKEN); //$NON-NLS-1$
+			result = checkForCriticalKey(AngularProject.DEFAULT_START_SYMBOL); //$NON-NLS-1$
 			if (result == null)
-				result = checkForCriticalKey(AngularProject.END_ANGULAR_EXPRESSION_TOKEN); //$NON-NLS-1$
+				result = checkForCriticalKey(AngularProject.DEFAULT_END_SYMBOL); //$NON-NLS-1$
 
 		}
 		return result;

@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.internal.ui.preferences.AngularUIPreferenceNames;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
@@ -39,16 +40,27 @@ public abstract class AbstractAngularExpressionSemanticHighlighting extends
 	@Override
 	protected List<Position> consumes(IDOMNode node, IFile file,
 			IStructuredDocumentRegion documentRegion) {
+		if (!(DOMRegionContext.XML_CONTENT.equals(documentRegion.getType()) || DOMRegionContext.XML_TAG_NAME
+				.equals(documentRegion.getType()))) {
+			return null;
+		}
+		String startSymbol = AngularProject.DEFAULT_START_SYMBOL;
+		String endSymbol = AngularProject.DEFAULT_END_SYMBOL;
+		try {
+			AngularProject angularProject = AngularProject
+					.getAngularProject(file.getProject());
+			startSymbol = angularProject.getStartSymbol();
+			endSymbol = angularProject.getEndSymbol();
+		} catch (CoreException e) {
+		}
 		if (DOMRegionContext.XML_CONTENT.equals(documentRegion.getType())) {
 			// text node, check if this node contains {{ and }}.
 			// ex : <span>{{remaining()}} of {{todos.length}} remaining</span>
 			List<Position> positions = new ArrayList<Position>();
-			String startExpression = AngularProject.START_ANGULAR_EXPRESSION_TOKEN;
-			String endExpression = AngularProject.END_ANGULAR_EXPRESSION_TOKEN;
 			String regionText = documentRegion.getText();
 			int startOffset = documentRegion.getStartOffset();
-			fillPositions(positions, startExpression, endExpression,
-					regionText, startOffset);
+			fillPositions(positions, startSymbol, endSymbol, regionText,
+					startOffset);
 			return positions;
 
 		} else if (DOMRegionContext.XML_TAG_NAME.equals(documentRegion
@@ -59,14 +71,12 @@ public abstract class AbstractAngularExpressionSemanticHighlighting extends
 			NamedNodeMap attributes = node.getAttributes();
 			if (attributes != null) {
 				List<Position> positions = new ArrayList<Position>();
-				String startExpression = AngularProject.START_ANGULAR_EXPRESSION_TOKEN;
-				String endExpression = AngularProject.END_ANGULAR_EXPRESSION_TOKEN;
 				IDOMAttr attr = null;
 				for (int i = 0; i < attributes.getLength(); i++) {
 					attr = (IDOMAttr) attributes.item(i);
 					String regionText = attr.getValue();
 					int startOffset = attr.getValueRegionStartOffset() + 1;
-					fillPositions(positions, startExpression, endExpression,
+					fillPositions(positions, startSymbol, endSymbol,
 							regionText, startOffset);
 				}
 				return positions;

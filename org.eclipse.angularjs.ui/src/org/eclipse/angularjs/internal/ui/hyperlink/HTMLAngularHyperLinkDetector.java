@@ -71,13 +71,22 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 
 				IDETernProject ternProject = AngularProject
 						.getTernProject(project);
+				String startSymbol = AngularProject.DEFAULT_START_SYMBOL;
+				String endSymbol = AngularProject.DEFAULT_END_SYMBOL;
+				try {
+					AngularProject angularProject = AngularProject
+							.getAngularProject(project);
+					startSymbol = angularProject.getStartSymbol();
+					endSymbol = angularProject.getEndSymbol();
+				} catch (CoreException e) {
+				}
 				switch (currentNode.getNodeType()) {
 				case Node.TEXT_NODE:
 					hyperlink = createHyperlinkForExpression(
 							documentRegion.getType(), documentRegion.getText(),
 							documentRegion.getStartOffset(),
 							region.getOffset(), currentNode, document,
-							ternProject, file);
+							ternProject, file, startSymbol, endSymbol);
 					return createHyperlinks(hyperlink);
 				case Node.ELEMENT_NODE:
 					// Get selected attribute
@@ -94,7 +103,8 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 									.getNameRegionEndOffset();
 							if (isAttrValue) {
 								IRegion valueRegion = AngularELWordFinder
-										.findWord(document, region.getOffset());
+										.findWord(document, region.getOffset(),
+												startSymbol, endSymbol);
 								// Hyperlink on attr value
 								end = region.getOffset()
 										- attr.getValueRegionStartOffset() - 1;
@@ -147,7 +157,8 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 										attr.getValueRegionStartOffset() + 1,
 										region.getOffset(),
 										(IDOMNode) attr.getOwnerElement(),
-										document, ternProject, file);
+										document, ternProject, file,
+										startSymbol, endSymbol);
 							}
 						}
 					}
@@ -162,15 +173,17 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 	private IHyperlink createHyperlinkForExpression(String regionType,
 			String regionText, int regionStartOffset, int documentPosition,
 			IDOMNode node, IDocument document, IDETernProject ternProject,
-			IFile file) {
+			IFile file, String startSymbol, String endSymbol) {
 		AngularELRegion angularRegion = AngularRegionUtils.getAngularELRegion(
-				regionType, regionText, regionStartOffset, documentPosition);
+				regionType, regionText, regionStartOffset, documentPosition,
+				file.getProject());
 		if (angularRegion != null) {
 			String expression = angularRegion.getExpression();
 			int expressionOffset = angularRegion.getExpressionOffset();
 			return new HTMLAngularHyperLink(node, AngularELWordFinder.findWord(
-					document, documentPosition), file, document, ternProject,
-					expression, expressionOffset, AngularType.model);
+					document, documentPosition, startSymbol, endSymbol), file,
+					document, ternProject, expression, expressionOffset,
+					AngularType.model);
 		}
 		return null;
 	}

@@ -2,28 +2,55 @@ package org.eclipse.angularjs.core.utils;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 
 public class AngularRegionUtils {
 
 	public static AngularELRegion getAngularELRegion(
-			IStructuredDocumentRegion documentRegion, int documentPosition) {
+			IStructuredDocumentRegion documentRegion, int documentPosition,
+			IProject project) {
+		String startSymbol = AngularProject.DEFAULT_START_SYMBOL;
+		String endSymbol = AngularProject.DEFAULT_END_SYMBOL;
+		try {
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			startSymbol = angularProject.getStartSymbol();
+			endSymbol = angularProject.getEndSymbol();
+		} catch (CoreException e) {
+		}
 		String regionType = documentRegion.getType();
 		String regionText = documentRegion.getText();
 		int regionStartOffset = documentRegion.getStartOffset();
 		return getAngularELRegion(regionType, regionText, regionStartOffset,
-				documentPosition);
+				documentPosition, startSymbol, endSymbol);
 	}
 
 	public static AngularELRegion getAngularELRegion(String regionType,
-			String regionText, int regionStartOffset, int documentPosition) {
+			String regionText, int regionStartOffset, int documentPosition,
+			IProject project) {
+		String startSymbol = AngularProject.DEFAULT_START_SYMBOL;
+		String endSymbol = AngularProject.DEFAULT_END_SYMBOL;
+		try {
+			AngularProject angularProject = AngularProject
+					.getAngularProject(project);
+			startSymbol = angularProject.getStartSymbol();
+			endSymbol = angularProject.getEndSymbol();
+		} catch (CoreException e) {
+		}
+		return getAngularELRegion(regionType, regionText, regionStartOffset,
+				documentPosition, startSymbol, endSymbol);
+	}
+
+	public static AngularELRegion getAngularELRegion(String regionType,
+			String regionText, int regionStartOffset, int documentPosition,
+			String startSymbol, String endSymbol) {
 		int startOffset = documentPosition - regionStartOffset;
 		if (startOffset < 0) {
 			return null;
 		}
-		String startSymbol = AngularProject.START_ANGULAR_EXPRESSION_TOKEN;
-		String endSymbol = AngularProject.END_ANGULAR_EXPRESSION_TOKEN;
 		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
 			// case for angular expression
 			int expressionOffset = startOffset - startSymbol.length();
@@ -51,4 +78,5 @@ public class AngularRegionUtils {
 		}
 		return null;
 	}
+
 }

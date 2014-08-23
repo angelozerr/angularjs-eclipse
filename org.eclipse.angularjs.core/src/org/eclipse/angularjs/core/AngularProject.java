@@ -48,8 +48,8 @@ public class AngularProject implements IDirectiveSyntax {
 
 	private static final String EXTENSION_ANGULAR_PROJECT_DESCRIBERS = "angularNatureAdapters";
 
-	public static final String START_ANGULAR_EXPRESSION_TOKEN = "{{";
-	public static final String END_ANGULAR_EXPRESSION_TOKEN = "}}";
+	public static final String DEFAULT_START_SYMBOL = "{{";
+	public static final String DEFAULT_END_SYMBOL = "}}";
 
 	private final IProject project;
 
@@ -142,8 +142,8 @@ public class AngularProject implements IDirectiveSyntax {
 
 	public Directive getDirective(String tagName, String name,
 			Restriction restriction) {
-		return AngularModulesManager.getInstance().getDirective(this,
-				tagName, name, restriction);
+		return AngularModulesManager.getInstance().getDirective(this, tagName,
+				name, restriction);
 	}
 
 	public void collectDirectives(String tagName, String directiveName,
@@ -249,6 +249,24 @@ public class AngularProject implements IDirectiveSyntax {
 		if (!tempAngularNature.isConfigured()) {
 			tempAngularNature.configure();
 		}
+	}
+
+	/**
+	 * Returns the start symbol used inside HTML for angular expression.
+	 * 
+	 * @return the start symbol used inside HTML for angular expression.
+	 */
+	public String getStartSymbol() {
+		return DEFAULT_START_SYMBOL;
+	}
+
+	/**
+	 * Returns the end symbol used inside HTML for angular expression.
+	 * 
+	 * @return the end symbol used inside HTML for angular expression.
+	 */
+	public String getEndSymbol() {
+		return DEFAULT_END_SYMBOL;
 	}
 
 }

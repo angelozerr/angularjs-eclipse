@@ -22,6 +22,7 @@ import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControlCreator;
@@ -48,7 +49,6 @@ import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
-import tern.eclipse.ide.ui.utils.EditorUtils;
 import tern.eclipse.ide.ui.utils.HTMLTernPrinter;
 import tern.eclipse.jface.text.HoverControlCreator;
 import tern.eclipse.jface.text.PresenterControlCreator;
@@ -85,7 +85,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				DirectiveParameter parameter = AngularDOMUtils
 						.getAngularDirectiveParameter(project, attr);
 				if (parameter != null) {
-					return HTMLAngularPrinter.getDirectiveParameterInfo(parameter);
+					return HTMLAngularPrinter
+							.getDirectiveParameterInfo(parameter);
 				}
 			}
 		}
@@ -124,7 +125,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 									DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE,
 									attr.getValue(),
 									attr.getValueRegionStartOffset() + 1,
-									documentPosition);
+									documentPosition, project);
 					if (angularRegion != null) {
 						// angular expression inside attribute value
 						// <span class="done-{{todo.done}}"
@@ -208,7 +209,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			IDETernProject ternProject = IDETernProject.getTernProject(file
 					.getProject());
 			AngularELRegion angularRegion = AngularRegionUtils
-					.getAngularELRegion(flatNode, documentPosition);
+					.getAngularELRegion(flatNode, documentPosition,
+							file.getProject());
 			if (angularRegion != null) {
 				String expression = angularRegion.getExpression();
 				int expressionOffset = angularRegion.getExpressionOffset() + 1;
@@ -316,15 +318,27 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			region = flatNode.getRegionAtCharacterOffset(offset);
 		}
 		if (region != null) {
+			IDOMNode element = DOMUtils.getNodeByOffset(
+					textViewer.getDocument(), offset);
+			String startSymbol = AngularProject.DEFAULT_START_SYMBOL;
+			String endSymbol = AngularProject.DEFAULT_END_SYMBOL;
+			try {
+				AngularProject angularProject = AngularProject
+						.getAngularProject(DOMUtils.getFile(element)
+								.getProject());
+				startSymbol = angularProject.getStartSymbol();
+				endSymbol = angularProject.getEndSymbol();
+			} catch (CoreException e) {
+			}
 			// only supply hoverhelp for tag name, attribute name, or
 			// attribute value
 			String regionType = region.getType();
 			if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
 				return AngularELWordFinder.findWord(textViewer.getDocument(),
-						offset);
+						offset, startSymbol, endSymbol);
 			} else if (DOMRegionContext.XML_CONTENT.equals(regionType)) {
 				return AngularELWordFinder.findWord(textViewer.getDocument(),
-						offset);
+						offset, startSymbol, endSymbol);
 			}
 			if ((regionType == DOMRegionContext.XML_TAG_NAME)
 					|| (regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_NAME)
@@ -339,16 +353,14 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 						// (whitespace after relevant info)
 						if (offset < flatNode.getTextEndOffset(region)) {
 							if ((regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE)) {
-								IDOMNode element = DOMUtils.getNodeByOffset(
-										textViewer.getDocument(), offset);
 								IDOMAttr attr = DOMUtils.getAttrByOffset(
 										element, offset);
 								if (AngularDOMUtils.isAngularDirective(attr)
 										|| attr.getValue()
-												.contains(
-														AngularProject.START_ANGULAR_EXPRESSION_TOKEN)) {
+												.contains(startSymbol)) {
 									return AngularELWordFinder.findWord(
-											textViewer.getDocument(), offset);
+											textViewer.getDocument(), offset,
+											startSymbol, endSymbol);
 								}
 							}
 							return new Region(flatNode.getStartOffset(region),

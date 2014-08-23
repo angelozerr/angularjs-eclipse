@@ -86,14 +86,14 @@ public class HyperlinkUtils {
 	public static String getExpressionContent(final String expr) {
 		String expression = expr;
 		if (expression
-				.startsWith(AngularProject.START_ANGULAR_EXPRESSION_TOKEN)) {
+				.startsWith(AngularProject.DEFAULT_START_SYMBOL)) {
 			expression = expression.substring(
-					AngularProject.START_ANGULAR_EXPRESSION_TOKEN.length(),
+					AngularProject.DEFAULT_START_SYMBOL.length(),
 					expression.length());
 		}
-		if (expression.endsWith(AngularProject.END_ANGULAR_EXPRESSION_TOKEN)) {
+		if (expression.endsWith(AngularProject.DEFAULT_END_SYMBOL)) {
 			expression = expression.substring(0, expression.length()
-					- AngularProject.END_ANGULAR_EXPRESSION_TOKEN.length());
+					- AngularProject.DEFAULT_END_SYMBOL.length());
 		}
 		return expression;
 	}
