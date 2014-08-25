@@ -26,4 +26,6 @@ public class AngularCoreConstants {
 	public static String DIRECTIVE_COLON_DELIMITER = "directiveColonDelimiter"; //$NON-NLS-1$
 	public static final String DIRECTIVE_MINUS_DELIMITER = "directiveMinusDelimiter"; //$NON-NLS-1$
 	public static final String DIRECTIVE_UNDERSCORE_DELIMITER = "directiveUnderscoreDelimiter"; //$NON-NLS-1$
+	public static final String EXPRESSION_START_SYMBOL = "startSymbol"; //$NON-NLS-1$
+	public static final String EXPRESSION_END_SYMBOL = "endSymbol"; //$NON-NLS-1$
 }

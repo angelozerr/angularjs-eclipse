@@ -26,6 +26,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
@@ -52,6 +54,8 @@ public class AngularProject implements IDirectiveSyntax {
 	public static final String DEFAULT_END_SYMBOL = "}}";
 
 	private final IProject project;
+	private String startSymbol;
+	private String endSymbol;
 
 	private final Map<ITernScriptPath, List<BaseModel>> folders;
 	private static List<String> angularNatureAdapters;
@@ -70,6 +74,35 @@ public class AngularProject implements IDirectiveSyntax {
 				customDirectives.clear();
 			}
 		});
+		// initialize symbols from project preferences
+		initializeSymbols();
+		AngularCorePreferencesSupport.getInstance()
+				.getEclipsePreferences(project)
+				.addPreferenceChangeListener(new IPreferenceChangeListener() {
+
+					@Override
+					public void preferenceChange(PreferenceChangeEvent event) {
+						if (AngularCoreConstants.EXPRESSION_START_SYMBOL
+								.equals(event.getKey())) {
+							AngularProject.this.startSymbol = event
+									.getNewValue().toString();
+						} else if (AngularCoreConstants.EXPRESSION_END_SYMBOL
+								.equals(event.getKey())) {
+							AngularProject.this.endSymbol = event.getNewValue()
+									.toString();
+						}
+					}
+				});
+	}
+
+	/**
+	 * Initialize start/end symbols.
+	 */
+	private void initializeSymbols() {
+		this.startSymbol = AngularCorePreferencesSupport.getInstance()
+				.getStartSymbol(getProject());
+		this.endSymbol = AngularCorePreferencesSupport.getInstance()
+				.getEndSymbol(getProject());
 	}
 
 	public static AngularProject getAngularProject(IProject project)
@@ -257,7 +290,7 @@ public class AngularProject implements IDirectiveSyntax {
 	 * @return the start symbol used inside HTML for angular expression.
 	 */
 	public String getStartSymbol() {
-		return DEFAULT_START_SYMBOL;
+		return startSymbol;
 	}
 
 	/**
@@ -266,7 +299,7 @@ public class AngularProject implements IDirectiveSyntax {
 	 * @return the end symbol used inside HTML for angular expression.
 	 */
 	public String getEndSymbol() {
-		return DEFAULT_END_SYMBOL;
+		return endSymbol;
 	}
 
 }

@@ -13,15 +13,9 @@ package org.eclipse.angularjs.internal.ui.properties;
 import java.util.List;
 
 import org.eclipse.angularjs.core.AngularCoreConstants;
-import org.eclipse.angularjs.core.AngularCorePlugin;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.ImageResource;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ProjectScope;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.ModifyEvent;
@@ -31,7 +25,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 import tern.angular.modules.DirectiveHelper;
 import tern.angular.modules.IDirectiveSyntax;
@@ -236,18 +229,6 @@ public class DirectivesPropertyPage extends
 	protected void performDefaults() {
 		super.performDefaults();
 		updateTestResult();
-	}
-
-	@Override
-	protected IPreferenceStore doGetPreferenceStore() {
-		IProject project = null;
-		try {
-			project = getAngularProject().getProject();
-		} catch (CoreException e) {
-		}
-		IScopeContext projectScope = new ProjectScope(project);
-		return new ScopedPreferenceStore(projectScope,
-				AngularCorePlugin.PLUGIN_ID);
 	}
 
 	@Override

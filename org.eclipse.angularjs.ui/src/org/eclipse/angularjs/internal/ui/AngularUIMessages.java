@@ -47,7 +47,7 @@ public final class AngularUIMessages extends NLS {
 	public static String TerminateTernServerAction_tooltip;
 	public static String UnLinkToControllerAction_text;
 	public static String UnLinkToControllerAction_tooltip;
-	
+
 	public static String AngularExplorerView_openFile_error;
 	public static String AngularExplorerView_openFileDialog_title;
 
@@ -67,7 +67,10 @@ public final class AngularUIMessages extends NLS {
 	public static String DirectivesPropertyPage_minusDelimiter_label;
 	public static String DirectivesPropertyPage_underscoreDelimiter_label;
 	public static String DirectivesPropertyPage_directiveTestLabel_text;
-	
+
+	public static String ExpressionPropertyPage_startSybol_label;
+	public static String ExpressionPropertyPage_endSybol_label;
+
 	private AngularUIMessages() {
 	}
 

@@ -10,13 +10,19 @@
  */
 package org.eclipse.angularjs.internal.ui.properties;
 
+import org.eclipse.angularjs.core.AngularCorePlugin;
 import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IWorkbenchPropertyPage;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 
 public abstract class AbstractAngularFieldEditorPropertyPage extends
 		FieldEditorPreferencePage implements IWorkbenchPropertyPage {
@@ -66,4 +72,15 @@ public abstract class AbstractAngularFieldEditorPropertyPage extends
 		return resource;
 	}
 
+	@Override
+	protected IPreferenceStore doGetPreferenceStore() {
+		IProject project = null;
+		try {
+			project = getAngularProject().getProject();
+		} catch (CoreException e) {
+		}
+		IScopeContext projectScope = new ProjectScope(project);
+		return new ScopedPreferenceStore(projectScope,
+				AngularCorePlugin.PLUGIN_ID);
+	}
 }

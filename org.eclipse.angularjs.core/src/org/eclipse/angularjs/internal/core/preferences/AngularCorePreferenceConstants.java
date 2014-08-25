@@ -12,6 +12,7 @@ package org.eclipse.angularjs.internal.core.preferences;
 
 import org.eclipse.angularjs.core.AngularCoreConstants;
 import org.eclipse.angularjs.core.AngularCorePlugin;
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
@@ -27,8 +28,14 @@ public class AngularCorePreferenceConstants {
 		IEclipsePreferences node = new DefaultScope()
 				.getNode(AngularCorePlugin.PLUGIN_ID);
 		// directive syntax
-		node.putBoolean(AngularCoreConstants.DIRECTIVE_STARTS_WITH_NOTHING, true);
+		node.putBoolean(AngularCoreConstants.DIRECTIVE_STARTS_WITH_NOTHING,
+				true);
 		node.putBoolean(AngularCoreConstants.DIRECTIVE_MINUS_DELIMITER, true);
+		// start/end symbols used in angular expression
+		node.put(AngularCoreConstants.EXPRESSION_START_SYMBOL,
+				AngularProject.DEFAULT_START_SYMBOL);
+		node.put(AngularCoreConstants.EXPRESSION_END_SYMBOL,
+				AngularProject.DEFAULT_END_SYMBOL);
 	}
 
 	// Don't instantiate

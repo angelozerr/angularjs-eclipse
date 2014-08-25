@@ -205,7 +205,18 @@
 		     	  <test property="org.eclipse.angularjs.ui.isAngularProject" />
 		     </adapt>         
          </enabledWhen>
-      </page>      
+      </page>
+      <page
+            name="%ExpressionPropertyPage.name"        
+            category="org.eclipse.angularjs.internal.ui.properties.AngularMainPropertyPage"       
+            class="org.eclipse.angularjs.internal.ui.properties.ExpressionPropertyPage"
+            id="org.eclipse.angularjs.internal.ui.properties.ExpressionPropertyPage">
+         <enabledWhen>
+		     <adapt type="org.eclipse.core.resources.IProject">
+		     	  <test property="org.eclipse.angularjs.ui.isAngularProject" />
+		     </adapt>         
+         </enabledWhen>
+      </page>            
 	</extension>		     
 	      	
 	<!-- Angular UI Adapter factories					   						  				  -->

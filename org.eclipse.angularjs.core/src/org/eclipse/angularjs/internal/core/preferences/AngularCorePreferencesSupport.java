@@ -12,8 +12,10 @@ package org.eclipse.angularjs.internal.core.preferences;
 
 import org.eclipse.angularjs.core.AngularCoreConstants;
 import org.eclipse.angularjs.core.AngularCorePlugin;
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
 import tern.eclipse.ide.core.preferences.PreferencesSupport;
 import tern.utils.StringUtils;
@@ -75,4 +77,41 @@ public class AngularCorePreferencesSupport {
 		return StringUtils.asBoolean(result, false);
 	}
 
+	/**
+	 * Return the {@link IEclipsePreferences} from the given project.
+	 * 
+	 * @param project
+	 * @return the {@link IEclipsePreferences} from the given project.
+	 */
+	public IEclipsePreferences getEclipsePreferences(IProject project) {
+		return preferencesSupport.getEclipsePreferences(project);
+	}
+
+	/**
+	 * Returns the start symbol to use for angular expression inside HTML for
+	 * the given project.
+	 * 
+	 * @param project
+	 * @return the start symbol to use for angular expression inside HTML for
+	 *         the given project.
+	 */
+	public String getStartSymbol(IProject project) {
+		return preferencesSupport.getPreferencesValue(
+				AngularCoreConstants.EXPRESSION_START_SYMBOL,
+				AngularProject.DEFAULT_START_SYMBOL, project);
+	}
+
+	/**
+	 * Returns the end symbol to use for angular expression inside HTML for the
+	 * given project.
+	 * 
+	 * @param project
+	 * @return the end symbol to use for angular expression inside HTML for the
+	 *         given project.
+	 */
+	public String getEndSymbol(IProject project) {
+		return preferencesSupport.getPreferencesValue(
+				AngularCoreConstants.EXPRESSION_END_SYMBOL,
+				AngularProject.DEFAULT_END_SYMBOL, project);
+	}
 }
