@@ -32,7 +32,8 @@ public class AngularExpressionBorderSemanticHighlighting extends
 	protected int fillPosition(List<Position> positions,
 			String startExpression, String endExpression, String regionText,
 			int startIndex, int startOffset) {
-		int endIndex = regionText.indexOf(endExpression, startIndex);
+		int endIndex = regionText.indexOf(endExpression, startIndex
+				+ startExpression.length());
 		// add position of {{
 		positions.add(new Position(startOffset + startIndex, startExpression
 				.length()));

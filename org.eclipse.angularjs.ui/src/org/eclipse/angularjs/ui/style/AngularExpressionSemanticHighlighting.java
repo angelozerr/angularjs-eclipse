@@ -34,7 +34,8 @@ public class AngularExpressionSemanticHighlighting extends
 	protected int fillPosition(List<Position> positions,
 			String startExpression, String endExpression, String regionText,
 			int startIndex, int startOffset) {
-		int endIndex = regionText.indexOf(endExpression, startIndex);
+		int endIndex = regionText.indexOf(endExpression, startIndex
+				+ startExpression.length());
 		int length = (endIndex != -1 ? endIndex : regionText.length())
 				- startIndex - endExpression.length();
 		positions.add(new Position(startOffset + startIndex
