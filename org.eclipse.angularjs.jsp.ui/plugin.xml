@@ -13,30 +13,6 @@
 ###############################################################################
  -->
 <plugin>
-	      	
-	<!-- Angular UI Adapter factories					   						  				  -->
-	<!--
-		======================================================================================
-	-->
-	
-   <extension
-       point="org.eclipse.wst.sse.ui.completionProposal">	
-	    <proposalComputer
-	          activate="true"
-	          categoryId="org.eclipse.wst.html.ui.proposalCategory.htmlTags"
-	          class="org.eclipse.angularjs.ui.contentassist.HTMLAngularTagsCompletionProposalComputer"
-	          id="org.eclipse.angularjs.jsp.proposalComputer.htmlAngularTags">
-	       <contentType
-	             id="org.eclipse.jst.jsp.core.jspsource">
-	          <partitionType
-	                id="org.eclipse.wst.html.HTML_DEFAULT">
-	          </partitionType>
-	          <partitionType
-	                id="org.eclipse.angularjs.ANGULAR_DEFAULT">
-	          </partitionType>	          
-	       </contentType>	       	          	       
-	    </proposalComputer>
-	</extension>
 
 	<!--======================================================================================-->
 	<!-- As you type validation                                      						  -->
@@ -79,7 +55,40 @@
 			</contentTypeIdentifier>
 		</validator>
 	</extension>	
+
+	<!--======================================================================================-->
+	<!-- Completion                                                 						  -->
+	<!--======================================================================================-->
  
+  <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalComputerExtendedActivation
+          id="org.eclipse.angularjs.ui.proposalComputer.htmlTags">
+       <contentType
+             id="org.eclipse.jst.jsp.core.jspsource">
+          <partitionType
+                id="org.eclipse.wst.html.HTML_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.html.HTML_COMMENT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.wst.sse.ST_DEFAULT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_COMMENT">
+          </partitionType>
+          <partitionType
+                id="org.eclipse.jst.jsp.JSP_DIRECTIVE">
+          </partitionType>
+       </contentType>
+    </proposalComputerExtendedActivation>
+  </extension>
+    
+	<!--======================================================================================-->
+	<!-- Semantic Highlighting                                        						  -->
+	<!--======================================================================================-->
+    
  <extension
        point="org.eclipse.wst.sse.ui.semanticHighlighting">
     <highlighting
