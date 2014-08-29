@@ -17,8 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
-import org.eclipse.angularjs.internal.core.documentModel.provisional.contenttype.ContentTypeIdForAngular;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.style.IStyleConstantsForAngular;
@@ -70,6 +68,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
+import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
@@ -454,7 +453,7 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 		setAccessible(fText, SSEUIMessages.Sample_text__UI_);
 		fDocument = StructuredModelManager.getModelManager()
 				.createStructuredDocumentFor(
-						ContentTypeIdForAngular.ContentTypeID_Angular);
+						ContentTypeIdForHTML.ContentTypeID_HTML);
 		fDocument.set(getExampleText());
 		initializeSourcePreviewColors(fPreviewViewer);
 		fPreviewViewer.setDocument(fDocument);
@@ -1038,13 +1037,13 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF,
 				IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
 
-		fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_OPEN,
+		/*fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_OPEN,
 				IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
 		fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_CLOSE,
 				IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
 		fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_CONTENT,
 				IStyleConstantsForAngular.ANGULAR_EXPRESSION);
-
+*/
 		// fContextToStyleMap.put(DOMRegionContext.XML_PI_OPEN,
 		// IStyleConstantsXML.PI_BORDER);
 		// fContextToStyleMap.put(DOMRegionContext.XML_PI_CONTENT,

@@ -1,12 +1,20 @@
+/**
+ *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *
+ *  Contributors:
+ *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ */
 package org.eclipse.angularjs.core.utils;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.internal.core.Trace;
-import org.eclipse.angularjs.internal.core.documentModel.provisional.contenttype.ContentTypeIdForAngular;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -27,18 +35,6 @@ import tern.angular.modules.DirectiveParameter;
  *
  */
 public class AngularDOMUtils {
-
-	/**
-	 * Returns true if if the given node is an Angular DOM and false otherwise.
-	 * 
-	 * @param node
-	 *            DOM node
-	 * @return true if if the given node is an Angular DOM and false otherwise.
-	 */
-	public static boolean isAngularContentType(IDOMNode node) {
-		return DOMUtils.isContentTypeId(node,
-				ContentTypeIdForAngular.ContentTypeID_Angular);
-	}
 
 	/**
 	 * Returns true if the given DOM node is an angular directive an dfalse
@@ -92,7 +88,7 @@ public class AngularDOMUtils {
 		try {
 			AngularProject angularProject = AngularProject
 					.getAngularProject(project);
-			return DOMSSEDirectiveProvider.getInstance().getAngularDirective(
+			return DOMDirectiveProvider.getInstance().getAngularDirective(
 					angularProject, attr);
 		} catch (CoreException e) {
 			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
@@ -150,7 +146,7 @@ public class AngularDOMUtils {
 		try {
 			AngularProject angularProject = AngularProject
 					.getAngularProject(project);
-			return DOMSSEDirectiveProvider.getInstance().getAngularDirective(
+			return DOMDirectiveProvider.getInstance().getAngularDirective(
 					angularProject, element);
 		} catch (CoreException e) {
 			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
@@ -191,7 +187,7 @@ public class AngularDOMUtils {
 		try {
 			AngularProject angularProject = AngularProject
 					.getAngularProject(project);
-			return DOMSSEDirectiveProvider.getInstance()
+			return DOMDirectiveProvider.getInstance()
 					.getAngularDirectiveParameter(angularProject, attr);
 		} catch (CoreException e) {
 			Trace.trace(Trace.WARNING, "Error while getting angular project", e);
@@ -225,7 +221,7 @@ public class AngularDOMUtils {
 		try {
 			AngularProject angularProject = AngularProject
 					.getAngularProject(project);
-			return DOMSSEDirectiveProvider.getInstance().getAngularDirectives(
+			return DOMDirectiveProvider.getInstance().getAngularDirectives(
 					angularProject, element, attr);
 		} catch (CoreException e) {
 			Trace.trace(Trace.WARNING, "Error while getting angular project", e);

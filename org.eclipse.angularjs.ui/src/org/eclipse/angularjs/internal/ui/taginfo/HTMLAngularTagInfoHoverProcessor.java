@@ -16,7 +16,6 @@ import org.eclipse.angularjs.core.utils.AngularELRegion;
 import org.eclipse.angularjs.core.utils.AngularRegionUtils;
 import org.eclipse.angularjs.core.utils.AngularScopeHelper;
 import org.eclipse.angularjs.core.utils.DOMUtils;
-import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.AngularELWordFinder;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
@@ -188,8 +187,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 		}
 		if (AngularDOMUtils.hasAngularNature(parentNode)) {
 			String regionType = region.getType();
-			if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT
-					|| regionType == DOMRegionContext.XML_CONTENT) {
+			if (regionType == DOMRegionContext.XML_CONTENT) {
 				return computeAngularExpressionHelp((IDOMNode) treeNode,
 						parentNode, flatNode, region, document,
 						documentPosition);
@@ -333,10 +331,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			// only supply hoverhelp for tag name, attribute name, or
 			// attribute value
 			String regionType = region.getType();
-			if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
-				return AngularELWordFinder.findWord(textViewer.getDocument(),
-						offset, startSymbol, endSymbol);
-			} else if (DOMRegionContext.XML_CONTENT.equals(regionType)) {
+			if (DOMRegionContext.XML_CONTENT.equals(regionType)) {
 				return AngularELWordFinder.findWord(textViewer.getDocument(),
 						offset, startSymbol, endSymbol);
 			}

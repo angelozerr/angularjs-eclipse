@@ -15,11 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
-import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
-import org.eclipse.angularjs.internal.core.documentModel.provisional.contenttype.ContentTypeIdForAngular;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -51,10 +47,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-
-import tern.angular.modules.DOMDirectiveProvider;
-import tern.angular.modules.Directive;
-import tern.angular.modules.DirectiveParameter;
 
 /**
  * Utilities for SSE DOM node {@link IDOMNode}.

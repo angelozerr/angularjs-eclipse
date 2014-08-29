@@ -10,7 +10,6 @@
  */
 package org.eclipse.angularjs.core.utils;
 
-import org.eclipse.angularjs.core.DOMSSEDirectiveProvider;
 import org.eclipse.angularjs.core.link.AngularLink;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.core.link.AngularLinkResource;
@@ -19,6 +18,7 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.w3c.dom.Node;
 
 import tern.angular.AngularType;
+import tern.angular.modules.DOMDirectiveProvider;
 import tern.angular.protocol.Controller;
 import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
@@ -40,9 +40,8 @@ public class AngularScopeHelper {
 	public static ITernScriptPath populateScope(Node element, IFile file,
 			AngularType angularType, TernAngularQuery query) throws Exception {
 		ITernScriptPath scriptPath = null;
-		HTMLTernAngularHelper
-				.populateScope(element, DOMSSEDirectiveProvider.getInstance(),
-						file.getProject(), query);
+		HTMLTernAngularHelper.populateScope(element,
+				DOMDirectiveProvider.getInstance(), file.getProject(), query);
 		AngularLinkResource info = null;
 		if (angularType != AngularType.module) {
 			// Check if query has module defined.

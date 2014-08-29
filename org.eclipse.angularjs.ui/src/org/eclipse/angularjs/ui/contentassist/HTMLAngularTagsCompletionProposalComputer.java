@@ -19,7 +19,6 @@ import org.eclipse.angularjs.core.utils.AngularELRegion;
 import org.eclipse.angularjs.core.utils.AngularRegionUtils;
 import org.eclipse.angularjs.core.utils.AngularScopeHelper;
 import org.eclipse.angularjs.core.utils.DOMUtils;
-import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.angularjs.internal.ui.contentassist.AngularMarkupCompletionProposal;
@@ -419,9 +418,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			CompletionProposalInvocationContext context) {
 		String regionType = completionRegion.getType();
 		boolean isXMLContent = (regionType == DOMRegionContext.XML_CONTENT);
-		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_OPEN
-				|| regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT
-				|| (isXMLContent && AngularDOMUtils.hasAngularNature(xmlnode))) {
+		if (isXMLContent && AngularDOMUtils.hasAngularNature(xmlnode)) {
 
 			// completion for Angular expression {{}} inside text node.
 			int documentPosition = context.getInvocationOffset();

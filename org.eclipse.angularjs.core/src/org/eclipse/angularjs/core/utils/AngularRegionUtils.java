@@ -1,7 +1,6 @@
 package org.eclipse.angularjs.core.utils;
 
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.internal.core.documentModel.parser.AngularRegionContext;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
@@ -51,12 +50,7 @@ public class AngularRegionUtils {
 		if (startOffset < 0) {
 			return null;
 		}
-		if (regionType == AngularRegionContext.ANGULAR_EXPRESSION_CONTENT) {
-			// case for angular expression
-			int expressionOffset = startOffset - startSymbol.length();
-			String expression = HyperlinkUtils.getExpressionContent(regionText);
-			return new AngularELRegion(expression, expressionOffset);
-		} else if (regionType == DOMRegionContext.XML_CONTENT
+		if (regionType == DOMRegionContext.XML_CONTENT
 				|| regionType == DOMRegionContext.XML_TAG_ATTRIBUTE_VALUE) {
 			String expression = null;
 			String text = regionText.substring(0, startOffset);

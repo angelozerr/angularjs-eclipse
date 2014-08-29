@@ -21,12 +21,8 @@ Require-Bundle: org.eclipse.core.runtime,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.angularjs.core.AngularCorePlugin
-Export-Package: org.eclipse.angularjs.core,org.eclipse.angularjs.core.
- documentModel.dom,org.eclipse.angularjs.core.link,org.eclipse.angular
- js.core.utils,org.eclipse.angularjs.core.validation,org.eclipse.angul
- arjs.internal.core.documentModel.handler,org.eclipse.angularjs.intern
- al.core.documentModel.parser;x-friends:="org.eclipse.angularjs.core.t
- ests",org.eclipse.angularjs.internal.core.documentModel.partitioner,o
- rg.eclipse.angularjs.internal.core.documentModel.provisional.contentt
- ype
+Export-Package: org.eclipse.angularjs.core,
+ org.eclipse.angularjs.core.link,
+ org.eclipse.angularjs.core.utils,
+ org.eclipse.angularjs.core.validation
 Import-Package: com.eclipsesource.json
