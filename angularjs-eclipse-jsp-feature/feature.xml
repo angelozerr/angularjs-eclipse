@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="angularjs-eclipse-feature"
+      id="angularjs-eclipse-jsp-feature"
       label="%featureName"
       version="0.5.0.qualifier"
       provider-name="%featureProvider"
@@ -20,14 +20,14 @@
    </license>
 
    <plugin
-         id="org.eclipse.angularjs.core"
+         id="org.eclipse.angularjs.jsp.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
+         
    <plugin
-         id="org.eclipse.angularjs.ui"
+         id="org.eclipse.angularjs.jsp.ui"
          download-size="0"
          install-size="0"
          version="0.0.0"

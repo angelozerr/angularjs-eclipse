@@ -28,6 +28,7 @@
 		<module>org.eclipse.angularjs.jsp.ui</module>
 		<module>org.eclipse.angularjs.repository</module>
 		<module>angularjs-eclipse-feature</module>
+		<module>angularjs-eclipse-jsp-feature</module>
 	</modules>
 	<build>
 		<defaultGoal>clean install</defaultGoal>

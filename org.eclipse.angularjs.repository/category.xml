@@ -21,7 +21,19 @@
    <feature  id="angularjs-eclipse-feature" version="0.0.0">
       <category name="AngularJS Eclipse Tooling"/>
    </feature>
-   <category-def name="AngularJS Eclipse Tooling" label="AngularJS Eclipse Tooling"/>
+   <feature  id="angularjs-eclipse-jsp-feature" version="0.0.0">
+      <category name="AngularJS support for JSP"/>
+   </feature>
+   <category-def name="AngularJS Eclipse Tooling" label="AngularJS Eclipse Tooling">
+     <description>
+       Customizes Eclipse WTP HTML editor and JSDT JavaScript Editor with AngularJS features.
+     </description>
+   </category-def>     
+   <category-def name="AngularJS support for JSP" label="AngularJS support for JSP">
+     <description>
+       Customizes Eclipse WTP JSP editor and JSDT JavaScript Editor with AngularJS features.
+     </description>
+   </category-def>      
    <category-def name="Tern - Embed Node.js" label="Tern - Embed Node.js">
       <description>
          Embed Node.js switch OS
