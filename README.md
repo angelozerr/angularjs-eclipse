@@ -22,16 +22,13 @@ To install AngularJS Eclipse, please read [Installation - Update Site](https://g
 
 # AngularJS Configuration
 
-Before opening your HTML files (to see AngulaJS synt), you must  convert your project to AngularJS Project : 
+Before opening your HTML files (to benefit with angular highlight, completion, hover, validation), you must  convert your project to AngularJS Project : 
 
 ![Convert To AngularJS Project](https://github.com/angelozerr/angularjs-eclipse/wiki/images/ConfigureToAngularProject.png)
 
 # HTML Editor
 
-After that, you can open your HTML with AngularJS Editor : 
-
-![Open With AngularJS Editor](https://github.com/angelozerr/angularjs-eclipse/wiki/images/OpenWithAngularEditor.png)
-
+After that, you can open your HTML with standard WTP HTML, JSP Editor. 
 You will see that AngularJS directive + EL are highlighted, completion is available for directive name : 
 
 ![AngulerJS Editor Overview](https://github.com/angelozerr/angularjs-eclipse/wiki/images/HTMLAngularEditorOverview.png)
