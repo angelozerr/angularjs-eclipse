@@ -10,6 +10,8 @@
  */
 package org.eclipse.angularjs.internal.ui.preferences.html;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,10 +21,18 @@ import java.util.Map;
 
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
+import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.angularjs.internal.ui.style.IStyleConstantsForAngular;
+import org.eclipse.angularjs.internal.ui.style.SemanticHighlightingManager;
+import org.eclipse.angularjs.ui.style.AbstractAngularSemanticHighlighting;
+import org.eclipse.angularjs.ui.style.AngularExpressionBorderSemanticHighlighting;
+import org.eclipse.angularjs.ui.style.AngularExpressionSemanticHighlighting;
+import org.eclipse.angularjs.ui.style.DirectiveParameterSemanticHighlighting;
+import org.eclipse.angularjs.ui.style.DirectiveSemanticHighlighting;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.JFaceResources;
+import org.eclipse.jface.text.Position;
 import org.eclipse.jface.text.TextAttribute;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.SourceViewer;
@@ -68,25 +78,27 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.texteditor.ChainedPreferenceStore;
-import org.eclipse.wst.html.core.internal.provisional.contenttype.ContentTypeIdForHTML;
 import org.eclipse.wst.html.ui.internal.HTMLUIMessages;
 import org.eclipse.wst.html.ui.internal.HTMLUIPlugin;
 import org.eclipse.wst.html.ui.internal.editor.IHelpContextIds;
 import org.eclipse.wst.sse.core.StructuredModelManager;
+import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 import org.eclipse.wst.sse.ui.internal.SSEUIMessages;
-import org.eclipse.wst.sse.ui.internal.SSEUIPlugin;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore;
 import org.eclipse.wst.sse.ui.internal.preferences.OverlayPreferenceStore.OverlayKey;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.AbstractSyntaxColoringPage;
 import org.eclipse.wst.sse.ui.internal.preferences.ui.ColorHelper;
 import org.eclipse.wst.sse.ui.internal.util.EditorUtility;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.eclipse.wst.xml.ui.internal.XMLUIMessages;
 import org.eclipse.wst.xml.ui.internal.style.IStyleConstantsXML;
+
+import tern.utils.IOUtils;
 
 import com.ibm.icu.text.Collator;
 
@@ -97,6 +109,9 @@ import com.ibm.icu.text.Collator;
  */
 public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 		AbstractSyntaxColoringPage implements IWorkbenchPreferencePage {
+
+	private static final String EXAMPLE_TEXT_FILE_NAME = HTMLAngularEditorSyntaxColoringPreferencePage.class
+			.getName() + ".xml";
 
 	static class MyChainedPreferenceStore extends ChainedPreferenceStore {
 
@@ -191,7 +206,6 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 	private Map fContextToStyleMap;
 	private Color fDefaultForeground = null;
 	private Color fDefaultBackground = null;
-	private IStructuredDocument fDocument;
 	private ColorSelector fForegroundColorEditor;
 	private ColorSelector fBackgroundColorEditor;
 	private Button fItalic;
@@ -257,31 +271,89 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 	void applyStyles() {
 		if (fText == null || fText.isDisposed())
 			return;
-		IStructuredDocumentRegion documentRegion = fDocument
-				.getFirstStructuredDocumentRegion();
-		while (documentRegion != null) {
-			ITextRegionList regions = documentRegion.getRegions();
-			for (int i = 0; i < regions.size(); i++) {
-				ITextRegion currentRegion = regions.get(i);
-				// lookup the local coloring type and apply it
-				String namedStyle = (String) fContextToStyleMap
-						.get(currentRegion.getType());
-				if (namedStyle == null)
-					continue;
-				TextAttribute attribute = getAttributeFor(namedStyle);
-				if (attribute == null)
-					continue;
-				StyleRange style = new StyleRange(
-						documentRegion.getStartOffset(currentRegion),
-						currentRegion.getTextLength(),
-						attribute.getForeground(), attribute.getBackground(),
-						attribute.getStyle());
-				style.strikeout = (attribute.getStyle() & TextAttribute.STRIKETHROUGH) != 0;
-				style.underline = (attribute.getStyle() & TextAttribute.UNDERLINE) != 0;
-				fText.setStyleRange(style);
+		IStructuredModel model = null;
+		try {
+			model = getDomModel();
+			IStructuredDocumentRegion documentRegion = model
+					.getStructuredDocument().getFirstStructuredDocumentRegion();
+			while (documentRegion != null) {
+				ITextRegionList regions = documentRegion.getRegions();
+				for (int i = 0; i < regions.size(); i++) {
+					ITextRegion currentRegion = regions.get(i);
+					// lookup the local coloring type and apply it
+					String namedStyle = (String) fContextToStyleMap
+							.get(currentRegion.getType());
+					if (namedStyle == null)
+						continue;
+					TextAttribute attribute = getAttributeFor(namedStyle);
+					if (attribute == null)
+						continue;
+
+					StyleRange style = new StyleRange(
+							documentRegion.getStartOffset(currentRegion),
+							currentRegion.getTextLength(),
+							attribute.getForeground(),
+							attribute.getBackground(), attribute.getStyle());
+					style.strikeout = (attribute.getStyle() & TextAttribute.STRIKETHROUGH) != 0;
+					style.underline = (attribute.getStyle() & TextAttribute.UNDERLINE) != 0;
+					fText.setStyleRange(style);
+
+					Position[] positions = null;
+					for (AbstractAngularSemanticHighlighting highlighting : SemanticHighlightingManager
+							.getInstance().getHighlightings()) {
+						positions = highlighting.consumes(documentRegion,
+								model.getIndexedRegion(documentRegion
+										.getStartOffset()));
+						if (positions != null) {
+							for (int j = 0; j < positions.length; j++) {
+								Position position = positions[j];
+								StyleRange styleRange = createStyleRange(
+										getAttributeFor(highlighting
+												.getStyleStringKey()),
+										position);
+								fText.setStyleRange(styleRange);
+							}
+						}
+					}
+
+				}
+				documentRegion = documentRegion.getNext();
 			}
-			documentRegion = documentRegion.getNext();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
 		}
+	}
+
+	private IDOMModel getDomModel() throws IOException {
+		IDOMModel model = (IDOMModel) StructuredModelManager.getModelManager()
+				.getExistingModelForRead(EXAMPLE_TEXT_FILE_NAME);
+		if (model != null) {
+			return model;
+		}
+
+		InputStream inputStream = IOUtils.toInputStream(getExampleText());
+		model = (IDOMModel) StructuredModelManager.getModelManager()
+				.getModelForRead(EXAMPLE_TEXT_FILE_NAME, inputStream, null);
+		return model;
+	}
+
+	private StyleRange createStyleRange(TextAttribute attr, Position position) {
+		StyleRange result = new StyleRange(position.getOffset(),
+				position.getLength(), attr.getForeground(),
+				attr.getBackground(), attr.getStyle());
+		if ((attr.getStyle() & TextAttribute.UNDERLINE) != 0) {
+			result.underline = true;
+			result.fontStyle &= ~TextAttribute.UNDERLINE;
+		}
+		if ((attr.getStyle() & TextAttribute.STRIKETHROUGH) != 0) {
+			result.strikeout = true;
+			result.fontStyle &= ~TextAttribute.STRIKETHROUGH;
+		}
+		return result;
 	}
 
 	Button createCheckbox(Composite parent, String label) {
@@ -451,12 +523,18 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 		fText.addMouseListener(getTextMouseListener());
 		fText.addTraverseListener(getTraverseListener());
 		setAccessible(fText, SSEUIMessages.Sample_text__UI_);
-		fDocument = StructuredModelManager.getModelManager()
-				.createStructuredDocumentFor(
-						ContentTypeIdForHTML.ContentTypeID_HTML);
-		fDocument.set(getExampleText());
 		initializeSourcePreviewColors(fPreviewViewer);
-		fPreviewViewer.setDocument(fDocument);
+		IStructuredModel model = null;
+		try {
+			model = getDomModel();
+			fPreviewViewer.setDocument(getDomModel().getStructuredDocument());
+		} catch (IOException e) {
+			Trace.trace(Trace.SEVERE, "Error while loading DOM", e);
+		} finally {
+			if (model != null) {
+				model.releaseFromRead();
+			}
+		}
 
 		top.setWeights(new int[] { 1, 1 });
 		editor.setWeights(new int[] { 1, 1 });
@@ -813,32 +891,46 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 	}
 
 	private String getNamedStyleAtOffset(int offset) {
-		// ensure the offset is clean
-		if (offset >= fDocument.getLength())
-			return getNamedStyleAtOffset(fDocument.getLength() - 1);
-		else if (offset < 0)
-			return getNamedStyleAtOffset(0);
-		IStructuredDocumentRegion documentRegion = fDocument
-				.getFirstStructuredDocumentRegion();
-		while (documentRegion != null && !documentRegion.containsOffset(offset)) {
-			documentRegion = documentRegion.getNext();
-		}
-		if (documentRegion != null) {
-			// find the ITextRegion's Context at this offset
-			ITextRegion interest = documentRegion
-					.getRegionAtCharacterOffset(offset);
-			if (interest == null)
-				return null;
-			if (offset > documentRegion.getTextEndOffset(interest))
-				return null;
-			String regionContext = interest.getType();
-			if (regionContext == null)
-				return null;
-			// find the named style (internal/selectable name) for that
-			// context
-			String namedStyle = (String) fContextToStyleMap.get(regionContext);
-			if (namedStyle != null) {
-				return namedStyle;
+		IDOMModel model = null;
+		IStructuredDocument document = null;
+		try {
+			model = getDomModel();
+			document = model.getStructuredDocument();
+			// ensure the offset is clean
+			if (offset >= document.getLength())
+				return getNamedStyleAtOffset(document.getLength() - 1);
+			else if (offset < 0)
+				return getNamedStyleAtOffset(0);
+			IStructuredDocumentRegion documentRegion = document
+					.getFirstStructuredDocumentRegion();
+			while (documentRegion != null
+					&& !documentRegion.containsOffset(offset)) {
+				documentRegion = documentRegion.getNext();
+			}
+			if (documentRegion != null) {
+				// find the ITextRegion's Context at this offset
+				ITextRegion interest = documentRegion
+						.getRegionAtCharacterOffset(offset);
+				if (interest == null)
+					return null;
+				if (offset > documentRegion.getTextEndOffset(interest))
+					return null;
+				String regionContext = interest.getType();
+				if (regionContext == null)
+					return null;
+				// find the named style (internal/selectable name) for that
+				// context
+				String namedStyle = (String) fContextToStyleMap
+						.get(regionContext);
+				if (namedStyle != null) {
+					return namedStyle;
+				}
+			}
+		} catch (IOException e) {
+			Trace.trace(Trace.SEVERE, "Error while loading DOM.", e);
+		} finally {
+			if (model != null) {
+				model.releaseFromRead();
 			}
 		}
 		return null;
@@ -1037,13 +1129,15 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF,
 				IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
 
-		/*fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_OPEN,
-				IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
-		fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_CLOSE,
-				IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
-		fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_CONTENT,
-				IStyleConstantsForAngular.ANGULAR_EXPRESSION);
-*/
+		/*
+		 * fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_OPEN,
+		 * IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
+		 * fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_CLOSE,
+		 * IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
+		 * fContextToStyleMap
+		 * .put(AngularRegionContext.ANGULAR_EXPRESSION_CONTENT,
+		 * IStyleConstantsForAngular.ANGULAR_EXPRESSION);
+		 */
 		// fContextToStyleMap.put(DOMRegionContext.XML_PI_OPEN,
 		// IStyleConstantsXML.PI_BORDER);
 		// fContextToStyleMap.put(DOMRegionContext.XML_PI_CONTENT,
@@ -1108,9 +1202,7 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 
 	public boolean performOk() {
 		getOverlayStore().propagate();
-
 		AngularUIPlugin.getDefault().savePluginPreferences();
-		SSEUIPlugin.getDefault().savePluginPreferences();
 		return true;
 	}
 

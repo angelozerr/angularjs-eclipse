@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.angularjs.core.utils.AngularDOMUtils;
 import org.eclipse.angularjs.internal.ui.preferences.AngularUIPreferenceNames;
+import org.eclipse.angularjs.internal.ui.style.IStyleConstantsForAngular;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.text.Position;
@@ -42,6 +43,11 @@ public class DirectiveSemanticHighlighting extends
 		AbstractAngularSemanticHighlighting {
 
 	@Override
+	public String getStyleStringKey() {
+		return IStyleConstantsForAngular.ANGULAR_DIRECTIVE_NAME;
+	}
+
+	@Override
 	public String getEnabledPreferenceKey() {
 		return AngularUIPreferenceNames.HIGHLIGHTING_DIRECTIVE_ENABLED;
 	}
@@ -49,7 +55,7 @@ public class DirectiveSemanticHighlighting extends
 	@Override
 	protected List<Position> consumes(IDOMNode node, IFile file,
 			IStructuredDocumentRegion documentRegion) {
-		if (isDirectiveElement(node, file.getProject())) {
+		if (isDirectiveElement(node, file)) {
 			// ex : highlight ng-include
 			// <ng-include src=""></ng-include>
 			return consumesElement(documentRegion);
@@ -64,7 +70,7 @@ public class DirectiveSemanticHighlighting extends
 				// loop for attributes of the element
 				for (int i = 0; i < attributes.getLength(); i++) {
 					currentNode = (IDOMNode) attributes.item(i);
-					if (isDirectiveAttr(currentNode, file.getProject())) {
+					if (isDirectiveAttr(currentNode, file)) {
 						// attribute is a directive.
 						attr = (IDOMAttr) currentNode;
 						Position pos = new Position(
@@ -83,18 +89,26 @@ public class DirectiveSemanticHighlighting extends
 		return null;
 	}
 
-	private boolean isDirectiveElement(IDOMNode node, IProject project) {
+	private boolean isDirectiveElement(IDOMNode node, IFile file) {
 		if (node.getNodeType() != Node.ELEMENT_NODE) {
 			return false;
 		}
-		return AngularDOMUtils.getAngularDirective(project, (IDOMElement) node) != null;
+		if (file == null) {
+			return node.getNodeName().startsWith("ng");
+		}
+		return AngularDOMUtils.getAngularDirective(file.getProject(),
+				(IDOMElement) node) != null;
 	}
 
-	protected boolean isDirectiveAttr(IDOMNode node, IProject project) {
+	protected boolean isDirectiveAttr(IDOMNode node, IFile file) {
 		if (node.getNodeType() != Node.ATTRIBUTE_NODE) {
 			return false;
 		}
-		return AngularDOMUtils.getAngularDirective(project, (IDOMAttr) node) != null;
+		if (file == null) {
+			return node.getNodeName().startsWith("ng");
+		}
+		return AngularDOMUtils.getAngularDirective(file.getProject(),
+				(IDOMAttr) node) != null;
 	}
 
 	private List<Position> consumesElement(IStructuredDocumentRegion region) {

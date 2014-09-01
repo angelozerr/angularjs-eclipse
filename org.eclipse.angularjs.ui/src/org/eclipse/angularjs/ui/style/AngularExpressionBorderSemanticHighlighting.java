@@ -12,6 +12,7 @@ package org.eclipse.angularjs.ui.style;
 
 import java.util.List;
 
+import org.eclipse.angularjs.internal.ui.style.IStyleConstantsForAngular;
 import org.eclipse.jface.text.Position;
 
 /**
@@ -27,6 +28,11 @@ import org.eclipse.jface.text.Position;
  */
 public class AngularExpressionBorderSemanticHighlighting extends
 		AbstractAngularExpressionSemanticHighlighting {
+
+	@Override
+	public String getStyleStringKey() {
+		return IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER;
+	}
 
 	@Override
 	protected int fillPosition(List<Position> positions,

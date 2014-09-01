@@ -12,9 +12,8 @@ package org.eclipse.angularjs.ui.style;
 
 import java.util.List;
 
+import org.eclipse.angularjs.internal.ui.style.IStyleConstantsForAngular;
 import org.eclipse.jface.text.Position;
-import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
-import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
 
 /**
  * Angular expression semantic highlighting used to highlight content of
@@ -29,6 +28,11 @@ import org.eclipse.wst.sse.core.internal.provisional.text.ITextRegionList;
  */
 public class AngularExpressionSemanticHighlighting extends
 		AbstractAngularExpressionSemanticHighlighting {
+
+	@Override
+	public String getStyleStringKey() {
+		return IStyleConstantsForAngular.ANGULAR_EXPRESSION;
+	}
 
 	@Override
 	protected int fillPosition(List<Position> positions,

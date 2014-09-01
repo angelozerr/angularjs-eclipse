@@ -46,12 +46,14 @@ public abstract class AbstractAngularExpressionSemanticHighlighting extends
 		}
 		String startSymbol = AngularProject.DEFAULT_START_SYMBOL;
 		String endSymbol = AngularProject.DEFAULT_END_SYMBOL;
-		try {
-			AngularProject angularProject = AngularProject
-					.getAngularProject(file.getProject());
-			startSymbol = angularProject.getStartSymbol();
-			endSymbol = angularProject.getEndSymbol();
-		} catch (CoreException e) {
+		if (file != null) {
+			try {
+				AngularProject angularProject = AngularProject
+						.getAngularProject(file.getProject());
+				startSymbol = angularProject.getStartSymbol();
+				endSymbol = angularProject.getEndSymbol();
+			} catch (CoreException e) {
+			}
 		}
 		if (DOMRegionContext.XML_CONTENT.equals(documentRegion.getType())) {
 			// text node, check if this node contains {{ and }}.

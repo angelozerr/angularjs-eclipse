@@ -144,8 +144,8 @@ public class AngularDOMUtils {
 	public static Directive getAngularDirective(IProject project,
 			Element element) {
 		try {
-			AngularProject angularProject = AngularProject
-					.getAngularProject(project);
+			AngularProject angularProject = project != null ? AngularProject
+					.getAngularProject(project) : null;
 			return DOMDirectiveProvider.getInstance().getAngularDirective(
 					angularProject, element);
 		} catch (CoreException e) {
@@ -185,8 +185,8 @@ public class AngularDOMUtils {
 	public static DirectiveParameter getAngularDirectiveParameter(
 			IProject project, Attr attr) {
 		try {
-			AngularProject angularProject = AngularProject
-					.getAngularProject(project);
+			AngularProject angularProject = project != null ? AngularProject
+					.getAngularProject(project) : null;
 			return DOMDirectiveProvider.getInstance()
 					.getAngularDirectiveParameter(angularProject, attr);
 		} catch (CoreException e) {

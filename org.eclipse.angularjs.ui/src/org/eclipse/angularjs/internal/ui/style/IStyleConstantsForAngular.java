@@ -10,6 +10,10 @@
  */
 package org.eclipse.angularjs.internal.ui.style;
 
+/**
+ * Constants for Angular styles.
+ *
+ */
 public interface IStyleConstantsForAngular {
 
 	public static final String ANGULAR_EXPRESSION_BORDER = "angularExpressionBorder";

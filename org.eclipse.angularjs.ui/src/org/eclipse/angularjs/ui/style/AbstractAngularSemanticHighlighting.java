@@ -16,7 +16,6 @@ import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.utils.DOMUtils;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.text.Position;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
@@ -35,14 +34,22 @@ public abstract class AbstractAngularSemanticHighlighting implements
 
 	private static final Position[] EMPTY_POSITION = new Position[0];
 
+	/**
+	 * Returns the style string key used inside the semantic highlight
+	 * extension.
+	 * 
+	 * @return the style string key used inside the semantic highlight
+	 *         extension.
+	 */
+	public abstract String getStyleStringKey();
+
 	@Override
 	public Position[] consumes(IStructuredDocumentRegion documentRegion,
 			IndexedRegion indexedRegion) {
 		if (indexedRegion != null && indexedRegion instanceof IDOMNode) {
 			IDOMNode node = (IDOMNode) indexedRegion;
 			IFile file = DOMUtils.getFile(node);
-			IProject project = file.getProject();
-			if (AngularProject.hasAngularNature(project)) {
+			if (canConsume(file)) {
 				// project has angular nature, compute positions.
 				List<Position> positions = consumes(node, file, documentRegion);
 				if (positions != null) {
@@ -51,6 +58,26 @@ public abstract class AbstractAngularSemanticHighlighting implements
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Returns true if this semantic highlight can be consumed and false
+	 * otherwise.
+	 * 
+	 * @param file
+	 *            the file of the DOM Document and null if DOM Document doesn't
+	 *            belong to a project.
+	 * @return true if this semantic highlight can be consumed and false
+	 *         otherwise.
+	 */
+	private boolean canConsume(IFile file) {
+		if (file == null) {
+			// file is null, this case coems from DOM Document loaded form an
+			// InputStream. See HTMLAngularEditorSyntaxColoringPreferencePage
+			return true;
+		}
+		// semantic highlight can be consumed if project has angular nature.
+		return AngularProject.hasAngularNature(file.getProject());
 	}
 
 	@Override
@@ -85,7 +112,7 @@ public abstract class AbstractAngularSemanticHighlighting implements
 
 	@Override
 	public String getDisplayName() {
-		return null;
+		return getStyleStringKey();
 	}
 
 	@Override
