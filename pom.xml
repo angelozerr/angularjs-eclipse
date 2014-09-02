@@ -89,6 +89,12 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
           		<artifactId>tycho-compiler-plugin</artifactId>
           		<version>${tycho-version}</version>
