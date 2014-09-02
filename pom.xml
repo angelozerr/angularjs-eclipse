@@ -21,14 +21,21 @@
 		</license>
 	</licenses>
 	<modules>
+		<!-- HTML AngularJS support -->
 		<module>org.eclipse.angularjs.core</module>
 		<module>org.eclipse.angularjs.core.tests</module>
 		<module>org.eclipse.angularjs.ui</module>
+		<module>angularjs-eclipse-feature</module>
+		<!-- JSP AngularJS support -->				
 		<module>org.eclipse.angularjs.jsp.core</module>
 		<module>org.eclipse.angularjs.jsp.ui</module>
-		<module>org.eclipse.angularjs.repository</module>
-		<module>angularjs-eclipse-feature</module>
-		<module>angularjs-eclipse-jsp-feature</module>
+		<module>angularjs-eclipse-jsp-feature</module>		
+		<!-- PHP AngularJS support -->		
+		<module>org.eclipse.angularjs.php.core</module>
+		<module>org.eclipse.angularjs.php.ui</module>
+		<module>angularjs-eclipse-php-feature</module>		
+		<!-- Update site -->				
+		<module>org.eclipse.angularjs.repository</module>		
 	</modules>
 	<build>
 		<defaultGoal>clean install</defaultGoal>

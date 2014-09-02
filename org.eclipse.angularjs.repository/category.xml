@@ -3,27 +3,30 @@
    <feature id="tern.eclipse.ide.server.nodejs.embed">
       <category name="Tern - Embed Node.js"/>
    </feature>
-   <feature  id="tern-feature" version="0.0.0">
+   <feature id="tern-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
-   <feature  id="tern-jsdt-feature" version="0.0.0">
+   <feature id="tern-jsdt-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
-   <feature  id="tern-server-rhino-feature" version="0.0.0">
+   <feature id="tern-server-rhino-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
-   <feature  id="tern-server-nodejs-feature" version="0.0.0">
+   <feature id="tern-server-nodejs-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
-   <feature  id="tern.eclipse.ide.tools.feature" version="0.0.0">
+   <feature id="tern.eclipse.ide.tools.feature" version="0.0.0">
       <category name="Tern Tooling"/>
    </feature>
-   <feature  id="angularjs-eclipse-feature" version="0.0.0">
+   <feature id="angularjs-eclipse-feature" version="0.0.0">
       <category name="AngularJS Eclipse Tooling"/>
    </feature>
-   <feature  id="angularjs-eclipse-jsp-feature" version="0.0.0">
+   <feature id="angularjs-eclipse-jsp-feature" version="0.0.0">
       <category name="AngularJS support for JSP"/>
    </feature>
+   <feature id="angularjs-eclipse-php-feature" version="0.0.0">
+      <category name="AngularJS support for PHP (PDT)"/>
+   </feature>   
    <category-def name="AngularJS Eclipse Tooling" label="AngularJS Eclipse Tooling">
      <description>
        Customizes Eclipse WTP HTML editor and JSDT JavaScript Editor with AngularJS features.
@@ -31,9 +34,15 @@
    </category-def>     
    <category-def name="AngularJS support for JSP" label="AngularJS support for JSP">
      <description>
-       Customizes Eclipse WTP JSP editor and JSDT JavaScript Editor with AngularJS features.
+       Customizes Eclipse WTP JSP editor with AngularJS features.
+     </description>
+   </category-def>
+   <category-def name="AngularJS support for PHP (PDT)" label="AngularJS support for PHP (PDT)">
+     <description>
+       Customizes Eclipse PHP editor (PDT) with AngularJS features. Please install PDT before.
      </description>
    </category-def>      
+         
    <category-def name="Tern - Embed Node.js" label="Tern - Embed Node.js">
       <description>
          Embed Node.js switch OS
