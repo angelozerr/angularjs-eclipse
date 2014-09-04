@@ -26,7 +26,15 @@
    </feature>
    <feature id="angularjs-eclipse-php-feature" version="0.0.0">
       <category name="AngularJS support for PHP (PDT)"/>
-   </feature>   
+   </feature>
+    <feature id="eclipse-wtp-htmlcss-feature">
+      <category name="WTP HTML-CSS"/>
+   </feature>
+   <category-def name="WTP HTML-CSS" label="WTP HTML-CSS">
+     <description>
+       Provides completion for WTP HTML editor for CSS className
+     </description>
+   </category-def>    
    <category-def name="AngularJS Eclipse Tooling" label="AngularJS Eclipse Tooling">
      <description>
        Customizes Eclipse WTP HTML editor and JSDT JavaScript Editor with AngularJS features.
