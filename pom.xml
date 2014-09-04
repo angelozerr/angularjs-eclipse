@@ -129,6 +129,11 @@
 			<url>http://download.eclipse.org/cbi/updates/license/</url>
 			<layout>p2</layout>
 		</repository>
+		<repository>
+			<id>tern.java</id>
+			<layout>p2</layout>
+			<url>http://oss.opensagres.fr/eclipse-wtp-htmlcss/0.6.0-SNAPSHOT/</url>
+		</repository>
 	</repositories>
 	<scm>
 		<url>https://github.com/angelozerr/angularjs-eclipse</url>
