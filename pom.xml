@@ -130,7 +130,7 @@
 			<layout>p2</layout>
 		</repository>
 		<repository>
-			<id>tern.java</id>
+			<id>eclipse-wtp-htmlcss</id>
 			<layout>p2</layout>
 			<url>http://oss.opensagres.fr/eclipse-wtp-htmlcss/0.6.0-SNAPSHOT/</url>
 		</repository>
