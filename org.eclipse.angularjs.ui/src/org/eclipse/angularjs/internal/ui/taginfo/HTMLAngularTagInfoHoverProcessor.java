@@ -62,10 +62,6 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	private IInformationControlCreator fHoverControlCreator;
 	private IInformationControlCreator fPresenterControlCreator;
 
-	public HTMLAngularTagInfoHoverProcessor() {
-		super();
-	}
-
 	@Override
 	protected String computeTagAttNameHelp(IDOMNode xmlnode,
 			IDOMNode parentNode, IStructuredDocumentRegion flatNode,
@@ -90,8 +86,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			}
 		}
 		// Here the attribute is not a directive, display classic Help.
-		return formatAsAdvancedHTML(super.computeTagAttNameHelp(xmlnode,
-				parentNode, flatNode, region));
+		return super.computeTagAttNameHelp(xmlnode, parentNode, flatNode,
+				region);
 	}
 
 	protected String computeTagAttValueHelp(IDOMNode xmlnode,
@@ -143,8 +139,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				Trace.trace(Trace.SEVERE, "Error while tern hover.", e);
 			}
 		}
-		return formatAsAdvancedHTML(super.computeTagAttValueHelp(xmlnode,
-				parentNode, flatNode, region));
+		return super.computeTagAttValueHelp(xmlnode, parentNode, flatNode,
+				region);
 	}
 
 	@Override
@@ -236,17 +232,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 				return HTMLAngularPrinter.getDirectiveInfo(directive);
 			}
 		}
-		return formatAsAdvancedHTML(super.computeTagNameHelp(xmlnode,
-				parentNode, flatNode, region));
-	}
-
-	private String formatAsAdvancedHTML(String html) {
-		if (StringUtils.isEmpty(html)) {
-			return html;
-		}
-		StringBuffer advancedHTML = new StringBuffer(html);
-		HTMLTernPrinter.endPage(advancedHTML);
-		return advancedHTML.toString();
+		return super.computeTagNameHelp(xmlnode, parentNode, flatNode, region);
 	}
 
 	private String computeHelp(Node domNode, String expression, Integer end,
@@ -358,8 +344,6 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 											startSymbol, endSymbol);
 								}
 							}
-							return new Region(flatNode.getStartOffset(region),
-									region.getTextLength());
 						}
 					}
 				} catch (BadLocationException e) {
