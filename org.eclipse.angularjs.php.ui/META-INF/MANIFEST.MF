@@ -25,9 +25,7 @@ Require-Bundle: org.eclipse.ui,
  tern.eclipse,
  org.eclipse.ui.ide,
  tern.eclipse.ide.ui,
- org.eclipse.core.expressions,
- org.eclipse.jst.jsp.core,
- org.eclipse.angularjs.jsp.core
+ org.eclipse.core.expressions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: com.eclipsesource.json
