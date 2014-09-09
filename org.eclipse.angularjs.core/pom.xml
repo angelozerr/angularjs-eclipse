@@ -3,7 +3,7 @@
 	<artifactId>org.eclipse.angularjs.core</artifactId>
 	<packaging>eclipse-plugin</packaging>
 	<parent>
-		<groupId>fr.opensagres.agnularjs</groupId>
+		<groupId>fr.opensagres.angularjs</groupId>
 		<artifactId>angularjs-eclipse</artifactId>
 		<version>0.6.0-SNAPSHOT</version>
 	</parent>
