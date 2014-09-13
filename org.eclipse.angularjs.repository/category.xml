@@ -24,7 +24,7 @@
    <feature id="angularjs-eclipse-php-feature" version="0.0.0">
       <category name="AngularJS support for PHP (PDT)"/>
    </feature>
-    <feature id="org.eclipse.wst.html.webresources.repository">
+    <feature id="org.eclipse.wst.html.webresources.feature">
       <category name="WTP HTML - Web Resources"/>
    </feature>
    <category-def name="WTP HTML - Web Resources" label="WTP HTML - Web Resources">
