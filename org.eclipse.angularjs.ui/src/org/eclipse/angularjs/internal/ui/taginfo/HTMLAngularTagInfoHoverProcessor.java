@@ -26,8 +26,9 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHoverExtension2;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -48,19 +49,39 @@ import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
-import tern.eclipse.ide.ui.utils.HTMLTernPrinter;
 import tern.eclipse.jface.text.HoverControlCreator;
 import tern.eclipse.jface.text.PresenterControlCreator;
+import tern.eclipse.jface.text.TernBrowserInformationControlInput;
 import tern.utils.StringUtils;
 
 /**
  * Provides hover help documentation for Angular tags
  * 
  */
-public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor {
+public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
+		implements ITextHoverExtension2, IInformationProviderExtension2 {
 
 	private IInformationControlCreator fHoverControlCreator;
 	private IInformationControlCreator fPresenterControlCreator;
+
+	@Override
+	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+		TernBrowserInformationControlInput info = (TernBrowserInformationControlInput) getHoverInfo2(
+				textViewer, hoverRegion);
+		return info != null ? info.getHtml() : null;
+	}
+
+	@Override
+	public Object getHoverInfo2(ITextViewer viewer, IRegion hoverRegion) {
+		if ((hoverRegion == null) || (viewer == null)
+				|| (viewer.getDocument() == null)) {
+			return null;
+		}
+
+		int documentOffset = hoverRegion.getOffset();
+		String displayText = computeHoverHelp(viewer, documentOffset);
+		return new TernBrowserInformationControlInput(null, displayText, 200);
+	}
 
 	@Override
 	protected String computeTagAttNameHelp(IDOMNode xmlnode,
@@ -263,21 +284,6 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 		return new HTMLTernTypeCollector();
 	}
 
-	@Override
-	public IInformationControlCreator getHoverControlCreator() {
-		if (fHoverControlCreator == null)
-			fHoverControlCreator = new HoverControlCreator(
-					getInformationPresenterControlCreator());
-		return fHoverControlCreator;
-	}
-
-	// @Override
-	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (fPresenterControlCreator == null)
-			fPresenterControlCreator = new PresenterControlCreator();
-		return fPresenterControlCreator;
-	}
-
 	/**
 	 * Returns the region to hover the text over based on the offset.
 	 * 
@@ -354,4 +360,18 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 		return null;
 	}
 
+	@Override
+	public IInformationControlCreator getHoverControlCreator() {
+		if (fHoverControlCreator == null)
+			fHoverControlCreator = new HoverControlCreator(
+					getInformationPresenterControlCreator());
+		return fHoverControlCreator;
+	}
+
+	@Override
+	public IInformationControlCreator getInformationPresenterControlCreator() {
+		if (fPresenterControlCreator == null)
+			fPresenterControlCreator = new PresenterControlCreator();
+		return fPresenterControlCreator;
+	}
 }
