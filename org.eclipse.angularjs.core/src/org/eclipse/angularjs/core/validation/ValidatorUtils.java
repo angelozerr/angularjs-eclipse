@@ -48,7 +48,7 @@ import tern.angular.modules.Directive;
 import tern.angular.modules.Restriction;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.type.TernAngularTypeQuery;
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.server.protocol.type.ValidationTernTypeCollector;
 
@@ -182,7 +182,7 @@ public class ValidatorUtils {
 						case module:
 						case controller:
 							try {
-								IDETernProject ternProject = AngularProject
+								IIDETernProject ternProject = AngularProject
 										.getTernProject(project);
 
 								boolean exists = isAngularElementExists(attr,
@@ -225,7 +225,7 @@ public class ValidatorUtils {
 	}
 
 	private static boolean isAngularElementExists(IDOMAttr attr, IFile file,
-			IDocument document, IDETernProject ternProject,
+			IDocument document, IIDETernProject ternProject,
 			final AngularType angularType) throws CoreException, IOException,
 			Exception {
 

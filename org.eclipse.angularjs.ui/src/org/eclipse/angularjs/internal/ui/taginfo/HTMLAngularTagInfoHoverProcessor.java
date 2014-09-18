@@ -46,7 +46,7 @@ import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.type.TernAngularTypeQuery;
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
 import tern.eclipse.jface.text.HoverControlCreator;
@@ -121,7 +121,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 			Directive directive = AngularDOMUtils.getAngularDirective(project,
 					attr);
 			try {
-				IDETernProject ternProject = AngularProject
+				IIDETernProject ternProject = AngularProject
 						.getTernProject(project);
 				if (directive != null) {
 					String expression = AngularScopeHelper.getAngularValue(
@@ -221,7 +221,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 			ITextRegion region, IDocument document, int documentPosition) {
 		IFile file = DOMUtils.getFile(treeNode);
 		try {
-			IDETernProject ternProject = IDETernProject.getTernProject(file
+			IIDETernProject ternProject = AngularProject.getTernProject(file
 					.getProject());
 			AngularELRegion angularRegion = AngularRegionUtils
 					.getAngularELRegion(flatNode, documentPosition,
@@ -257,7 +257,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 	}
 
 	private String computeHelp(Node domNode, String expression, Integer end,
-			IFile file, IDocument document, IDETernProject ternProject,
+			IFile file, IDocument document, IIDETernProject ternProject,
 			final AngularType angularType) throws Exception {
 
 		TernAngularQuery query = new TernAngularTypeQuery(angularType);
@@ -374,4 +374,6 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 			fPresenterControlCreator = new PresenterControlCreator();
 		return fPresenterControlCreator;
 	}
+	
+
 }

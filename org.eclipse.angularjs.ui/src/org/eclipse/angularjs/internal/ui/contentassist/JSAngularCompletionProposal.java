@@ -33,6 +33,7 @@ public class JSAngularCompletionProposal extends JSTernCompletionProposal
 		super(name, type, doc, url, origin, pos, startOffset);
 		this.ternServer = server;
 		this.completion = completion;
+		super.setTriggerCharacters(new char[] {'.'});
 	}
 
 	@Override

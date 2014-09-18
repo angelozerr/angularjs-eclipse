@@ -57,7 +57,7 @@ import tern.angular.modules.IDirectiveParameterCollector;
 import tern.angular.modules.Restriction;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
 import tern.server.protocol.completions.ITernCompletionCollector;
@@ -288,7 +288,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 		IFile file = DOMUtils.getFile(element);
 		IProject eclipseProject = file.getProject();
 		try {
-			IDETernProject ternProject = AngularProject
+			IIDETernProject ternProject = AngularProject
 					.getTernProject(eclipseProject);
 
 			// get the expression to use for Tern completion

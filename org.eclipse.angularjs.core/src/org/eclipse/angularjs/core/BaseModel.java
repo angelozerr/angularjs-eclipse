@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.CoreException;
 
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.server.protocol.definition.ITernDefinitionCollector;
@@ -48,9 +48,9 @@ public class BaseModel {
 		return scriptPath;
 	}
 
-	protected IDETernProject getTernProject() throws CoreException {
+	protected IIDETernProject getTernProject() throws CoreException {
 		IProject project = getProject();
-		return IDETernProject.getTernProject(project);
+		return AngularProject.getTernProject(project);
 	}
 
 	public IProject getProject() {
@@ -60,7 +60,7 @@ public class BaseModel {
 	protected void execute(TernAngularCompletionsQuery query,
 			ITernCompletionCollector collector) {
 		try {
-			IDETernProject ternProject = getTernProject();
+			IIDETernProject ternProject = getTernProject();
 			ternProject.request(query, query.getFiles(), scriptPath, collector);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -70,7 +70,7 @@ public class BaseModel {
 	protected void execute(TernAngularDefinitionQuery query,
 			ITernDefinitionCollector collector) {
 		try {
-			IDETernProject ternProject = getTernProject();
+			IIDETernProject ternProject = getTernProject();
 			ternProject.request(query, query.getFiles(), scriptPath, collector);
 		} catch (Exception e) {
 			e.printStackTrace();

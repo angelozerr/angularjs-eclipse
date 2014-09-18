@@ -13,11 +13,12 @@ package org.eclipse.angularjs.core.link;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.utils.StringUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 
 public class AngularLinkResource {
@@ -40,7 +41,7 @@ public class AngularLinkResource {
 			String module = null;
 			String controller = null;
 			String elementId = null;
-			IDETernProject ternProject = IDETernProject.getTernProject(resource
+			IIDETernProject ternProject = AngularProject.getTernProject(resource
 					.getProject());
 			for (int i = 0; i < infos.length; i++) {
 				switch (i % 4) {

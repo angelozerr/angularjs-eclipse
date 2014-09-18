@@ -14,7 +14,7 @@ import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.views.AngularExplorerView;
 import org.eclipse.jface.action.Action;
 
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.ui.ImageResource;
 
 /**
@@ -35,7 +35,7 @@ public class TerminateTernServerAction extends Action {
 
 	@Override
 	public void run() {
-		IDETernProject ternProject = explorer.getCurrentTernProject();
+		IIDETernProject ternProject = explorer.getCurrentTernProject();
 		if (ternProject != null) {
 			ternProject.disposeServer();
 		}
