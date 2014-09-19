@@ -11,6 +11,8 @@
 package org.eclipse.angularjs.internal.ui.contentassist;
 
 import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
+import org.eclipse.wst.sse.ui.internal.contentassist.IRelevanceCompletionProposal;
+import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 
 import tern.angular.AngularType;
 import tern.eclipse.ide.ui.contentassist.JSTernCompletionProposal;
@@ -22,7 +24,7 @@ import tern.server.ITernServer;
  * 
  */
 public class JSAngularCompletionProposal extends JSTernCompletionProposal
-		/*implements IRelevanceCompletionProposal*/ {
+		implements IRelevanceCompletionProposal {
 
 	private final ITernServer ternServer;
 	private final Object completion;
@@ -74,8 +76,10 @@ public class JSAngularCompletionProposal extends JSTernCompletionProposal
 		return title.toString();
 	}
 
-	/*@Override
+	@Override
 	public int getRelevance() {
-		return 1000000;
-	}*/
+		// Since this proposal is limited only to Angular Expression regions, 
+		// it should be higher than any of tag or attribute value proposals
+		return XMLRelevanceConstants.R_STRICTLY_VALID_TAG_NAME + 5;
+	}
 }
