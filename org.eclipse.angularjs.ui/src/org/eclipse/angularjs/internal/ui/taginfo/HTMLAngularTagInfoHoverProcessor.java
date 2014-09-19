@@ -80,6 +80,11 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 
 		int documentOffset = hoverRegion.getOffset();
 		String displayText = computeHoverHelp(viewer, documentOffset);
+
+		if(displayText == null) {
+		    return null;
+		}
+
 		return new TernBrowserInformationControlInput(null, displayText, 200);
 	}
 
