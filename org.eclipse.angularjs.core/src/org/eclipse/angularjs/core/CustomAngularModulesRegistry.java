@@ -33,7 +33,8 @@ import tern.angular.modules.IDirectiveSyntax;
 import tern.angular.modules.Module;
 import tern.angular.modules.Restriction;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
+import tern.eclipse.ide.core.TernCorePlugin;
 import tern.eclipse.ide.core.utils.FileUtils;
 import tern.server.ITernServer;
 import tern.server.protocol.completions.ITernCompletionCollector;
@@ -82,7 +83,7 @@ public class CustomAngularModulesRegistry extends
 					return;
 				}
 				super.clear();
-				IDETernProject ternProject = IDETernProject
+				IIDETernProject ternProject = TernCorePlugin
 						.getTernProject(project);
 				TernAngularCompletionsQuery query = new TernAngularCompletionsQuery(
 						AngularType.directives);

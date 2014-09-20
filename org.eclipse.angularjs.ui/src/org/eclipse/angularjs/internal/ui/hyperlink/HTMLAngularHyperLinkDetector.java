@@ -37,7 +37,7 @@ import org.w3c.dom.Node;
 
 import tern.angular.AngularType;
 import tern.angular.modules.Directive;
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
 
 /**
  * 
@@ -69,7 +69,7 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 						.getStructuredDocumentRegion(textViewer,
 								region.getOffset());
 
-				IDETernProject ternProject = AngularProject
+				IIDETernProject ternProject = AngularProject
 						.getTernProject(project);
 				String startSymbol = AngularProject.DEFAULT_START_SYMBOL;
 				String endSymbol = AngularProject.DEFAULT_END_SYMBOL;
@@ -172,7 +172,7 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 
 	private IHyperlink createHyperlinkForExpression(String regionType,
 			String regionText, int regionStartOffset, int documentPosition,
-			IDOMNode node, IDocument document, IDETernProject ternProject,
+			IDOMNode node, IDocument document, IIDETernProject ternProject,
 			IFile file, String startSymbol, String endSymbol) {
 		AngularELRegion angularRegion = AngularRegionUtils.getAngularELRegion(
 				regionType, regionText, regionStartOffset, documentPosition,

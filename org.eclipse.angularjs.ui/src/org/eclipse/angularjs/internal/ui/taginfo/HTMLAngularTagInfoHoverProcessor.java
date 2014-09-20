@@ -26,8 +26,9 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IInformationControlCreator;
 import org.eclipse.jface.text.IRegion;
+import org.eclipse.jface.text.ITextHoverExtension2;
 import org.eclipse.jface.text.ITextViewer;
-import org.eclipse.jface.text.Region;
+import org.eclipse.jface.text.information.IInformationProviderExtension2;
 import org.eclipse.wst.html.ui.internal.taginfo.HTMLTagInfoHoverProcessor;
 import org.eclipse.wst.sse.core.internal.provisional.IndexedRegion;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
@@ -45,22 +46,47 @@ import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.type.TernAngularTypeQuery;
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
-import tern.eclipse.ide.ui.utils.HTMLTernPrinter;
 import tern.eclipse.jface.text.HoverControlCreator;
 import tern.eclipse.jface.text.PresenterControlCreator;
+import tern.eclipse.jface.text.TernBrowserInformationControlInput;
 import tern.utils.StringUtils;
 
 /**
  * Provides hover help documentation for Angular tags
  * 
  */
-public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor {
+public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
+		implements ITextHoverExtension2, IInformationProviderExtension2 {
 
 	private IInformationControlCreator fHoverControlCreator;
 	private IInformationControlCreator fPresenterControlCreator;
+
+	@Override
+	public String getHoverInfo(ITextViewer textViewer, IRegion hoverRegion) {
+		TernBrowserInformationControlInput info = (TernBrowserInformationControlInput) getHoverInfo2(
+				textViewer, hoverRegion);
+		return info != null ? info.getHtml() : null;
+	}
+
+	@Override
+	public Object getHoverInfo2(ITextViewer viewer, IRegion hoverRegion) {
+		if ((hoverRegion == null) || (viewer == null)
+				|| (viewer.getDocument() == null)) {
+			return null;
+		}
+
+		int documentOffset = hoverRegion.getOffset();
+		String displayText = computeHoverHelp(viewer, documentOffset);
+
+		if(displayText == null) {
+		    return null;
+		}
+
+		return new TernBrowserInformationControlInput(null, displayText, 200);
+	}
 
 	@Override
 	protected String computeTagAttNameHelp(IDOMNode xmlnode,
@@ -100,7 +126,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			Directive directive = AngularDOMUtils.getAngularDirective(project,
 					attr);
 			try {
-				IDETernProject ternProject = AngularProject
+				IIDETernProject ternProject = AngularProject
 						.getTernProject(project);
 				if (directive != null) {
 					String expression = AngularScopeHelper.getAngularValue(
@@ -200,7 +226,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			ITextRegion region, IDocument document, int documentPosition) {
 		IFile file = DOMUtils.getFile(treeNode);
 		try {
-			IDETernProject ternProject = IDETernProject.getTernProject(file
+			IIDETernProject ternProject = AngularProject.getTernProject(file
 					.getProject());
 			AngularELRegion angularRegion = AngularRegionUtils
 					.getAngularELRegion(flatNode, documentPosition,
@@ -236,7 +262,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 	}
 
 	private String computeHelp(Node domNode, String expression, Integer end,
-			IFile file, IDocument document, IDETernProject ternProject,
+			IFile file, IDocument document, IIDETernProject ternProject,
 			final AngularType angularType) throws Exception {
 
 		TernAngularQuery query = new TernAngularTypeQuery(angularType);
@@ -261,21 +287,6 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 			return new HTMLAngularTernTypeCollector();
 		}
 		return new HTMLTernTypeCollector();
-	}
-
-	@Override
-	public IInformationControlCreator getHoverControlCreator() {
-		if (fHoverControlCreator == null)
-			fHoverControlCreator = new HoverControlCreator(
-					getInformationPresenterControlCreator());
-		return fHoverControlCreator;
-	}
-
-	// @Override
-	public IInformationControlCreator getInformationPresenterControlCreator() {
-		if (fPresenterControlCreator == null)
-			fPresenterControlCreator = new PresenterControlCreator();
-		return fPresenterControlCreator;
 	}
 
 	/**
@@ -353,5 +364,21 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor 
 		}
 		return null;
 	}
+
+	@Override
+	public IInformationControlCreator getHoverControlCreator() {
+		if (fHoverControlCreator == null)
+			fHoverControlCreator = new HoverControlCreator(
+					getInformationPresenterControlCreator());
+		return fHoverControlCreator;
+	}
+
+	@Override
+	public IInformationControlCreator getInformationPresenterControlCreator() {
+		if (fPresenterControlCreator == null)
+			fPresenterControlCreator = new PresenterControlCreator();
+		return fPresenterControlCreator;
+	}
+	
 
 }

@@ -57,7 +57,8 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.part.ViewPart;
 
 import tern.angular.AngularType;
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
+import tern.eclipse.ide.core.TernCorePlugin;
 import tern.eclipse.ide.core.scriptpath.IScriptResource;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.utils.EditorUtils;
@@ -73,7 +74,7 @@ public class AngularExplorerView extends ViewPart implements
 		ISelectionListener, ITernDefinitionCollector, ITernServerListener {
 
 	private IWorkbenchPart currentEditor;
-	private IDETernProject currentTernProject;
+	private IIDETernProject currentTernProject;
 	private IResource currentResource;
 	private TreeViewer viewer;
 
@@ -260,7 +261,7 @@ public class AngularExplorerView extends ViewPart implements
 					IProject project = resource.getProject();
 					if (AngularProject.hasAngularNature(project)) {
 						try {
-							IDETernProject ternProject = IDETernProject
+							IIDETernProject ternProject = TernCorePlugin
 									.getTernProject(project);
 							boolean projectChanged = !ternProject
 									.equals(currentTernProject);
@@ -273,7 +274,7 @@ public class AngularExplorerView extends ViewPart implements
 							}
 							currentTernProject = ternProject;
 							this.terminateAction.setEnabled(!currentTernProject
-									.isTernServerDisposed());
+									.isServerDisposed());
 							currentResource = resource;
 							if (projectChanged) {
 								// refresh
@@ -307,7 +308,7 @@ public class AngularExplorerView extends ViewPart implements
 		return currentResource;
 	}
 
-	public IDETernProject getCurrentTernProject() {
+	public IIDETernProject getCurrentTernProject() {
 		return currentTernProject;
 	}
 

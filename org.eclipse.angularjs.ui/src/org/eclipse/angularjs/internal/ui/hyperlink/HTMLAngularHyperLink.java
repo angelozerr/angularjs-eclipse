@@ -19,7 +19,7 @@ import org.w3c.dom.Node;
 
 import tern.angular.AngularType;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
-import tern.eclipse.ide.core.IDETernProject;
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.hyperlink.AbstractTernHyperlink;
 
@@ -36,7 +36,7 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 	private final AngularType angularType;
 
 	public HTMLAngularHyperLink(Node node, IRegion region, IFile file,
-			IDocument document, IDETernProject ternProject, String expression,
+			IDocument document, IIDETernProject ternProject, String expression,
 			Integer end, AngularType angularType) {
 		super(region, ternProject);
 		this.node = node;
