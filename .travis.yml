@@ -1,4 +1,11 @@
 language: java
 
+install: echo "I trust Maven."
+
+# don't just run the tests, also run Findbugs and friends
+script: mvn verify
+
 notifications:
-  email: false
+  email:
+    recipients:
+      - angelo.zerr@gmail.com
