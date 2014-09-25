@@ -54,7 +54,9 @@ public class AngularScopeHelper {
 						scriptPath = resourceLink.getScriptPath();
 						query.getScope().setModule(resourceLink.getModule());
 						if (angularType != AngularType.controller) {
-							if (!query.hasControllers()) {
+							if (!query.hasControllers()
+									&& !StringUtils.isEmpty(resourceLink
+											.getController())) {
 								query.getScope().getControllers()
 										.add(resourceLink.getController());
 							}
