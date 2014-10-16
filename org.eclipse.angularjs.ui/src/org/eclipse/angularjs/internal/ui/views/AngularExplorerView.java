@@ -56,12 +56,13 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.part.ViewPart;
 
+import tern.ITernFile;
 import tern.angular.AngularType;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.TernCorePlugin;
-import tern.eclipse.ide.core.scriptpath.IScriptResource;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.utils.EditorUtils;
+import tern.scriptpath.ITernScriptResource;
+import tern.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
 import tern.server.ITernServerListener;
 import tern.server.protocol.definition.ITernDefinitionCollector;
@@ -173,7 +174,7 @@ public class AngularExplorerView extends ViewPart implements
 			// Open action (Go To Definition available if teh selected element
 			// can be opened in a editor).
 			this.openAction
-					.setEnabled(firstSelection instanceof IScriptResource
+					.setEnabled(firstSelection instanceof ITernScriptResource
 							|| firstSelection instanceof IDefinitionAware);
 			// Link/Unlink actions
 			Module module = null;
@@ -351,16 +352,16 @@ public class AngularExplorerView extends ViewPart implements
 	public void tryOpenInEditor(Object firstSelection) {
 		if (firstSelection instanceof ITernScriptPath) {
 			ITernScriptPath scriptPath = (ITernScriptPath) firstSelection;
-			IResource resource = scriptPath.getResource();
-			if (resource.getType() == IResource.FILE) {
-				IFile file = (IFile) resource;
-				tryToOpenFile(file, file.getFullPath().makeRelative()
-						.toString(), null, null);
+			ITernFile file = (ITernFile) scriptPath.getAdapter(ITernFile.class);
+			if (file != null) {
+				tryToOpenFile(file, file.getFullName(currentTernProject), null, null);
 			}
-		} else if (firstSelection instanceof IScriptResource) {
-			IScriptResource scriptResource = (IScriptResource) firstSelection;
-			IFile file = scriptResource.getFile();
-			tryToOpenFile(file, scriptResource.getLabel(), null, null);
+		} else if (firstSelection instanceof ITernScriptResource) {
+			ITernScriptResource scriptResource = (ITernScriptResource) firstSelection;
+			ITernFile file = scriptResource.getFile();
+			if (file != null) {
+				tryToOpenFile(file, file.getFullName(currentTernProject), null, null);
+			}
 		} else if (firstSelection instanceof IDefinitionAware) {
 			((IDefinitionAware) firstSelection)
 					.findDefinition(AngularExplorerView.this);
@@ -372,7 +373,7 @@ public class AngularExplorerView extends ViewPart implements
 	 * 
 	 * @param file
 	 */
-	private void tryToOpenFile(IFile file, String filename, Long start, Long end) {
+	private void tryToOpenFile(ITernFile file, String filename, Long start, Long end) {
 		IStatus status = openFile(file, filename, start, end);
 		if (!status.isOK()) {
 			ErrorDialog.openError(getSite().getShell(),
@@ -386,10 +387,11 @@ public class AngularExplorerView extends ViewPart implements
 	 * 
 	 * @param file
 	 */
-	private IStatus openFile(IFile file, String filename, Long start, Long end) {
-		if (file == null && filename != null) {
-			file = getCurrentTernProject().getFileManager().getFile(filename);
+	private IStatus openFile(ITernFile tFile, String filename, Long start, Long end) {
+		if (tFile == null && filename != null) {
+			tFile = getCurrentTernProject().getFile(filename);
 		}
+		IFile file = (IFile) tFile.getAdapter(IFile.class);
 		if (file == null) {
 			return new Status(
 					IStatus.ERROR,

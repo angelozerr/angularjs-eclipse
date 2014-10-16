@@ -22,7 +22,7 @@ import tern.angular.modules.DOMDirectiveProvider;
 import tern.angular.protocol.Controller;
 import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.scriptpath.ITernScriptPath;
 
 /**
  * Angular scope helper.

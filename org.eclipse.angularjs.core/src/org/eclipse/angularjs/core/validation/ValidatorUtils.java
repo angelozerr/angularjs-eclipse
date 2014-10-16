@@ -42,6 +42,7 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import tern.ITernFile;
 import tern.angular.AngularType;
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
@@ -49,7 +50,8 @@ import tern.angular.modules.Restriction;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IIDETernProject;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.eclipse.ide.core.resources.TernDocumentFile;
+import tern.scriptpath.ITernScriptPath;
 import tern.server.protocol.type.ValidationTernTypeCollector;
 
 /**
@@ -239,10 +241,10 @@ public class ValidatorUtils {
 		ValidationTernTypeCollector collector = new ValidationTernTypeCollector();
 
 		if (scriptPath != null) {
-			ternProject.request(query, query.getFiles(), scriptPath, collector);
+			ternProject.request(query, query.getFiles(), scriptPath, null, null, collector);
 		} else {
-			ternProject.request(query, query.getFiles(), attr, file, document,
-					collector);
+			ITernFile tf = new TernDocumentFile(file, document);
+			ternProject.request(query, query.getFiles(), null, attr, tf, collector);
 		}
 		return collector.isExists();
 	}

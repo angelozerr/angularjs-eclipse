@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
+import tern.TernResourcesManager;
 import tern.angular.AngularType;
 import tern.angular.modules.AbstractAngularModulesRegistry;
 import tern.angular.modules.Directive;
@@ -35,7 +36,6 @@ import tern.angular.modules.Restriction;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.TernCorePlugin;
-import tern.eclipse.ide.core.utils.FileUtils;
 import tern.server.ITernServer;
 import tern.server.protocol.completions.ITernCompletionCollector;
 
@@ -88,7 +88,7 @@ public class CustomAngularModulesRegistry extends
 				TernAngularCompletionsQuery query = new TernAngularCompletionsQuery(
 						AngularType.directives);
 				query.setExpression("");
-				ternProject.request(query, query.getFiles(),
+				ternProject.request(query, query.getFiles(), null, null, null,
 						new ITernCompletionCollector() {
 
 							@Override
@@ -158,7 +158,7 @@ public class CustomAngularModulesRegistry extends
 			return true;
 
 		case IResource.FILE:
-			if (FileUtils.isJSFile(resource) || FileUtils.isHTMLFile(resource)) {
+			if (TernResourcesManager.isJSFile(resource) || TernResourcesManager.isHTMLFile(resource)) {
 				clear();
 			}
 			return true;

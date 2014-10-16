@@ -17,7 +17,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.runtime.CoreException;
 
-import tern.TernProject;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.server.TernDef;
 import tern.server.TernPlugin;
