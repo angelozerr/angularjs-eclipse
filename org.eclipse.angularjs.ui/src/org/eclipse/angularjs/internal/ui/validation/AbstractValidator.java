@@ -111,11 +111,13 @@ public abstract class AbstractValidator implements IValidator,
 			file = getFile(delta[0]);
 		}
 
-		IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument)
-				.getStructuredDocumentRegions(dirtyRegion.getOffset(),
-						dirtyRegion.getLength());
-
-		validate(reporter, file, regions);
+		if (AngularProject.hasAngularNature(file.getProject())) {
+			// do angular validation only if project has angular nature
+			IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument)
+					.getStructuredDocumentRegions(dirtyRegion.getOffset(),
+							dirtyRegion.getLength());
+			validate(reporter, file, regions);
+		}
 	}
 
 	private void validate(IReporter reporter, IFile file,
