@@ -58,23 +58,6 @@ public class ConvertProjectToAngularCommandHandler extends AbstractHandler {
 				IProjectDescription projectDescription = project
 						.getDescription();
 
-				// Configure builders:
-				/*
-				 * List newBuildSpec = new LinkedList(); ICommand[] buildSpec =
-				 * projectDescription.getBuildSpec(); for (int c = 0; c <
-				 * buildSpec.length; ++c) { if
-				 * (!buildSpec[c].getBuilderName().equals( PHPECLIPSE_BUILDER))
-				 * { newBuildSpec.add(buildSpec[c]); } } ICommand command =
-				 * projectDescription.newCommand();
-				 * command.setBuilderName(PHPNature.VALIDATION_BUILDER_ID);
-				 * newBuildSpec.add(command);
-				 * 
-				 * command = projectDescription.newCommand();
-				 * newBuildSpec.add(command);
-				 * 
-				 * projectDescription.setBuildSpec((ICommand[]) newBuildSpec
-				 * .toArray(new ICommand[newBuildSpec.size()]));
-				 */
 				// Configure natures:
 				List newNatures = new LinkedList();
 				String[] natures = projectDescription.getNatureIds();
