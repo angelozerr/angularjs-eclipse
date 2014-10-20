@@ -10,7 +10,7 @@
  */
 package org.eclipse.angularjs.core.link;
 
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.scriptpath.ITernScriptPath;
 
 public class AngularLink {
 

@@ -41,17 +41,19 @@ import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import tern.ITernFile;
 import tern.angular.AngularType;
 import tern.angular.modules.Directive;
 import tern.angular.modules.DirectiveParameter;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.type.TernAngularTypeQuery;
 import tern.eclipse.ide.core.IIDETernProject;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.eclipse.ide.core.resources.TernDocumentFile;
 import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
 import tern.eclipse.jface.text.HoverControlCreator;
 import tern.eclipse.jface.text.PresenterControlCreator;
 import tern.eclipse.jface.text.TernBrowserInformationControlInput;
+import tern.scriptpath.ITernScriptPath;
 import tern.utils.StringUtils;
 
 /**
@@ -272,11 +274,10 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 				DOMUtils.getOwnerElement(domNode), file, angularType, query);
 		HTMLTernTypeCollector collector = createCollector(angularType);
 		if (scriptPath != null) {
-			ternProject.request(query, query.getFiles(), scriptPath, collector);
+			ternProject.request(query, query.getFiles(), scriptPath, null, null, collector);
 		} else {
-
-			ternProject.request(query, query.getFiles(), domNode, file,
-					document, collector);
+			ITernFile tf = new TernDocumentFile(file, document);
+			ternProject.request(query, query.getFiles(), null, domNode, tf, collector);
 		}
 		return collector.getInfo();
 	}

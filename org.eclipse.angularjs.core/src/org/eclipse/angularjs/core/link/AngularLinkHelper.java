@@ -16,7 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 
 import tern.eclipse.ide.core.TernCorePlugin;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.scriptpath.ITernScriptPath;
 
 public class AngularLinkHelper {
 
@@ -94,8 +94,10 @@ public class AngularLinkHelper {
 	private static boolean isSameController(AngularLink link,
 			ITernScriptPath scriptPath, String module, String controller,
 			String elementId) {
-		if (!link.getScriptPath().getResource().getProject()
-				.equals(scriptPath.getResource().getProject())) {
+		IResource r1 = (IResource) link.getScriptPath().getAdapter(IResource.class);
+		IResource r2 = (IResource) scriptPath.getAdapter(IResource.class);
+		if (r1 == null || r2 == null ||
+				!r1.getProject().equals(r2.getProject())) {
 			// not the same project
 			return false;
 		}

@@ -36,7 +36,7 @@ import tern.angular.modules.IDirectiveSyntax;
 import tern.angular.modules.Restriction;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.TernCorePlugin;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
 import tern.server.TernServerAdapter;
 

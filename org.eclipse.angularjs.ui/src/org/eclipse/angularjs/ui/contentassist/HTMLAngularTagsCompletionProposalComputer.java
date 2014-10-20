@@ -46,6 +46,7 @@ import org.eclipse.wst.xml.ui.internal.contentassist.XMLRelevanceConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import tern.ITernFile;
 import tern.angular.AngularType;
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
@@ -58,7 +59,8 @@ import tern.angular.modules.Restriction;
 import tern.angular.protocol.TernAngularQuery;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IIDETernProject;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.eclipse.ide.core.resources.TernDocumentFile;
+import tern.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
 import tern.server.protocol.completions.ITernCompletionCollector;
 
@@ -345,10 +347,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 			if (scriptPath != null) {
 				ternProject.request(query, query.getFiles(), scriptPath,
-						collector);
+						null, null, collector);
 			} else {
-				ternProject.request(query, query.getFiles(), element, file,
-						document, collector);
+				ITernFile tf = new TernDocumentFile(file, document);
+				ternProject.request(query, query.getFiles(), null, element, tf, collector);
 			}
 
 		} catch (Exception e) {

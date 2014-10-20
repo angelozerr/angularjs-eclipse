@@ -15,7 +15,7 @@ import java.util.List;
 
 import tern.angular.AngularType;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
 import tern.server.protocol.completions.ITernCompletionCollector;
 

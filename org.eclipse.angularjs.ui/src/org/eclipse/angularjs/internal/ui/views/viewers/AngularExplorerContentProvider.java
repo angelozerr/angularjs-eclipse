@@ -15,10 +15,11 @@ import org.eclipse.angularjs.core.BaseModel;
 import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.ModulesFolder;
 import org.eclipse.angularjs.core.ScriptsFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
 import tern.eclipse.ide.ui.viewers.TernScriptPathContentProvider;
+import tern.scriptpath.ITernScriptPath;
 
 /**
  * Content provider used in the tree of the angular explorer.
@@ -33,8 +34,8 @@ public class AngularExplorerContentProvider extends
 			ITernScriptPath scriptPath = (ITernScriptPath) element;
 			try {
 				AngularProject angularProject = AngularProject
-						.getAngularProject(scriptPath.getResource()
-								.getProject());
+						.getAngularProject((IProject) scriptPath.getOwnerProject().
+								getAdapter(IProject.class));
 				return angularProject.getFolders(scriptPath).toArray();
 			} catch (CoreException e) {
 				e.printStackTrace();

@@ -17,11 +17,13 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.w3c.dom.Node;
 
+import tern.ITernFile;
 import tern.angular.AngularType;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.eclipse.ide.core.IIDETernProject;
-import tern.eclipse.ide.core.scriptpath.ITernScriptPath;
+import tern.eclipse.ide.core.resources.TernDocumentFile;
 import tern.eclipse.ide.ui.hyperlink.AbstractTernHyperlink;
+import tern.scriptpath.ITernScriptPath;
 
 /**
  * HTML angular element hyperlink.
@@ -57,10 +59,10 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 			ITernScriptPath scriptPath = AngularScopeHelper.populateScope(node,
 					file, angularType, query);
 			if (scriptPath != null) {
-				ternProject.request(query, query.getFiles(), scriptPath, this);
+				ternProject.request(query, query.getFiles(), scriptPath, null, null, this);
 			} else {
-				ternProject.request(query, query.getFiles(), node, file,
-						document, this);
+				ITernFile tf = new TernDocumentFile(file, document);
+				ternProject.request(query, query.getFiles(), null, node, tf, this);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
