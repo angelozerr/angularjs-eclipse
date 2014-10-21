@@ -73,20 +73,18 @@ public abstract class AbstractValidator implements IValidator,
 		// remove old messages
 		reporter.removeAllMessages(this);
 
-		IFile file = null;
 		String[] delta = helper.getURIs();
 		if (delta.length > 0) {
 			// get the file, model and document:
-			file = getFile(delta[0]);
+			IFile file = getFile(delta[0]);
+			if (file != null
+					&& AngularProject.hasAngularNature(file.getProject())) {
+				// do angular validation only if project has angular nature
+				IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument)
+						.getStructuredDocumentRegions();
+				validate(reporter, file, regions);
+			}
 		}
-
-		if (AngularProject.hasAngularNature(file.getProject())) {
-			// do angular validation only if project has angular nature
-			IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument)
-					.getStructuredDocumentRegions();
-			validate(reporter, file, regions);
-		}
-
 	}
 
 	public void validate(IRegion dirtyRegion, IValidationContext helper,
@@ -104,19 +102,18 @@ public abstract class AbstractValidator implements IValidator,
 		// remove old messages
 		reporter.removeAllMessages(this);
 
-		IFile file = null;
 		String[] delta = helper.getURIs();
 		if (delta.length > 0) {
 			// get the file, model and document:
-			file = getFile(delta[0]);
-		}
-
-		if (AngularProject.hasAngularNature(file.getProject())) {
-			// do angular validation only if project has angular nature
-			IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument)
-					.getStructuredDocumentRegions(dirtyRegion.getOffset(),
-							dirtyRegion.getLength());
-			validate(reporter, file, regions);
+			IFile file = getFile(delta[0]);
+			if (file != null
+					&& AngularProject.hasAngularNature(file.getProject())) {
+				// do angular validation only if project has angular nature
+				IStructuredDocumentRegion[] regions = ((IStructuredDocument) fDocument)
+						.getStructuredDocumentRegions(dirtyRegion.getOffset(),
+								dirtyRegion.getLength());
+				validate(reporter, file, regions);
+			}
 		}
 	}
 
