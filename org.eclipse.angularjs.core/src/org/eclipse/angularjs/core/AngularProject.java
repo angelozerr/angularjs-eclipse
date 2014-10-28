@@ -38,6 +38,7 @@ import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.TernCorePlugin;
 import tern.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
+import tern.server.TernPlugin;
 import tern.server.TernServerAdapter;
 
 /**
@@ -68,7 +69,6 @@ public class AngularProject implements IDirectiveSyntax {
 				project);
 		AngularModulesManager.getInstance().addRegistry(this, customDirectives);
 		project.setSessionProperty(ANGULAR_PROJECT, this);
-		ensureNatureIsConfigured();
 		getTernProject(project).addServerListener(new TernServerAdapter() {
 			@Override
 			public void onStop(ITernServer server) {
@@ -143,8 +143,11 @@ public class AngularProject implements IDirectiveSyntax {
 	public static boolean hasAngularNature(IProject project) {
 		if (project.isAccessible()) {
 			try {
-				if (project.hasNature(AngularNature.ID))
+				if (TernCorePlugin.hasTernNature(project)
+						&& TernCorePlugin.getTernProject(project).hasPlugin(
+								TernPlugin.angular)) {
 					return true;
+				}
 
 				List<String> angularNatureAdapters = getAngularNatureAdapters();
 				for (String adaptToNature : angularNatureAdapters) {
@@ -274,15 +277,6 @@ public class AngularProject implements IDirectiveSyntax {
 			loadAngularProjectDescribers();
 		}
 		return angularNatureAdapters;
-	}
-
-	private void ensureNatureIsConfigured() throws CoreException {
-		// Check if .tern-project is correctly configured for adapted nature
-		final AngularNature tempAngularNature = new AngularNature();
-		tempAngularNature.setProject(project);
-		if (!tempAngularNature.isConfigured()) {
-			tempAngularNature.configure();
-		}
 	}
 
 	/**

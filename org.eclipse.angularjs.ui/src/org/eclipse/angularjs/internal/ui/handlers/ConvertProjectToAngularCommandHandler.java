@@ -10,16 +10,14 @@
  */
 package org.eclipse.angularjs.internal.ui.handlers;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.io.IOException;
 
-import org.eclipse.angularjs.core.AngularNature;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
+import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
@@ -31,8 +29,10 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.TernCorePlugin;
-import tern.eclipse.ide.core.TernNature;
+import tern.server.TernDef;
+import tern.server.TernPlugin;
 
 /**
  * Convert selected project to Angular project.
@@ -53,35 +53,21 @@ public class ConvertProjectToAngularCommandHandler extends AbstractHandler {
 			public IStatus runInWorkspace(IProgressMonitor monitor)
 					throws CoreException {
 
-				boolean adoptedToTern = TernCorePlugin.hasTernNature(project);
-				
-				IProjectDescription projectDescription = project
-						.getDescription();
+				// Add "angular" plugin
+				IIDETernProject ternProject = TernCorePlugin.getTernProject(
+						project, true);
+				ternProject.addPlugin(TernPlugin.angular);
 
-				// Configure natures:
-				List newNatures = new LinkedList();
-				String[] natures = projectDescription.getNatureIds();
-				boolean recreateTernNature = false;
-				for (int c = 0; c < natures.length; ++c) {
-					if (TernNature.ID.equals(natures[c])) {
-						recreateTernNature = true; 	// If Tern Nature exist on a project 
-													// it should be recreated for AngularJS project
-					}
-					
-					if (!AngularNature.ID.equals(natures[c]) && 
-							!TernNature.ID.equals(natures[c])) {
-						newNatures.add(natures[c]);
-					}
+				// Add "browser" + "ecma5" JSON Type Def
+				ternProject.addLib(TernDef.browser);
+				ternProject.addLib(TernDef.ecma5);
+
+				try {
+					ternProject.saveIfNeeded();
+				} catch (IOException e) {
+					Trace.trace(Trace.SEVERE,
+							"Error while configuring angular nature.", e);
 				}
-				if (!adoptedToTern || recreateTernNature) // Add Tern Nature only if the project is not adopted
-					newNatures.add(TernNature.ID);
-				newNatures.add(AngularNature.ID);
-
-				projectDescription.setNatureIds((String[]) newNatures
-						.toArray(new String[newNatures.size()]));
-
-				// Save project description:
-				project.setDescription(projectDescription, monitor);
 				return Status.OK_STATUS;
 			}
 		};

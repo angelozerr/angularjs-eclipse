@@ -17,17 +17,6 @@
 	<extension-point id="angularNatureAdapters" name="%angularNatureAdapters.name"
 		schema="schema/angularNatureAdapters.exsd" />	
 	
-	<extension
-		id="angularnature"
-		name="%angularNature"
-		point="org.eclipse.core.resources.natures">
-		<runtime>
-			<run
-				class="org.eclipse.angularjs.core.AngularNature">
-			</run>
-		</runtime>
-	</extension>
-	
 	<!-- Preferences initialization -->
 	<extension
 		point="org.eclipse.core.runtime.preferences">
