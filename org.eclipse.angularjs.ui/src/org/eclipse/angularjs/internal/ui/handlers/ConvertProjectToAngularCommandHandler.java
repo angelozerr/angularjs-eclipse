@@ -25,12 +25,17 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.TernCorePlugin;
+import tern.eclipse.ide.ui.handlers.AbstractConvertProjectCommandHandler;
+import tern.server.ITernDef;
+import tern.server.ITernPlugin;
 import tern.server.TernDef;
 import tern.server.TernPlugin;
 
@@ -38,56 +43,24 @@ import tern.server.TernPlugin;
  * Convert selected project to Angular project.
  * 
  */
-public class ConvertProjectToAngularCommandHandler extends AbstractHandler {
+public class ConvertProjectToAngularCommandHandler extends
+		AbstractConvertProjectCommandHandler {
 
-	public Object execute(ExecutionEvent event) throws ExecutionException {
-
-		final IProject project = getSelectedProject(event);
-
-		if (project == null) {
-			return null;
-		}
-
-		WorkspaceJob convertJob = new WorkspaceJob(
-				AngularUIMessages.ConvertProjectToAngular_converting_project_job_title) {
-			public IStatus runInWorkspace(IProgressMonitor monitor)
-					throws CoreException {
-
-				// Add "angular" plugin
-				IIDETernProject ternProject = TernCorePlugin.getTernProject(
-						project, true);
-				ternProject.addPlugin(TernPlugin.angular);
-
-				// Add "browser" + "ecma5" JSON Type Def
-				ternProject.addLib(TernDef.browser);
-				ternProject.addLib(TernDef.ecma5);
-
-				try {
-					ternProject.saveIfNeeded();
-				} catch (IOException e) {
-					Trace.trace(Trace.SEVERE,
-							"Error while configuring angular nature.", e);
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		convertJob.setUser(true);
-		convertJob.setRule(ResourcesPlugin.getWorkspace().getRoot());
-		convertJob.schedule();
-
-		return null;
+	@Override
+	protected String getConvertingProjectJobTitle(IProject project) {
+		return NLS
+				.bind(AngularUIMessages.ConvertProjectToAngular_converting_project_job_title,
+						project.getName());
 	}
 
-	private IProject getSelectedProject(ExecutionEvent event) {
-		ISelection currentSelection = HandlerUtil.getCurrentSelection(event);
+	@Override
+	protected ITernPlugin[] getPlugins(IScopeContext[] fLookupOrder) {
+		return new ITernPlugin[] { TernPlugin.angular };
+	}
 
-		if (currentSelection instanceof IStructuredSelection) {
-			Object element = ((IStructuredSelection) currentSelection)
-					.getFirstElement();
-			return (IProject) Platform.getAdapterManager().getAdapter(element,
-					IProject.class);
-		}
-		return null;
+	@Override
+	protected ITernDef[] getDefs(IScopeContext[] fLookupOrder) {
+		return new ITernDef[] { TernDef.browser, TernDef.ecma5 };
 	}
 
 }
