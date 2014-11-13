@@ -121,7 +121,7 @@ public class CustomAngularModulesRegistry extends
 			}
 		} catch (Exception e) {
 			Trace.trace(Trace.WARNING,
-					"Error while refrsh custom angular directives.", e);
+					"Error while refresh custom angular directives.", e);
 		}
 	}
 
@@ -149,16 +149,10 @@ public class CustomAngularModulesRegistry extends
 			return true;
 		case IResource.PROJECT:
 			IProject project = (IProject) resource;
-			if (!(project.isAccessible())) {
-				return false;
-			}
-			if (!AngularProject.hasAngularNature(project)) {
-				return false;
-			}
-			return true;
-
+			return this.project.equals(project);
 		case IResource.FILE:
-			if (TernResourcesManager.isJSFile(resource) || TernResourcesManager.isHTMLFile(resource)) {
+			if (TernResourcesManager.isJSFile(resource)
+					|| TernResourcesManager.isHTMLFile(resource)) {
 				clear();
 			}
 			return true;
