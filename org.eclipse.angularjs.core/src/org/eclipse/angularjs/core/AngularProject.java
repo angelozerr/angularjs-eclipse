@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
@@ -35,6 +34,7 @@ import tern.angular.modules.IDirectiveCollector;
 import tern.angular.modules.IDirectiveSyntax;
 import tern.angular.modules.Restriction;
 import tern.eclipse.ide.core.IIDETernProject;
+import tern.eclipse.ide.core.ITernProjectLifecycleListener;
 import tern.eclipse.ide.core.TernCorePlugin;
 import tern.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
@@ -45,31 +45,34 @@ import tern.server.TernServerAdapter;
  * Angular project.
  * 
  */
-public class AngularProject implements IDirectiveSyntax {
+public class AngularProject implements IDirectiveSyntax,
+		ITernProjectLifecycleListener {
 
-	private static final QualifiedName ANGULAR_PROJECT = new QualifiedName(
-			AngularCorePlugin.PLUGIN_ID + ".sessionprops", "AngularProject");
+	private static final String ANGULAR_PROJECT = AngularProject.class
+			.getName();
 
 	private static final String EXTENSION_ANGULAR_PROJECT_DESCRIBERS = "angularNatureAdapters";
 
 	public static final String DEFAULT_START_SYMBOL = "{{";
 	public static final String DEFAULT_END_SYMBOL = "}}";
 
-	private final IProject project;
+	private final IIDETernProject ternProject;
 	private String startSymbol;
 	private String endSymbol;
 
 	private final Map<ITernScriptPath, List<BaseModel>> folders;
+
+	private final CustomAngularModulesRegistry customDirectives;
 	private static List<String> angularNatureAdapters;
 
-	AngularProject(IProject project) throws CoreException {
-		this.project = project;
+	AngularProject(IIDETernProject ternProject) throws CoreException {
+		this.ternProject = ternProject;
 		this.folders = new HashMap<ITernScriptPath, List<BaseModel>>();
-		final CustomAngularModulesRegistry customDirectives = new CustomAngularModulesRegistry(
-				project);
+		this.customDirectives = new CustomAngularModulesRegistry(
+				ternProject.getProject());
 		AngularModulesManager.getInstance().addRegistry(this, customDirectives);
-		project.setSessionProperty(ANGULAR_PROJECT, this);
-		getTernProject(project).addServerListener(new TernServerAdapter() {
+		ternProject.setData(ANGULAR_PROJECT, this);
+		ternProject.addServerListener(new TernServerAdapter() {
 			@Override
 			public void onStop(ITernServer server) {
 				customDirectives.clear();
@@ -78,7 +81,7 @@ public class AngularProject implements IDirectiveSyntax {
 		// initialize symbols from project preferences
 		initializeSymbols();
 		AngularCorePreferencesSupport.getInstance()
-				.getEclipsePreferences(project)
+				.getEclipsePreferences(ternProject.getProject())
 				.addPreferenceChangeListener(new IPreferenceChangeListener() {
 
 					@Override
@@ -114,16 +117,16 @@ public class AngularProject implements IDirectiveSyntax {
 							"The project " + project.getName()
 									+ " is not an angular project."));
 		}
-		AngularProject angularProject = (AngularProject) project
-				.getSessionProperty(ANGULAR_PROJECT);
+		IIDETernProject ternProject = TernCorePlugin.getTernProject(project);
+		AngularProject angularProject = ternProject.getData(ANGULAR_PROJECT);
 		if (angularProject == null) {
-			angularProject = new AngularProject(project);
+			angularProject = new AngularProject(ternProject);
 		}
 		return angularProject;
 	}
 
 	public IProject getProject() {
-		return project;
+		return ternProject.getProject();
 	}
 
 	public static IIDETernProject getTernProject(IProject project)
@@ -195,43 +198,43 @@ public class AngularProject implements IDirectiveSyntax {
 	@Override
 	public boolean isUseOriginalName() {
 		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveUseOriginalName(project);
+				.isDirectiveUseOriginalName(getProject());
 	}
 
 	@Override
 	public boolean isStartsWithNothing() {
 		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveStartsWithNothing(project);
+				.isDirectiveStartsWithNothing(getProject());
 	}
 
 	@Override
 	public boolean isStartsWithX() {
 		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveStartsWithX(project);
+				.isDirectiveStartsWithX(getProject());
 	}
 
 	@Override
 	public boolean isStartsWithData() {
 		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveStartsWithData(project);
+				.isDirectiveStartsWithData(getProject());
 	}
 
 	@Override
 	public boolean isColonDelimiter() {
 		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveColonDelimiter(project);
+				.isDirectiveColonDelimiter(getProject());
 	}
 
 	@Override
 	public boolean isMinusDelimiter() {
 		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveMinusDelimiter(project);
+				.isDirectiveMinusDelimiter(getProject());
 	}
 
 	@Override
 	public boolean isUnderscoreDelimiter() {
 		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveUnderscoreDelimiter(project);
+				.isDirectiveUnderscoreDelimiter(getProject());
 	}
 
 	private synchronized static void loadAngularProjectDescribers() {
@@ -297,4 +300,16 @@ public class AngularProject implements IDirectiveSyntax {
 		return endSymbol;
 	}
 
+	@Override
+	public void handleEvent(IIDETernProject project, LifecycleEventType state) {
+		switch (state) {
+		case onDisposeAfter:
+			dispose();
+		default:
+		}
+	}
+
+	private void dispose() {
+		customDirectives.dispose();
+	}
 }

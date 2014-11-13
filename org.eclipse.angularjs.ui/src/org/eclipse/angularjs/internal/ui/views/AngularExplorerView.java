@@ -10,6 +10,8 @@
  */
 package org.eclipse.angularjs.internal.ui.views;
 
+import java.util.Collections;
+
 import org.eclipse.angularjs.core.AngularElement;
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.IDefinitionAware;
@@ -47,6 +49,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.ui.IEditorPart;
@@ -59,10 +62,11 @@ import org.eclipse.ui.part.ViewPart;
 import tern.ITernFile;
 import tern.angular.AngularType;
 import tern.eclipse.ide.core.IIDETernProject;
+import tern.eclipse.ide.core.ITernProjectLifecycleListener;
 import tern.eclipse.ide.core.TernCorePlugin;
 import tern.eclipse.ide.ui.utils.EditorUtils;
-import tern.scriptpath.ITernScriptResource;
 import tern.scriptpath.ITernScriptPath;
+import tern.scriptpath.ITernScriptResource;
 import tern.server.ITernServer;
 import tern.server.ITernServerListener;
 import tern.server.protocol.definition.ITernDefinitionCollector;
@@ -72,7 +76,8 @@ import tern.server.protocol.definition.ITernDefinitionCollector;
  * 
  */
 public class AngularExplorerView extends ViewPart implements
-		ISelectionListener, ITernDefinitionCollector, ITernServerListener {
+		ISelectionListener, ITernDefinitionCollector, ITernServerListener,
+		ITernProjectLifecycleListener {
 
 	private IWorkbenchPart currentEditor;
 	private IIDETernProject currentTernProject;
@@ -156,7 +161,7 @@ public class AngularExplorerView extends ViewPart implements
 
 		getSite().getWorkbenchWindow().getPartService()
 				.addPartListener(partListener);
-
+		TernCorePlugin.addTernProjectLifeCycleListener(this);
 		updateEnabledActions();
 	}
 
@@ -293,6 +298,20 @@ public class AngularExplorerView extends ViewPart implements
 
 			}
 		}
+		if (currentResource == null) {
+			initializeExplorer();
+		}
+	}
+
+	protected void initializeExplorer() {
+		// The current resources doesn't belong to an angular project,
+		// disable angular explorer.
+		if (currentTernProject != null) {
+			currentTernProject.removeServerListener(this);
+		}
+		currentTernProject = null;
+		currentResource = null;
+		viewer.setInput(Collections.emptyList());
 	}
 
 	@Override
@@ -300,6 +319,7 @@ public class AngularExplorerView extends ViewPart implements
 		super.dispose();
 		getSite().getWorkbenchWindow().getPartService()
 				.removePartListener(partListener);
+		TernCorePlugin.removeTernProjectLifeCycleListener(this);
 		if (currentTernProject != null) {
 			currentTernProject.removeServerListener(this);
 		}
@@ -354,13 +374,15 @@ public class AngularExplorerView extends ViewPart implements
 			ITernScriptPath scriptPath = (ITernScriptPath) firstSelection;
 			ITernFile file = (ITernFile) scriptPath.getAdapter(ITernFile.class);
 			if (file != null) {
-				tryToOpenFile(file, file.getFullName(currentTernProject), null, null);
+				tryToOpenFile(file, file.getFullName(currentTernProject), null,
+						null);
 			}
 		} else if (firstSelection instanceof ITernScriptResource) {
 			ITernScriptResource scriptResource = (ITernScriptResource) firstSelection;
 			ITernFile file = scriptResource.getFile();
 			if (file != null) {
-				tryToOpenFile(file, file.getFullName(currentTernProject), null, null);
+				tryToOpenFile(file, file.getFullName(currentTernProject), null,
+						null);
 			}
 		} else if (firstSelection instanceof IDefinitionAware) {
 			((IDefinitionAware) firstSelection)
@@ -373,7 +395,8 @@ public class AngularExplorerView extends ViewPart implements
 	 * 
 	 * @param file
 	 */
-	private void tryToOpenFile(ITernFile file, String filename, Long start, Long end) {
+	private void tryToOpenFile(ITernFile file, String filename, Long start,
+			Long end) {
 		IStatus status = openFile(file, filename, start, end);
 		if (!status.isOK()) {
 			ErrorDialog.openError(getSite().getShell(),
@@ -387,7 +410,8 @@ public class AngularExplorerView extends ViewPart implements
 	 * 
 	 * @param file
 	 */
-	private IStatus openFile(ITernFile tFile, String filename, Long start, Long end) {
+	private IStatus openFile(ITernFile tFile, String filename, Long start,
+			Long end) {
 		if (tFile == null && filename != null) {
 			tFile = getCurrentTernProject().getFile(filename);
 		}
@@ -428,4 +452,33 @@ public class AngularExplorerView extends ViewPart implements
 		terminateAction.setEnabled(false);
 	}
 
+	@Override
+	public void handleEvent(IIDETernProject project, LifecycleEventType state) {
+		if (project.equals(currentTernProject)) {
+			switch (state) {
+			case onDisposeAfter:
+				Display.getDefault().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						initializeExplorer();
+					}
+				});
+				break;
+			case onLoadAfter:
+				// refresh
+				Display.getDefault().asyncExec(new Runnable() {
+
+					@Override
+					public void run() {
+						viewer.setInput(currentTernProject.getScriptPaths());
+					}
+				});
+				break;
+			default:
+				break;
+			}
+
+		}
+	}
 }
