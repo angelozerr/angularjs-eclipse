@@ -151,7 +151,7 @@ public class CustomAngularModulesRegistry extends
 			IProject project = (IProject) resource;
 			return this.project.equals(project);
 		case IResource.FILE:
-			if (TernResourcesManager.isJSFile(resource)
+			if (TernResourcesManager.isJSFile(resource.getName())
 					|| TernResourcesManager.isHTMLFile(resource)) {
 				clear();
 			}
