@@ -12,10 +12,7 @@
 #     Angelo Zerr <angelo.zerr@gmail.com> - Initial API and implementation 
 ###############################################################################
  -->
-<plugin>
-	
-	<extension-point id="angularNatureAdapters" name="%angularNatureAdapters.name"
-		schema="schema/angularNatureAdapters.exsd" />	
+<plugin>	
 	
 	<!-- Preferences initialization -->
 	<extension
