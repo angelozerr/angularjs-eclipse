@@ -10,6 +10,7 @@
  */
 package org.eclipse.angularjs.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,8 +39,10 @@ import tern.eclipse.ide.core.ITernProjectLifecycleListener;
 import tern.eclipse.ide.core.TernCorePlugin;
 import tern.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
+import tern.server.TernDef;
 import tern.server.TernPlugin;
 import tern.server.TernServerAdapter;
+import tern.utils.TernModuleHelper;
 
 /**
  * Angular project.
@@ -155,6 +158,22 @@ public class AngularProject implements IDirectiveSyntax,
 				List<String> angularNatureAdapters = getAngularNatureAdapters();
 				for (String adaptToNature : angularNatureAdapters) {
 					if (project.hasNature(adaptToNature)) {
+						if (!TernCorePlugin.getTernProject(project).hasPlugin(TernPlugin.angular)) {
+							IIDETernProject ternProject = TernCorePlugin.getTernProject(project,
+									false);
+
+							// add default JSON type definitions and plugins
+							TernModuleHelper.update(TernPlugin.angular, ternProject);
+							TernModuleHelper.update(TernDef.browser, ternProject);
+							TernModuleHelper.update(TernDef.ecma5, ternProject);
+							// save tern project if needed
+							try {
+								ternProject.save();
+							} catch (IOException e) {
+								Trace.trace(Trace.SEVERE,
+										"Error while configuring angular nature.", e);
+							}
+						}
 						return true;
 					}
 				}
