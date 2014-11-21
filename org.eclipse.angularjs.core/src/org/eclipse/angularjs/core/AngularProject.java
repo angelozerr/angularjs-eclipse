@@ -129,13 +129,12 @@ public class AngularProject implements IDirectiveSyntax,
 	}
 
 	/**
-	 * Return true if the given project have angular nature
-	 * "org.eclipse.angularjs.core.angularnature" and false otherwise.
+	 * Return true if the given project have angular nature and false otherwise.
 	 * 
 	 * @param project
 	 *            Eclipse project.
-	 * @return true if the given project have angular nature
-	 *         "org.eclipse.angularjs.core.angularnature" and false otherwise.
+	 * @return true if the given project have angular nature and false
+	 *         otherwise.
 	 */
 	public static boolean hasAngularNature(IProject project) {
 		if (project.isAccessible()) {
