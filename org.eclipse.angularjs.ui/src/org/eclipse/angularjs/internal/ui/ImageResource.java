@@ -130,7 +130,7 @@ public class ImageResource {
 	 * Initialize the image resources.
 	 */
 	protected static void initializeImageRegistry() {
-		imageRegistry = new ImageRegistry();
+		imageRegistry = AngularUIPlugin.getDefault().getImageRegistry();
 		imageDescriptors = new HashMap<String, ImageDescriptor>();
 
 		// load general object images
