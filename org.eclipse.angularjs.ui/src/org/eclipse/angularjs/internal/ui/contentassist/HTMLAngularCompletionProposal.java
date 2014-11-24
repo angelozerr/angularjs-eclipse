@@ -19,8 +19,11 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 
+import tern.eclipse.ide.core.IIDETernProject;
+import tern.eclipse.ide.core.IIDETernProjectProvider;
 import tern.eclipse.ide.ui.TernUIPlugin;
-import tern.eclipse.jface.text.HoverControlCreator;
+import tern.eclipse.ide.ui.hover.IDEHoverControlCreator;
+import tern.eclipse.ide.ui.hover.IDEPresenterControlCreator;
 import tern.eclipse.jface.text.PresenterControlCreator;
 
 /**
@@ -30,18 +33,21 @@ import tern.eclipse.jface.text.PresenterControlCreator;
  *
  */
 public class HTMLAngularCompletionProposal extends CustomCompletionProposal
-		implements ICompletionProposalExtension3 {
+		implements ICompletionProposalExtension3, IIDETernProjectProvider {
 
+	private final IIDETernProject ternProject;
 	private IInformationControlCreator ternControlCreator;
 
 	public HTMLAngularCompletionProposal(String replacementString,
 			int replacementOffset, int replacementLength, int cursorPosition,
 			Image image, String displayString,
 			IContextInformation contextInformation,
-			String additionalProposalInfo, int relevance) {
+			String additionalProposalInfo, int relevance,
+			IIDETernProject ternProject) {
 		super(replacementString, replacementOffset, replacementLength,
 				cursorPosition, image, displayString, contextInformation,
 				additionalProposalInfo, relevance);
+		this.ternProject = ternProject;
 	}
 
 	@Override
@@ -51,9 +57,10 @@ public class HTMLAngularCompletionProposal extends CustomCompletionProposal
 			return null;
 
 		if (ternControlCreator == null) {
-			PresenterControlCreator presenterControlCreator = new PresenterControlCreator();
-			ternControlCreator = new HoverControlCreator(
-					presenterControlCreator, true);
+			IInformationControlCreator presenterControlCreator = new IDEPresenterControlCreator(
+					this);
+			ternControlCreator = new IDEHoverControlCreator(
+					presenterControlCreator, true, this);
 		}
 		return ternControlCreator;
 	}
@@ -69,4 +76,8 @@ public class HTMLAngularCompletionProposal extends CustomCompletionProposal
 		return null;
 	}
 
+	@Override
+	public IIDETernProject getTernProject() {
+		return ternProject;
+	}
 }
