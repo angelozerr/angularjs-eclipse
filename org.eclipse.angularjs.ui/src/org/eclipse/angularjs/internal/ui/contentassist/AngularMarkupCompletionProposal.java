@@ -20,18 +20,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 
 import tern.eclipse.ide.core.IIDETernProject;
-import tern.eclipse.ide.core.IIDETernProjectProvider;
 import tern.eclipse.ide.ui.TernUIPlugin;
 import tern.eclipse.ide.ui.hover.IDEHoverControlCreator;
 import tern.eclipse.ide.ui.hover.IDEPresenterControlCreator;
-import tern.eclipse.jface.text.PresenterControlCreator;
+import tern.eclipse.ide.ui.hover.ITernHoverInfoProvider;
 
 /**
  * Extends WTP {@link MarkupCompletionProposal} to use
  * {@link BrowserInformationControl}.
  */
 public class AngularMarkupCompletionProposal extends MarkupCompletionProposal
-		implements ICompletionProposalExtension3, IIDETernProjectProvider {
+		implements ICompletionProposalExtension3, ITernHoverInfoProvider {
 
 	private IInformationControlCreator ternControlCreator;
 	private final IIDETernProject ternProject;
@@ -77,5 +76,15 @@ public class AngularMarkupCompletionProposal extends MarkupCompletionProposal
 	@Override
 	public IIDETernProject getTernProject() {
 		return ternProject;
+	}
+
+	@Override
+	public String getFilemane() {
+		return null;
+	}
+
+	@Override
+	public Integer getOffset() {
+		return null;
 	}
 }

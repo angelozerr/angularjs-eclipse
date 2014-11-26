@@ -24,6 +24,7 @@ import tern.eclipse.ide.core.IIDETernProjectProvider;
 import tern.eclipse.ide.ui.TernUIPlugin;
 import tern.eclipse.ide.ui.hover.IDEHoverControlCreator;
 import tern.eclipse.ide.ui.hover.IDEPresenterControlCreator;
+import tern.eclipse.ide.ui.hover.ITernHoverInfoProvider;
 import tern.eclipse.jface.text.PresenterControlCreator;
 
 /**
@@ -33,7 +34,7 @@ import tern.eclipse.jface.text.PresenterControlCreator;
  *
  */
 public class HTMLAngularCompletionProposal extends CustomCompletionProposal
-		implements ICompletionProposalExtension3, IIDETernProjectProvider {
+		implements ICompletionProposalExtension3, ITernHoverInfoProvider {
 
 	private final IIDETernProject ternProject;
 	private IInformationControlCreator ternControlCreator;
@@ -79,5 +80,15 @@ public class HTMLAngularCompletionProposal extends CustomCompletionProposal
 	@Override
 	public IIDETernProject getTernProject() {
 		return ternProject;
+	}
+
+	@Override
+	public String getFilemane() {
+		return null;
+	}
+
+	@Override
+	public Integer getOffset() {
+		return null;
 	}
 }
