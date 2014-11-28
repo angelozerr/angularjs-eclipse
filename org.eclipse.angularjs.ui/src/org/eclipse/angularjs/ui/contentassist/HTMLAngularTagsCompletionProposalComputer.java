@@ -331,15 +331,15 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 
 				@Override
 				public void addProposal(String name, String type, String doc,
-						String url, String origin, int pos, Object completion,
-						ITernServer ternServer) {
-
+						String url, String origin, int start, int end,
+						Object completion, ITernServer ternServer) {
 					ICompletionProposal proposal = null;
 					if (isModuleOrController(angularType)) {
 
 						MarkupAngularCompletionProposal markupPproposal = new MarkupAngularCompletionProposal(
-								name, type, doc, url, origin, pos, completion,
-								ternServer, angularType, replacementOffset);
+								name, type, doc, url, origin, start, end,
+								completion, ternServer, angularType,
+								replacementOffset);
 
 						// in the case of "module", "controller" completion
 						// the value must replace the existing value.
@@ -356,7 +356,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 						proposal = markupPproposal;
 					} else {
 						proposal = new JSAngularCompletionProposal(name, type,
-								doc, url, origin, pos, completion, ternServer,
+								doc, url, origin, completion, ternServer,
 								angularType, replacementOffset);
 					}
 					contentAssistRequest.addProposal(proposal);

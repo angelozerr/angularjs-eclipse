@@ -94,7 +94,7 @@ public class CustomAngularModulesRegistry extends
 							@Override
 							public void addProposal(String name, String type,
 									String doc, String url, String origin,
-									int pos, Object completion,
+									int start, int end, Object completion,
 									ITernServer ternServer) {
 								String moduleName = ternServer.getText(
 										completion, "module");

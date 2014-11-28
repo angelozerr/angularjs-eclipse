@@ -29,9 +29,10 @@ public class MarkupAngularCompletionProposal extends TernCompletionProposal {
 	private final Object completion;
 
 	public MarkupAngularCompletionProposal(String name, String type,
-			String doc, String url, String origin, int pos, Object completion,
-			ITernServer server, AngularType angularType, int startOffset) {
-		super(name, type, doc, url, origin, pos, startOffset);
+			String doc, String url, String origin, int start, int end,
+			Object completion, ITernServer server, AngularType angularType,
+			int startOffset) {
+		super(name, type, doc, url, origin, startOffset, startOffset);
 		this.ternServer = server;
 		this.completion = completion;
 	}
@@ -42,8 +43,8 @@ public class MarkupAngularCompletionProposal extends TernCompletionProposal {
 		String controller = ternServer.getText(completion, "controller");
 		AngularType angularType = AngularType.get(ternServer.getText(
 				completion, "angularType"));
-		return HTMLAngularPrinter.getAngularInfo(getType(), getName(),
-				module, controller, angularType, super.getDoc(), getOrigin());
+		return HTMLAngularPrinter.getAngularInfo(getType(), getName(), module,
+				controller, angularType, super.getDoc(), getOrigin());
 	}
 
 	@Override

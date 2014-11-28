@@ -30,9 +30,9 @@ public class JSAngularCompletionProposal extends JSTernCompletionProposal
 	private final Object completion;
 
 	public JSAngularCompletionProposal(String name, String type, String doc,
-			String url, String origin, int pos, Object completion,
+			String url, String origin, Object completion,
 			ITernServer server, AngularType angularType, int startOffset) {
-		super(name, type, doc, url, origin, pos, startOffset);
+		super(name, type, doc, url, origin, startOffset, startOffset);
 		this.ternServer = server;
 		this.completion = completion;
 		super.setTriggerCharacters(new char[] {'.'});
