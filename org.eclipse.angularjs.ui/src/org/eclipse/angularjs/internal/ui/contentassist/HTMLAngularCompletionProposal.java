@@ -19,13 +19,12 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.sse.ui.internal.contentassist.CustomCompletionProposal;
 
+import tern.ITernFile;
 import tern.eclipse.ide.core.IIDETernProject;
-import tern.eclipse.ide.core.IIDETernProjectProvider;
 import tern.eclipse.ide.ui.TernUIPlugin;
 import tern.eclipse.ide.ui.hover.IDEHoverControlCreator;
 import tern.eclipse.ide.ui.hover.IDEPresenterControlCreator;
 import tern.eclipse.ide.ui.hover.ITernHoverInfoProvider;
-import tern.eclipse.jface.text.PresenterControlCreator;
 
 /**
  * 
@@ -83,7 +82,7 @@ public class HTMLAngularCompletionProposal extends CustomCompletionProposal
 	}
 
 	@Override
-	public String getFilemane() {
+	public ITernFile getFile() {
 		return null;
 	}
 

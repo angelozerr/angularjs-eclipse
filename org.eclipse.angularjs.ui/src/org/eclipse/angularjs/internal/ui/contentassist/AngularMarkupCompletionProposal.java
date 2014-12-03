@@ -19,6 +19,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wst.xml.ui.internal.contentassist.MarkupCompletionProposal;
 
+import tern.ITernFile;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.ui.TernUIPlugin;
 import tern.eclipse.ide.ui.hover.IDEHoverControlCreator;
@@ -79,7 +80,7 @@ public class AngularMarkupCompletionProposal extends MarkupCompletionProposal
 	}
 
 	@Override
-	public String getFilemane() {
+	public ITernFile getFile() {
 		return null;
 	}
 

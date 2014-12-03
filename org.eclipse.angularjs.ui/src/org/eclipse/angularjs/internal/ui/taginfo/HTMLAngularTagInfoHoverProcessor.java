@@ -394,7 +394,7 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 	}
 
 	@Override
-	public String getFilemane() {
+	public ITernFile getFile() {
 		return null;
 	}
 
