@@ -19,7 +19,7 @@ import tern.eclipse.ide.ui.contentassist.JSTernCompletionProposal;
 import tern.server.ITernServer;
 
 /**
- * Extrends Javacsript Tern completion proposal to display "module" and
+ * Extrends JavaScript Tern completion proposal to display "module" and
  * "controller" information from the tern completion.
  * 
  */
@@ -30,12 +30,12 @@ public class JSAngularCompletionProposal extends JSTernCompletionProposal
 	private final Object completion;
 
 	public JSAngularCompletionProposal(String name, String type, String doc,
-			String url, String origin, Object completion,
-			ITernServer server, AngularType angularType, int startOffset) {
+			String url, String origin, Object completion, ITernServer server,
+			AngularType angularType, int startOffset) {
 		super(name, type, doc, url, origin, startOffset, startOffset);
 		this.ternServer = server;
 		this.completion = completion;
-		super.setTriggerCharacters(new char[] {'.'});
+		super.setTriggerCharacters(new char[] { '.' });
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class JSAngularCompletionProposal extends JSTernCompletionProposal
 
 	@Override
 	public int getRelevance() {
-		// Since this proposal is limited only to Angular Expression regions, 
+		// Since this proposal is limited only to Angular Expression regions,
 		// it should be higher than any of tag or attribute value proposals
 		return XMLRelevanceConstants.R_STRICTLY_VALID_TAG_NAME + 5;
 	}

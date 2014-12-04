@@ -92,7 +92,8 @@ public class CustomAngularModulesRegistry extends
 						new ITernCompletionCollector() {
 
 							@Override
-							public void addProposal(String name, String type,
+							public void addProposal(String name,
+									String displayName, String type,
 									String doc, String url, String origin,
 									int start, int end, Object completion,
 									ITernServer ternServer) {
