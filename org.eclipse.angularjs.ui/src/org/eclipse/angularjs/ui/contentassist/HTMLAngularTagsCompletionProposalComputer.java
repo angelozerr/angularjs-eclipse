@@ -330,9 +330,10 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
 				@Override
-				public void addProposal(String name, String type, String doc,
-						String url, String origin, int start, int end,
-						Object completion, ITernServer ternServer) {
+				public void addProposal(String name, 
+						String type, String doc, String url, String origin,
+						int start, int end, Object completion,
+						ITernServer ternServer) {
 					ICompletionProposal proposal = null;
 					if (isModuleOrController(angularType)) {
 
@@ -357,7 +358,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					} else {
 						proposal = new JSAngularCompletionProposal(name, type,
 								doc, url, origin, completion, ternServer,
-								angularType, replacementOffset);
+								angularType, replacementOffset - (end - start));
 					}
 					contentAssistRequest.addProposal(proposal);
 
