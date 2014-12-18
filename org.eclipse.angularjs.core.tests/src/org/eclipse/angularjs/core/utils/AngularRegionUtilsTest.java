@@ -11,14 +11,51 @@
 package org.eclipse.angularjs.core.utils;
 
 import org.eclipse.wst.xml.core.internal.regions.DOMRegionContext;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class AngularRegionUtilsTest {
 
 	@Test
-	public void test() {
+	public void offsetBeforeStartEL() {
+		AngularELRegion region = AngularRegionUtils.getAngularELRegion(
+				DOMRegionContext.XML_CONTENT, "{{todo.text + to}}", 588, 588,
+				"{{", "}}");
+		Assert.assertNull(region);
+	}
+
+	@Test
+	public void offsetAfterStartEL() {
+		AngularELRegion region = AngularRegionUtils.getAngularELRegion(
+				DOMRegionContext.XML_CONTENT, "{{todo.text + to}}", 588, 590,
+				"{{", "}}");
+		Assert.assertNotNull(region);
+		Assert.assertEquals("todo.text + to", region.getExpression());
+		Assert.assertEquals(0, region.getExpressionOffset());
+	}
+
+	@Test
+	public void offsetBeforeEndEL() {
+		AngularELRegion region = AngularRegionUtils.getAngularELRegion(
+				DOMRegionContext.XML_CONTENT, "{{todo.text + to}}", 588, 603,
+				"{{", "}}");
+		Assert.assertNull(region);
+	}
+
+	@Test
+	public void offsetAfterEndEL() {
 		AngularELRegion region = AngularRegionUtils.getAngularELRegion(
 				DOMRegionContext.XML_CONTENT, "{{todo.text + to}}", 588, 604,
 				"{{", "}}");
+		Assert.assertNotNull(region);
+		Assert.assertEquals("todo.text + to", region.getExpression());
+		Assert.assertEquals(14, region.getExpressionOffset());
+	}
+
+	@Test
+	public void test2() {
+		AngularELRegion region = AngularRegionUtils.getAngularELRegion(
+				DOMRegionContext.XML_CONTENT, "{{", 588, 604, "{{", "}}");
+		Assert.assertNull(region);
 	}
 }

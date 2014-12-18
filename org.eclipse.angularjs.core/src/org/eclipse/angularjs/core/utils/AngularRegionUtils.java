@@ -57,7 +57,7 @@ public class AngularRegionUtils {
 			String regionText, int regionStartOffset, int documentPosition,
 			String startSymbol, String endSymbol) {
 		int startOffset = documentPosition - regionStartOffset;
-		if (startOffset < 0) {
+		if (startOffset < 0 || startOffset > regionText.length()) {
 			return null;
 		}
 		if (regionType == DOMRegionContext.XML_CONTENT
