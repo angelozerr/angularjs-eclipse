@@ -95,7 +95,8 @@ public class CustomAngularModulesRegistry extends
 							public void addProposal(String name,
 									String displayName, String type,
 									String doc, String url, String origin,
-									int start, int end, Object completion,
+									int start, int end, boolean isProperty,
+									boolean isObjectKey, Object completion,
 									ITernServer ternServer) {
 								String moduleName = ternServer.getText(
 										completion, "module");
