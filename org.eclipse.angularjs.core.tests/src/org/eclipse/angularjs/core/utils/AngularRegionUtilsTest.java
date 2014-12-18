@@ -39,7 +39,9 @@ public class AngularRegionUtilsTest {
 		AngularELRegion region = AngularRegionUtils.getAngularELRegion(
 				DOMRegionContext.XML_CONTENT, "{{todo.text + to}}", 588, 603,
 				"{{", "}}");
-		Assert.assertNull(region);
+		Assert.assertNotNull(region);
+		Assert.assertEquals("todo.text + to", region.getExpression());
+		Assert.assertEquals(13, region.getExpressionOffset());
 	}
 
 	@Test
