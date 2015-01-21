@@ -12,12 +12,13 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.xml.core,
  org.eclipse.core.resources,
  org.eclipse.wst.common.uriresolver,
- tern.core;bundle-version="0.2.0",
- tern.eclipse;bundle-version="0.2.0",
- tern.server.nodejs;bundle-version="0.2.0",
- tern.eclipse.ide.core;bundle-version="0.2.0",
+ tern.core,
+ tern.eclipse,
+ tern.server.nodejs,
+ tern.eclipse.ide.core,
  org.eclipse.wst.validation,
- org.eclipse.core.filesystem
+ org.eclipse.core.filesystem,
+ minimal-json;bundle-version="0.9.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.angularjs.core.AngularCorePlugin
@@ -25,4 +26,3 @@ Export-Package: org.eclipse.angularjs.core,
  org.eclipse.angularjs.core.link,
  org.eclipse.angularjs.core.utils,
  org.eclipse.angularjs.core.validation
-Import-Package: com.eclipsesource.json

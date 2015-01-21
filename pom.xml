@@ -110,7 +110,7 @@
 			<!-- OSGi bundle coming from Maven repo -->
 			<groupId>com.eclipsesource.minimal-json</groupId>
 			<artifactId>minimal-json</artifactId>
-			<version>0.9.1</version>
+			<version>0.9.2</version>
 		</dependency>
 	</dependencies>
 	<repositories>

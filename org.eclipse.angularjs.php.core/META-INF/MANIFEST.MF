@@ -24,4 +24,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.expressions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: com.eclipsesource.json
+

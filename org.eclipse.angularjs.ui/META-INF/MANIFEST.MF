@@ -10,7 +10,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.wst.sse.ui,
  org.eclipse.jface.text,
- org.eclipse.angularjs.core;bundle-version="0.2.0",
+ org.eclipse.angularjs.core,
  org.eclipse.wst.html.core,
  org.eclipse.wst.html.ui,
  org.eclipse.wst.xml.ui,
@@ -19,16 +19,16 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  com.ibm.icu,
  org.eclipse.wst.validation,
- tern.eclipse.ide.core;bundle-version="0.2.0",
- tern.core;bundle-version="0.2.0",
- tern.eclipse;bundle-version="0.2.0",
+ tern.eclipse.ide.core,
+ tern.core,
+ tern.eclipse,
  org.eclipse.ui.ide,
- tern.eclipse.ide.ui;bundle-version="0.2.0",
+ tern.eclipse.ide.ui,
  org.eclipse.wst.jsdt.web.core,
- org.eclipse.core.expressions
+ org.eclipse.core.expressions,
+ minimal-json;bundle-version="0.9.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: com.eclipsesource.json
 Export-Package: org.eclipse.angularjs.ui.contentassist,
  org.eclipse.angularjs.ui.style,
  org.eclipse.angularjs.ui.validation

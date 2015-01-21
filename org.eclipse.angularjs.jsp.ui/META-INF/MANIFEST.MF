@@ -32,4 +32,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.angularjs.jsp.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Import-Package: com.eclipsesource.json
+
