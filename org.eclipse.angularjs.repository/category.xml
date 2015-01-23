@@ -18,20 +18,32 @@
    <feature id="angularjs-eclipse-feature" version="0.0.0">
       <category name="AngularJS Eclipse Tooling"/>
    </feature>
+   <feature id="angularjs-eclipse-feature.source" version="0.0.0">
+      <category name="AngularJS Eclipse Tooling Development Resources"/>
+   </feature>
    <feature id="angularjs-eclipse-jsp-feature" version="0.0.0">
       <category name="AngularJS support for JSP"/>
+   </feature>
+      <feature id="angularjs-eclipse-jsp-feature.source" version="0.0.0">
+      <category name="AngularJS Eclipse Tooling Development Resources"/>
    </feature>
    <feature id="angularjs-eclipse-php-feature" version="0.0.0">
       <category name="AngularJS support for PHP (PDT)"/>
    </feature>
-    <feature id="org.eclipse.wst.html.webresources.feature">
+   <feature id="angularjs-eclipse-php-feature.source" version="0.0.0">
+      <category name="AngularJS Eclipse Tooling Development Resources"/>
+   </feature>
+   <feature id="org.eclipse.wst.html.webresources.feature">
       <category name="WTP HTML - Web Resources"/>
+   </feature>
+   <feature url="features/tern.eclipse.ide.tools.feature.source_0.0.0.jar" id="tern.eclipse.ide.tools.feature.source" version="0.0.0">
+      <category name="Tern Tooling Development Resources"/>
    </feature>
    <category-def name="WTP HTML - Web Resources" label="WTP HTML - Web Resources">
      <description>
        Provides completion, hyperlink, hover inside WTP HTML editor for Web Resources (CSS, JS, Images)
      </description>
-   </category-def>    
+   </category-def>
    <category-def name="AngularJS Eclipse Tooling" label="AngularJS Eclipse Tooling">
      <description>
        Customizes Eclipse WTP HTML editor and JSDT JavaScript Editor with AngularJS features.
@@ -55,4 +67,6 @@
    </category-def>
    <category-def name="Tern IDE" label="Tern IDE"/>
    <category-def name="Tern Tooling" label="Tern Tooling"/>
+   <category-def name="Tern Tooling Development Resources" label="Tern Tooling Development Resources"/>
+   <category-def name="AngularJS Eclipse Tooling Development Resources" label="AngularJS Eclipse Tooling Development Resoures"/>
 </site>
