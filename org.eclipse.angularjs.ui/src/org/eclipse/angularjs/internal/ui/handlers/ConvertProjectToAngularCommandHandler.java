@@ -10,32 +10,17 @@
  */
 package org.eclipse.angularjs.internal.ui.handlers;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
-import org.eclipse.angularjs.internal.ui.Trace;
-import org.eclipse.core.commands.AbstractHandler;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.ui.handlers.HandlerUtil;
 
-import tern.eclipse.ide.core.IIDETernProject;
-import tern.eclipse.ide.core.TernCorePlugin;
 import tern.eclipse.ide.ui.handlers.AbstractConvertProjectCommandHandler;
-import tern.server.ITernDef;
-import tern.server.ITernPlugin;
+import tern.server.ITernModule;
 import tern.server.TernDef;
 import tern.server.TernPlugin;
 
@@ -54,13 +39,18 @@ public class ConvertProjectToAngularCommandHandler extends
 	}
 
 	@Override
-	protected ITernPlugin[] getPlugins(IScopeContext[] fLookupOrder) {
-		return new ITernPlugin[] { TernPlugin.angular };
+	protected ITernModule[] getModules(IScopeContext[] fLookupOrder) {
+		List<ITernModule> modules = new ArrayList<ITernModule>(
+				Arrays.asList(super.getModules(fLookupOrder)));
+		if (!modules.contains(TernDef.ecma5)) {
+			modules.add(TernDef.ecma5);
+		}
+		if (!modules.contains(TernDef.browser)) {
+			modules.add(TernDef.browser);
+		}
+		if (!modules.contains(TernPlugin.angular)) {
+			modules.add(TernPlugin.angular);
+		}
+		return modules.toArray(ITernModule.EMPTY_MODULE);
 	}
-
-	@Override
-	protected ITernDef[] getDefs(IScopeContext[] fLookupOrder) {
-		return new ITernDef[] { TernDef.browser, TernDef.ecma5 };
-	}
-
 }
