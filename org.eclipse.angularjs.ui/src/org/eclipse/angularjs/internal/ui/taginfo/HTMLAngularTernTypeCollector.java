@@ -15,11 +15,12 @@ import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import tern.angular.AngularType;
 import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
 import tern.server.ITernServer;
+import tern.server.protocol.IJSONObjectHelper;
 import tern.server.protocol.type.ITernTypeCollector;
 
 /**
  * {@link ITernTypeCollector} implementation for HTML Angular type collector.
- *
+ * 
  */
 public class HTMLAngularTernTypeCollector extends HTMLTernTypeCollector {
 
@@ -28,11 +29,11 @@ public class HTMLAngularTernTypeCollector extends HTMLTernTypeCollector {
 	@Override
 	public void setType(String type, boolean guess, String name,
 			String exprName, String doc, String url, String origin,
-			Object object, ITernServer ternServer) {
+			Object object, IJSONObjectHelper objectHelper) {
 		if (name != null) {
-			String module = ternServer.getText(object, "module");
-			String controller = ternServer.getText(object, "controller");
-			AngularType angularType = AngularType.get(ternServer.getText(
+			String module = objectHelper.getText(object, "module");
+			String controller = objectHelper.getText(object, "controller");
+			AngularType angularType = AngularType.get(objectHelper.getText(
 					object, "angularType"));
 			this.info = HTMLAngularPrinter.getAngularInfo(type, name, module,
 					controller, angularType, doc, origin);
