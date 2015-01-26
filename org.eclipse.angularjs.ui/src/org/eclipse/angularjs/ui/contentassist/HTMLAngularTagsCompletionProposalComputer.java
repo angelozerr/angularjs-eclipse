@@ -57,13 +57,15 @@ import tern.angular.modules.IDirectiveCollector;
 import tern.angular.modules.IDirectiveParameterCollector;
 import tern.angular.modules.Restriction;
 import tern.angular.protocol.TernAngularQuery;
+import tern.angular.protocol.completions.AngularCompletionProposalRec;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.TernCorePlugin;
 import tern.eclipse.ide.core.resources.TernDocumentFile;
 import tern.scriptpath.ITernScriptPath;
-import tern.server.ITernServer;
+import tern.server.protocol.IJSONObjectHelper;
 import tern.server.protocol.completions.ITernCompletionCollector;
+import tern.server.protocol.completions.TernCompletionProposalRec;
 
 /**
  * Completion in HTML editor for :
@@ -330,22 +332,20 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
 				@Override
-				public void addProposal(String name, String displayName,
-						String type, String doc, String url, String origin,
-						int start, int end, boolean isProperty,
-						boolean isObjectKey, Object completion,
-						ITernServer ternServer) {
+				public void addProposal(TernCompletionProposalRec proposalItem,
+						Object completion, IJSONObjectHelper jsonObjectHelper) {
 					ICompletionProposal proposal = null;
 					if (isModuleOrController(angularType)) {
 
 						MarkupAngularCompletionProposal markupPproposal = new MarkupAngularCompletionProposal(
-								name, type, doc, url, origin, start, end,
-								completion, ternServer, angularType,
-								replacementOffset);
+								new AngularCompletionProposalRec(proposalItem,
+										replacementOffset), completion,
+								jsonObjectHelper, angularType);
 
 						// in the case of "module", "controller" completion
 						// the value must replace the existing value.
-						String replacementString = "\"" + name + "\"";
+						String replacementString = "\"" + proposalItem.name
+								+ "\"";
 						int replacementLength = contentAssistRequest
 								.getReplacementLength();
 						int cursorPosition = getCursorPositionForProposedText(replacementString) - 2;
@@ -357,9 +357,12 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 								.getImage(angularType));
 						proposal = markupPproposal;
 					} else {
-						proposal = new JSAngularCompletionProposal(name, type,
-								doc, url, origin, completion, ternServer,
-								angularType, replacementOffset - (end - start));
+						proposal = new JSAngularCompletionProposal(
+								new AngularCompletionProposalRec(
+										proposalItem,
+										replacementOffset
+												- (proposalItem.end - proposalItem.start)),
+								completion, jsonObjectHelper, angularType);
 					}
 					contentAssistRequest.addProposal(proposal);
 

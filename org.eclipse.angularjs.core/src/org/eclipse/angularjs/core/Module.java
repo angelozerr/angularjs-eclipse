@@ -18,7 +18,9 @@ import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.angular.protocol.definition.TernAngularDefinitionQuery;
 import tern.scriptpath.ITernScriptPath;
 import tern.server.ITernServer;
+import tern.server.protocol.IJSONObjectHelper;
 import tern.server.protocol.completions.ITernCompletionCollector;
+import tern.server.protocol.completions.TernCompletionProposalRec;
 import tern.server.protocol.definition.ITernDefinitionCollector;
 
 public class Module extends BaseModel implements ITernCompletionCollector,
@@ -49,13 +51,11 @@ public class Module extends BaseModel implements ITernCompletionCollector,
 	}
 
 	@Override
-	public void addProposal(String name, String displayName, String type,
-			String doc, String url, String origin, int start, int end,
-			boolean isProperty, boolean isObjectKey, Object completion,
-			ITernServer ternServer) {
-		AngularType angularType = AngularType.get(ternServer.getText(
+	public void addProposal(TernCompletionProposalRec proposal,
+			Object completion, IJSONObjectHelper jsonObjectHelper) {
+		AngularType angularType = AngularType.get(jsonObjectHelper.getText(
 				completion, "angularType"));
-		elements.add(new AngularElement(name, angularType, Module.this));
+		elements.add(new AngularElement(proposal.name, angularType, Module.this));
 	}
 
 	@Override
