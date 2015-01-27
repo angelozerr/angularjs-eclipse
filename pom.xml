@@ -144,6 +144,14 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
@@ -163,7 +171,7 @@
 		<repository>
 			<id>tern.java</id>
 			<layout>p2</layout>
-			<url>http://oss.opensagres.fr/tern.repository/0.8.0-SNAPSHOT/</url>
+			<url>http://oss.opensagres.fr/tern.repository/0.8.0/</url>
 		</repository>
 		<repository>
 			<id>license-feature</id>
