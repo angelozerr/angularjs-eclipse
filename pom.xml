@@ -7,7 +7,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.opensagres.angularjs</groupId>
 	<artifactId>angularjs-eclipse</artifactId>
-	<version>0.9.0-SNAPSHOT</version>
+	<version>0.8.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -171,7 +171,7 @@
 		<repository>
 			<id>tern.java</id>
 			<layout>p2</layout>
-			<url>http://oss.opensagres.fr/tern.repository/0.9.0-SNAPSHOT/</url>
+			<url>http://oss.opensagres.fr/tern.repository/0.8.0/</url>
 		</repository>
 		<repository>
 			<id>license-feature</id>
@@ -181,7 +181,7 @@
 		<repository>
 			<id>eclipse-wtp-webresources</id>
 			<layout>p2</layout>
-			<url>http://oss.opensagres.fr/eclipse-wtp-webresources/0.9.0-SNAPSHOT/</url>
+			<url>http://oss.opensagres.fr/eclipse-wtp-webresources/0.8.0/</url>
 		</repository>
 	</repositories>
 	<scm>
