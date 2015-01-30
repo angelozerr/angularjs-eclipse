@@ -36,8 +36,9 @@ import tern.angular.modules.Restriction;
 import tern.angular.protocol.completions.TernAngularCompletionsQuery;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.TernCorePlugin;
-import tern.server.ITernServer;
+import tern.server.protocol.IJSONObjectHelper;
 import tern.server.protocol.completions.ITernCompletionCollector;
+import tern.server.protocol.completions.TernCompletionProposalRec;
 
 public class CustomAngularModulesRegistry extends
 		AbstractAngularModulesRegistry implements IResourceChangeListener,
@@ -92,13 +93,11 @@ public class CustomAngularModulesRegistry extends
 						new ITernCompletionCollector() {
 
 							@Override
-							public void addProposal(String name,
-									String displayName, String type,
-									String doc, String url, String origin,
-									int start, int end, boolean isProperty,
-									boolean isObjectKey, Object completion,
-									ITernServer ternServer) {
-								String moduleName = ternServer.getText(
+							public void addProposal(
+									TernCompletionProposalRec proposal,
+									Object completion,
+									IJSONObjectHelper jsonObjectHelper) {
+								String moduleName = jsonObjectHelper.getText(
 										completion, "module");
 								if (!StringUtils.isEmpty(moduleName)) {
 									tern.angular.modules.Module module = CustomAngularModulesRegistry.this
@@ -109,12 +108,12 @@ public class CustomAngularModulesRegistry extends
 									}
 
 									List<String> tagsName = new ArrayList<String>();
-									String restrict = ternServer.getText(
+									String restrict = jsonObjectHelper.getText(
 											completion, "restrict");
 									DirectiveValue directiveValue = DirectiveValue.none;
-									new Directive(name, AngularType.model,
-											null, tagsName, restrict,
-											directiveValue, module);
+									new Directive(proposal.name,
+											AngularType.model, null, tagsName,
+											restrict, directiveValue, module);
 								}
 
 							}
