@@ -171,7 +171,7 @@
 		<repository>
 			<id>tern.java</id>
 			<layout>p2</layout>
-			<url>http://oss.opensagres.fr/tern.repository/0.8.1-SNAPSHOT/</url>
+			<url>http://oss.opensagres.fr/tern.repository/0.8.1/</url>
 		</repository>
 		<repository>
 			<id>license-feature</id>
