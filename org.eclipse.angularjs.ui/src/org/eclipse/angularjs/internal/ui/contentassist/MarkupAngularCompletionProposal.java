@@ -14,9 +14,10 @@ import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 import org.eclipse.swt.widgets.Shell;
 
 import tern.angular.AngularType;
+import tern.angular.protocol.completions.AngularCompletionProposalRec;
 import tern.eclipse.ide.ui.TernUIPlugin;
 import tern.eclipse.jface.contentassist.TernCompletionProposal;
-import tern.server.ITernServer;
+import tern.server.protocol.IJSONObjectHelper;
 
 /**
  * Extrends Tern completion proposal to display "module" and "controller"
@@ -25,23 +26,22 @@ import tern.server.ITernServer;
  */
 public class MarkupAngularCompletionProposal extends TernCompletionProposal {
 
-	private final ITernServer ternServer;
+	private final IJSONObjectHelper jsonObjectHelper;
 	private final Object completion;
 
-	public MarkupAngularCompletionProposal(String name, String type,
-			String doc, String url, String origin, int start, int end,
-			Object completion, ITernServer server, AngularType angularType,
-			int startOffset) {
-		super(name, type, doc, url, origin, startOffset, startOffset);
-		this.ternServer = server;
+	public MarkupAngularCompletionProposal(
+			AngularCompletionProposalRec proposal, Object completion,
+			IJSONObjectHelper jsonObjectHelper, AngularType angularType) {
+		super(proposal);
+		this.jsonObjectHelper = jsonObjectHelper;
 		this.completion = completion;
 	}
 
 	@Override
 	public String getAdditionalProposalInfo() {
-		String module = ternServer.getText(completion, "module");
-		String controller = ternServer.getText(completion, "controller");
-		AngularType angularType = AngularType.get(ternServer.getText(
+		String module = jsonObjectHelper.getText(completion, "module");
+		String controller = jsonObjectHelper.getText(completion, "controller");
+		AngularType angularType = AngularType.get(jsonObjectHelper.getText(
 				completion, "angularType"));
 		return HTMLAngularPrinter.getAngularInfo(getType(), getName(), module,
 				controller, angularType, super.getDoc(), getOrigin());
