@@ -5,6 +5,6 @@
 	<parent>
 		<groupId>fr.opensagres.angularjs</groupId>
 		<artifactId>angularjs-eclipse</artifactId>
-		<version>0.7.1-SNAPSHOT</version>
+		<version>0.7.1</version>
 	</parent>
 </project>
