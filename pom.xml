@@ -183,6 +183,11 @@
 			<layout>p2</layout>
 			<url>http://oss.opensagres.fr/eclipse-wtp-webresources/0.9.0-SNAPSHOT/</url>
 		</repository>
+		<repository>
+			<id>eclipse-wtp-json</id>
+			<layout>p2</layout>
+			<url>http://oss.opensagres.fr/eclipse-wtp-json/0.9.0-SNAPSHOT/</url>
+		</repository>
 	</repositories>
 	<scm>
 		<url>https://github.com/angelozerr/angularjs-eclipse</url>
