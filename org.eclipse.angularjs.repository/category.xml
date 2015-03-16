@@ -15,6 +15,9 @@
    <feature id="tern-server-nodejs-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
+   <feature id="tern-linters-feature" version="0.0.0">
+      <category name="Tern IDE"/>
+   </feature>
    <feature id="tern.eclipse.ide.tools.feature" version="0.0.0">
       <category name="Tern Tooling"/>
    </feature>
