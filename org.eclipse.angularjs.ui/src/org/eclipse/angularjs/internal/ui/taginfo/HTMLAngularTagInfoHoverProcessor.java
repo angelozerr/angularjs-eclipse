@@ -275,7 +275,8 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 		query.setEnd(end);
 		ITernScriptPath scriptPath = AngularScopeHelper.populateScope(
 				DOMUtils.getOwnerElement(domNode), file, angularType, query);
-		HTMLTernTypeCollector collector = createCollector(angularType);
+		HTMLTernTypeCollector collector = createCollector(angularType,
+				ternProject);
 		// update with the current tern project
 		this.ternProject = ternProject;
 		if (scriptPath != null) {
@@ -289,12 +290,13 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 		return collector.getInfo();
 	}
 
-	private HTMLTernTypeCollector createCollector(AngularType angularType) {
+	private HTMLTernTypeCollector createCollector(AngularType angularType,
+			IIDETernProject ternProject) {
 		if (angularType == AngularType.module
 				|| angularType == AngularType.controller) {
-			return new HTMLAngularTernTypeCollector();
+			return new HTMLAngularTernTypeCollector(ternProject);
 		}
-		return new HTMLTernTypeCollector();
+		return new HTMLTernTypeCollector(ternProject);
 	}
 
 	/**
