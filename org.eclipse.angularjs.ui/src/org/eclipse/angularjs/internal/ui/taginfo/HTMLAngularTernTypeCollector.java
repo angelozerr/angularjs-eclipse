@@ -13,6 +13,7 @@ package org.eclipse.angularjs.internal.ui.taginfo;
 import org.eclipse.angularjs.internal.ui.utils.HTMLAngularPrinter;
 
 import tern.angular.AngularType;
+import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.ui.hover.HTMLTernTypeCollector;
 import tern.server.ITernServer;
 import tern.server.protocol.IJSONObjectHelper;
@@ -23,6 +24,10 @@ import tern.server.protocol.type.ITernTypeCollector;
  * 
  */
 public class HTMLAngularTernTypeCollector extends HTMLTernTypeCollector {
+
+	public HTMLAngularTernTypeCollector(IIDETernProject ternProject) {
+		super(ternProject);
+	}
 
 	private String info;
 
