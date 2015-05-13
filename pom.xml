@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
@@ -26,16 +27,16 @@
 		<module>org.eclipse.angularjs.core.tests</module>
 		<module>org.eclipse.angularjs.ui</module>
 		<module>angularjs-eclipse-feature</module>
-		<!-- JSP AngularJS support -->				
+		<!-- JSP AngularJS support -->
 		<module>org.eclipse.angularjs.jsp.core</module>
 		<module>org.eclipse.angularjs.jsp.ui</module>
-		<module>angularjs-eclipse-jsp-feature</module>		
-		<!-- PHP AngularJS support -->		
+		<module>angularjs-eclipse-jsp-feature</module>
+		<!-- PHP AngularJS support -->
 		<module>org.eclipse.angularjs.php.core</module>
 		<module>org.eclipse.angularjs.php.ui</module>
-		<module>angularjs-eclipse-php-feature</module>		
-		<!-- Update site -->				
-		<module>org.eclipse.angularjs.repository</module>		
+		<module>angularjs-eclipse-php-feature</module>
+		<!-- Update site -->
+		<module>org.eclipse.angularjs.repository</module>
 	</modules>
 	<build>
 		<defaultGoal>clean install</defaultGoal>
@@ -142,8 +143,8 @@
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
-          		<artifactId>tycho-compiler-plugin</artifactId>
-          		<version>${tycho-version}</version>
+				<artifactId>tycho-compiler-plugin</artifactId>
+				<version>${tycho-version}</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -210,7 +211,7 @@
 						<artifactId>tycho-packaging-plugin</artifactId>
 						<version>${tycho-version}</version>
 						<configuration>
-						<strictVersions>false</strictVersions>
+							<strictVersions>false</strictVersions>
 						</configuration>
 					</plugin>
 				</plugins>

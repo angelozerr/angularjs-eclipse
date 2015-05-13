@@ -55,5 +55,33 @@
 				</plugins>
 			</build>
 		</profile>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>de.jutzig</groupId>
+						<artifactId>github-release-plugin</artifactId>
+						<version>1.1.1</version>
+						<executions>
+							<execution>
+								<id>github-upload</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>release</goal>
+								</goals>
+								<inherited>false</inherited>
+							</execution>
+						</executions>
+						<configuration>
+							<overwriteArtifact>true</overwriteArtifact>
+							<tag>${project.artifactId}-${project.version}</tag>
+							<releaseName>${project.artifactId}-${project.version}</releaseName>
+							<artifact>${project.build.directory}/${project.artifactId}-${project.version}.zip</artifact>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>
