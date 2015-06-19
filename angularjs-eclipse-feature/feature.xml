@@ -2,7 +2,7 @@
 <feature
       id="angularjs-eclipse-feature"
       label="%featureName"
-      version="0.10.0.qualifier"
+      version="1.0.0.qualifier"
       provider-name="%featureProvider"
       license-feature="org.eclipse.license"
       license-feature-version="1.0.0.qualifier">
