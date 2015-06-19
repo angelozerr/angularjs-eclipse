@@ -4,7 +4,7 @@
   <ius size='7'>
     <iu id='angularjs-eclipse-feature.feature.group' name='Angularjs eclipse' version='1.0.0.201403141822'>
       <repositories size='1'>
-        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.2.0-SNAPSHOT/'/>
+        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.8.0-SNAPSHOT/'/>
       </repositories>
     </iu>
     <iu id='org.eclipse.wst.web_ui.feature.feature.group' name='Eclipse Web Developer Tools' version='3.5.2.v201401062113-7O7QG3wEMkBS3Graz0gRCYqCz-PVayJqBmOpb93L'>
@@ -19,22 +19,22 @@
     </iu>
     <iu id='tern-feature.feature.group' name='tern feature' version='1.0.0.201403141815'>
       <repositories size='1'>
-        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.2.0-SNAPSHOT/'/>
+        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.8.0-SNAPSHOT/'/>
       </repositories>
     </iu>
     <iu id='tern-jsdt-feature.feature.group' name='tern jsdt feature' version='1.0.0.201403141815'>
       <repositories size='1'>
-        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.2.0-SNAPSHOT/'/>
+        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.8.0-SNAPSHOT/'/>
       </repositories>
     </iu>
     <iu id='tern-server-nodejs-feature.feature.group' name='tern server nodejs feature' version='1.0.0.201403141815'>
       <repositories size='1'>
-        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.2.0-SNAPSHOT/'/>
+        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.8.0-SNAPSHOT/'/>
       </repositories>
     </iu>
     <iu id='tern-server-rhino-feature.feature.group' name='tern server rhino feature' version='1.0.0.201403141815'>
       <repositories size='1'>
-        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.2.0-SNAPSHOT/'/>
+        <repository location='http://oss.opensagres.fr/angularjs-eclipse/0.8.0-SNAPSHOT/'/>
       </repositories>
     </iu>
   </ius>
