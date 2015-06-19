@@ -176,7 +176,7 @@
 		<repository>
 			<id>tern.java</id>
 			<layout>p2</layout>
-			<url>http://oss.opensagres.fr/tern.repository/1.0.0/</url>
+			<url>http://oss.opensagres.fr/tern.repository/1.0.0-SNAPSHOT/</url>
 		</repository>
 		<repository>
 			<id>license-feature</id>
@@ -186,12 +186,12 @@
 		<repository>
 			<id>eclipse-wtp-webresources</id>
 			<layout>p2</layout>
-			<url>http://oss.opensagres.fr/eclipse-wtp-webresources/1.0.0/</url>
+			<url>http://oss.opensagres.fr/eclipse-wtp-webresources/1.0.0-SNAPSHOT/</url>
 		</repository>
 		<repository>
 			<id>eclipse-wtp-json</id>
 			<layout>p2</layout>
-			<url>http://oss.opensagres.fr/eclipse-wtp-json/1.0.0/</url>
+			<url>http://oss.opensagres.fr/eclipse-wtp-json/1.0.0-SNAPSHOT/</url>
 		</repository>
 	</repositories>
 	<scm>
