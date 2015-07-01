@@ -166,6 +166,11 @@
 			<artifactId>minimal-json</artifactId>
 			<version>0.9.2</version>
 		</dependency>
+		<dependency>
+			<groupId>fr.opensagres.js</groupId>
+			<artifactId>minimatch.java</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
@@ -193,6 +198,10 @@
 			<layout>p2</layout>
 			<url>http://oss.opensagres.fr/eclipse-wtp-json/1.0.0-SNAPSHOT/</url>
 		</repository>
+		<repository>
+			<id>cloudbees</id>
+			<url>http://repository-opensagres.forge.cloudbees.com/snapshot/</url>
+		</repository>		
 	</repositories>
 	<scm>
 		<url>https://github.com/angelozerr/angularjs-eclipse</url>
