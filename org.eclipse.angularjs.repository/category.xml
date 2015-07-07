@@ -21,6 +21,9 @@
    <feature id="tern.eclipse.ide.tools.feature" version="0.0.0">
       <category name="Tern Tooling"/>
    </feature>
+   <feature id="tern.eclipse.ide.tools.feature.source" version="0.0.0">
+      <category name="Tern Tooling Development Resources"/>
+   </feature>
    <feature id="angularjs-eclipse-feature" version="0.0.0">
       <category name="AngularJS Eclipse Tooling"/>
    </feature>
@@ -42,9 +45,7 @@
    <feature id="org.eclipse.wst.html.webresources.feature">
       <category name="WTP HTML - Web Resources"/>
    </feature>
-   <feature url="features/tern.eclipse.ide.tools.feature.source_0.0.0.jar" id="tern.eclipse.ide.tools.feature.source" version="0.0.0">
-      <category name="Tern Tooling Development Resources"/>
-   </feature>
+   
    <category-def name="WTP HTML - Web Resources" label="WTP HTML - Web Resources">
      <description>
        Provides completion, hyperlink, hover inside WTP HTML editor for Web Resources (CSS, JS, Images)
@@ -64,8 +65,7 @@
      <description>
        Customizes Eclipse PHP editor (PDT) with AngularJS features. Please install PDT before.
      </description>
-   </category-def>      
-         
+   </category-def>
    <category-def name="Tern - Embed Node.js" label="Tern - Embed Node.js">
       <description>
          Embed Node.js switch OS
