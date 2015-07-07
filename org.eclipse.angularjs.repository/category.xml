@@ -9,6 +9,9 @@
    <bundle id="minimal-json" >
       <category name="Tern IDE"/>
    </bundle>
+   <bundle id="minimatch.java" >
+      <category name="Tern IDE"/>
+   </bundle>
    <feature id="tern-jsdt-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
