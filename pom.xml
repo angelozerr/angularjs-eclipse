@@ -196,7 +196,7 @@
 		<repository>
 			<id>eclipse-wtp-json</id>
 			<layout>p2</layout>
-			<url>http://oss.opensagres.fr/eclipse-wtp-json/1.0.0-SNAPSHOT/</url>
+			<url>http://oss.opensagres.fr/eclipse-wtp-json/1.0.0/</url>
 		</repository>
 		<!-- only for SNAPSHOT versions of minimatch
 		 <repository>
