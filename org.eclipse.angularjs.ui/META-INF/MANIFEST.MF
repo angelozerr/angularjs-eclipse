@@ -31,4 +31,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.angularjs.ui.contentassist,
  org.eclipse.angularjs.ui.style,
  org.eclipse.angularjs.ui.validation
-Import-Package: com.eclipsesource.json;version="[0.9.2,0.9.3)"
+Import-Package: com.eclipsesource.json;version="[0.9.4,0.9.5)"
