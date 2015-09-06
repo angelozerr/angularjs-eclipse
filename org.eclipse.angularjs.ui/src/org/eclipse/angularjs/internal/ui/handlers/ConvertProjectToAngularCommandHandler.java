@@ -42,9 +42,6 @@ public class ConvertProjectToAngularCommandHandler extends
 	protected ITernModule[] getModules(IScopeContext[] fLookupOrder) {
 		List<ITernModule> modules = new ArrayList<ITernModule>(
 				Arrays.asList(super.getModules(fLookupOrder)));
-		if (!modules.contains(TernDef.ecma5)) {
-			modules.add(TernDef.ecma5);
-		}
 		if (!modules.contains(TernDef.browser)) {
 			modules.add(TernDef.browser);
 		}
