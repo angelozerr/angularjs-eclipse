@@ -50,7 +50,7 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 	}
 
 	@Override
-	public void open() {
+	protected void findDef() {
 		try {
 			TernAngularDefinitionQuery query = new TernAngularDefinitionQuery(
 					angularType);

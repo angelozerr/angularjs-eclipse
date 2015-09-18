@@ -61,7 +61,7 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 
 		IFile file = DOMUtils.getFile(currentNode);
 		IProject project = file.getProject();
-		IHyperlink hyperlink = null;
+		HTMLAngularHyperLink hyperlink = null;
 		if (AngularProject.hasAngularNature(project)) {
 			try {
 
@@ -170,7 +170,7 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 		return createHyperlinks(hyperlink);
 	}
 
-	private IHyperlink createHyperlinkForExpression(String regionType,
+	private HTMLAngularHyperLink createHyperlinkForExpression(String regionType,
 			String regionText, int regionStartOffset, int documentPosition,
 			IDOMNode node, IDocument document, IIDETernProject ternProject,
 			IFile file, String startSymbol, String endSymbol) {
@@ -188,8 +188,8 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 		return null;
 	}
 
-	private IHyperlink[] createHyperlinks(IHyperlink hyperlink) {
-		if (hyperlink != null) {
+	private IHyperlink[] createHyperlinks(HTMLAngularHyperLink hyperlink) {
+		if (hyperlink != null && hyperlink.isValid()) {
 			IHyperlink[] hyperlinks = new IHyperlink[1];
 			hyperlinks[0] = hyperlink;
 			return hyperlinks;
