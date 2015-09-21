@@ -13,9 +13,6 @@ package org.eclipse.angularjs.core;
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-import tern.eclipse.ide.core.TernCorePlugin;
-import tern.metadata.TernModuleMetadataManager;
-
 /**
  * Angular Core Plugin.
  * 
@@ -38,10 +35,6 @@ public class AngularCorePlugin extends Plugin {
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-
-		TernModuleMetadataManager.getInstance().init(
-				TernCorePlugin.getTernCoreBaseDir());
-
 	}
 
 	@Override
