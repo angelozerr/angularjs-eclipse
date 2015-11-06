@@ -52,6 +52,7 @@ public class ImageResource {
 	public static final String IMG_ELCL_GOTO_DEF = "goto_def";
 	public static final String IMG_ELCL_LINK_TO_CTRL = "link_to_ctrl";
 	public static final String IMG_ELCL_UNLINK_TO_CTRL = "unlink_to_ctrl";
+	public static final String IMG_ELCL_SORT = "alphab_sort_co";
 
 	static {
 		try {
@@ -155,6 +156,7 @@ public class ImageResource {
 				+ ".gif");
 		registerImage(IMG_ELCL_UNLINK_TO_CTRL, ELCL_OBJ
 				+ IMG_ELCL_UNLINK_TO_CTRL + ".gif");
+		registerImage(IMG_ELCL_SORT, ELCL_OBJ + IMG_ELCL_SORT + ".png");
 	}
 
 	/**
