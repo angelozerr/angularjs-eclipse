@@ -20,6 +20,7 @@ import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.views.actions.GoToDefinitionAction;
+import org.eclipse.angularjs.internal.ui.views.actions.LexicalSortingAction;
 import org.eclipse.angularjs.internal.ui.views.actions.LinkToControllerAction;
 import org.eclipse.angularjs.internal.ui.views.actions.RefreshExplorerAction;
 import org.eclipse.angularjs.internal.ui.views.actions.TerminateTernServerAction;
@@ -89,6 +90,7 @@ public class AngularExplorerView extends ViewPart implements
 	private UnLinkToControllerAction unLinkAction;
 	private GoToDefinitionAction openAction;
 	private RefreshExplorerAction refreshAction;
+	private LexicalSortingAction sortAction;
 
 	private IPartListener2 partListener = new IPartListener2() {
 		public void partVisible(IWorkbenchPartReference ref) {
@@ -210,6 +212,8 @@ public class AngularExplorerView extends ViewPart implements
 				.getToolBarManager();
 		this.terminateAction = new TerminateTernServerAction(this);
 		manager.add(terminateAction);
+		sortAction = new LexicalSortingAction(this);
+		manager.add(sortAction);
 		this.linkAction = new LinkToControllerAction(this);
 		manager.add(linkAction);
 		this.unLinkAction = new UnLinkToControllerAction(this);
