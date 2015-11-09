@@ -4,7 +4,7 @@ Bundle-Name: %pluginName
 Bundle-Vendor: %pluginProvider
 Bundle-Localization: plugin
 Bundle-SymbolicName: org.eclipse.angularjs.ui;singleton:=true
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: org.eclipse.angularjs.internal.ui.AngularUIPlugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
