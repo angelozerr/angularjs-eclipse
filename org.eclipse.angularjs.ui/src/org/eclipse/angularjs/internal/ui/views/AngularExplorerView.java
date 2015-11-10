@@ -419,7 +419,7 @@ public class AngularExplorerView extends ViewPart implements
 		if (tFile == null && filename != null) {
 			tFile = getCurrentTernProject().getFile(filename);
 		}
-		IFile file = (IFile) tFile.getAdapter(IFile.class);
+		IFile file = tFile != null ? (IFile) tFile.getAdapter(IFile.class) : null;
 		if (file == null) {
 			return new Status(
 					IStatus.ERROR,
