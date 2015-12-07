@@ -10,6 +10,7 @@
  */
 package org.eclipse.angularjs.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -25,6 +26,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.IPreferenceChangeListener;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChangeEvent;
 
+import com.eclipsesource.json.JsonValue;
+
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
 import tern.angular.modules.IDirectiveCollector;
@@ -34,6 +37,8 @@ import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.ITernProjectLifecycleListener;
 import tern.eclipse.ide.core.TernCorePlugin;
 import tern.scriptpath.ITernScriptPath;
+import tern.server.ITernModule;
+import tern.server.ITernModuleConfigurable;
 import tern.server.ITernServer;
 import tern.server.TernPlugin;
 import tern.server.TernServerAdapter;
@@ -139,10 +144,28 @@ public class AngularProject implements IDirectiveSyntax,
 	public static boolean hasAngularNature(IProject project) {
 		if (project.isAccessible()) {
 			try {
-				if (TernCorePlugin.hasTernNature(project)
-						&& TernCorePlugin.getTernProject(project).hasPlugin(
-								TernPlugin.angular)) {
-					return true;
+				if (TernCorePlugin.hasTernNature(project)) {
+					IIDETernProject ternProject = TernCorePlugin.getTernProject(project); 
+					if (ternProject.hasPlugin(TernPlugin.angular1)) {
+						return true;
+					}
+					if (ternProject.hasPlugin("angular")) {
+						try {
+							// .tern-project must be updated with angular1
+							ITernModule angular = ternProject.getRepository().getModule("angular");
+							JsonValue options = (angular instanceof ITernModuleConfigurable)
+									? ((ITernModuleConfigurable) angular).getOptions() : null;
+							ternProject.addPlugin(TernPlugin.angular1, options);
+							ternProject.getPlugins().remove("angular");
+							ternProject.save();
+						} catch (Exception e) {
+							Trace.trace(Trace.SEVERE, "Error while updating .tern-project with angular1", e);
+							return false;
+						}
+						AngularCorePlugin.getDefault().getLog().log(new Status(IStatus.INFO,
+								AngularCorePlugin.PLUGIN_ID, ".tern-project was updated with angular1"));
+						return true;
+					}
 				}
 			} catch (CoreException e) {
 				Trace.trace(Trace.SEVERE, "Error angular nature", e);

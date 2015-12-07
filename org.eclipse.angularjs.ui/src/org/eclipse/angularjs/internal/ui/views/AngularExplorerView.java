@@ -70,7 +70,9 @@ import tern.scriptpath.ITernScriptPath;
 import tern.scriptpath.ITernScriptResource;
 import tern.server.ITernServer;
 import tern.server.ITernServerListener;
+import tern.server.protocol.IJSONObjectHelper;
 import tern.server.protocol.definition.ITernDefinitionCollector;
+import tern.server.protocol.push.IMessageHandler;
 
 /**
  * Angular explorer view.
@@ -78,7 +80,7 @@ import tern.server.protocol.definition.ITernDefinitionCollector;
  */
 public class AngularExplorerView extends ViewPart implements
 		ISelectionListener, ITernDefinitionCollector, ITernServerListener,
-		ITernProjectLifecycleListener {
+		ITernProjectLifecycleListener, IMessageHandler {
 
 	private IWorkbenchPart currentEditor;
 	private IIDETernProject currentTernProject;
@@ -277,9 +279,11 @@ public class AngularExplorerView extends ViewPart implements
 									.equals(currentTernProject);
 							if (projectChanged) {
 								ternProject.addServerListener(this);
+								ternProject.on("angular:modulesChanged", this);
 								if (currentTernProject != null) {
 									currentTernProject
 											.removeServerListener(this);
+									currentTernProject.off("angular:modulesChanged", this);
 								}
 							}
 							currentTernProject = ternProject;
@@ -312,6 +316,7 @@ public class AngularExplorerView extends ViewPart implements
 		// disable angular explorer.
 		if (currentTernProject != null) {
 			currentTernProject.removeServerListener(this);
+			currentTernProject.off("angular:modulesChanged", this);
 		}
 		currentTernProject = null;
 		currentResource = null;
@@ -326,6 +331,7 @@ public class AngularExplorerView extends ViewPart implements
 		TernCorePlugin.removeTernProjectLifeCycleListener(this);
 		if (currentTernProject != null) {
 			currentTernProject.removeServerListener(this);
+			currentTernProject.off("angular:modulesChanged", this);
 		}
 	}
 
@@ -484,5 +490,10 @@ public class AngularExplorerView extends ViewPart implements
 			}
 
 		}
+	}
+	
+	@Override
+	public void handleMessage(Object jsonObject, IJSONObjectHelper helper) {
+		System.err.println(jsonObject);
 	}
 }

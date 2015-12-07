@@ -45,8 +45,8 @@ public class ConvertProjectToAngularCommandHandler extends
 		if (!modules.contains(TernDef.browser)) {
 			modules.add(TernDef.browser);
 		}
-		if (!modules.contains(TernPlugin.angular)) {
-			modules.add(TernPlugin.angular);
+		if (!modules.contains(TernPlugin.angular1)) {
+			modules.add(TernPlugin.angular1);
 		}
 		return modules.toArray(ITernModule.EMPTY_MODULE);
 	}
