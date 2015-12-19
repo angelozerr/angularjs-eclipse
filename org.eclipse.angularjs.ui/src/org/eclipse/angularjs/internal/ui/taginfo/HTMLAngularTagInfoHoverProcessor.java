@@ -280,11 +280,11 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 		// update with the current tern project
 		this.ternProject = ternProject;
 		if (scriptPath != null) {
-			ternProject.request(query, query.getFiles(), scriptPath, null,
+			ternProject.request(query, null, scriptPath, null,
 					null, collector);
 		} else {
 			ITernFile tf = new TernDocumentFile(file, document);
-			ternProject.request(query, query.getFiles(), null, domNode, tf,
+			ternProject.request(query, null, null, domNode, tf,
 					collector);
 		}
 		return collector.getInfo();

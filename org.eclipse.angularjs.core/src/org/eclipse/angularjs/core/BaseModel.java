@@ -10,7 +10,6 @@
  */
 package org.eclipse.angularjs.core;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 
 import tern.ITernProject;
@@ -61,7 +60,7 @@ public class BaseModel {
 			ITernCompletionCollector collector) {
 		try {
 			IIDETernProject ternProject = getTernProject();
-			ternProject.request(query, query.getFiles(), scriptPath, null, null, collector);
+			ternProject.request(query, null, scriptPath, null, null, collector);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -71,7 +70,7 @@ public class BaseModel {
 			ITernDefinitionCollector collector) {
 		try {
 			IIDETernProject ternProject = getTernProject();
-			ternProject.request(query, query.getFiles(), scriptPath, null, null, collector);
+			ternProject.request(query, null, scriptPath, null, null, collector);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

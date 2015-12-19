@@ -370,11 +370,11 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			};
 
 			if (scriptPath != null) {
-				ternProject.request(query, query.getFiles(), scriptPath, null,
+				ternProject.request(query, null, scriptPath, null,
 						null, collector);
 			} else {
 				ITernFile tf = new TernDocumentFile(file, document);
-				ternProject.request(query, query.getFiles(), null, element, tf,
+				ternProject.request(query, null, null, element, tf,
 						collector);
 			}
 

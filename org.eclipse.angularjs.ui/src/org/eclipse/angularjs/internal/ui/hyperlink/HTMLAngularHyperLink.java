@@ -59,10 +59,10 @@ public class HTMLAngularHyperLink extends AbstractTernHyperlink {
 			ITernScriptPath scriptPath = AngularScopeHelper.populateScope(node,
 					file, angularType, query);
 			if (scriptPath != null) {
-				ternProject.request(query, query.getFiles(), scriptPath, null, null, this);
+				ternProject.request(query, null, scriptPath, null, null, this);
 			} else {
 				ITernFile tf = new TernDocumentFile(file, document);
-				ternProject.request(query, query.getFiles(), null, node, tf, this);
+				ternProject.request(query, null, null, node, tf, this);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

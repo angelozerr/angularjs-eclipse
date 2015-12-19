@@ -89,7 +89,7 @@ public class CustomAngularModulesRegistry extends
 				TernAngularCompletionsQuery query = new TernAngularCompletionsQuery(
 						AngularType.directives);
 				query.setExpression("");
-				ternProject.request(query, query.getFiles(), null, null, null,
+				ternProject.request(query, null, null, null, null,
 						new ITernCompletionCollector() {
 
 							@Override

@@ -241,10 +241,10 @@ public class ValidatorUtils {
 		ValidationTernTypeCollector collector = new ValidationTernTypeCollector();
 
 		if (scriptPath != null) {
-			ternProject.request(query, query.getFiles(), scriptPath, null, null, collector);
+			ternProject.request(query, null, scriptPath, null, null, collector);
 		} else {
 			ITernFile tf = new TernDocumentFile(file, document);
-			ternProject.request(query, query.getFiles(), null, attr, tf, collector);
+			ternProject.request(query, null, null, attr, tf, collector);
 		}
 		return collector.isExists();
 	}
