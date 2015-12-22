@@ -62,6 +62,13 @@
 			name="%convertProjectToAngularCommandName"
 			categoryId="org.eclipse.ui.category.file">
 		</command>
+		<!-- navigate -->
+		<command
+            name="%ActionDefinition.openAngularElement.name"
+            description="%ActionDefinition.openAngularElement.description"
+            categoryId="org.eclipse.ui.category.navigate"
+            id="org.eclipse.angularjs.ui.navigate.open.angular.element">
+        </command>		
 	</extension>		
 			
 	<!--Handlers:-->
@@ -89,7 +96,89 @@
 		</handler>
 		
 	</extension>		
+
+	<!--Action Set:-->
 				
+    <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="%AngularActionSet.label"
+            description="%AngularActionSet.description"
+            visible="false"
+            id="org.eclipse.angularjs.ui.AngularActionSet">
+         <action
+               definitionId="org.eclipse.angularjs.ui.navigate.open.angular.element"
+               label="%OpenAngularElementAction.label"
+               tooltip="%OpenAngularElementAction.tooltip"
+               icon="icons/full/obj16/angularjs.png"
+               class="org.eclipse.angularjs.internal.ui.actions.OpenAngularElementAction"
+               menubarPath="navigate/open.ext2"
+               id="openAngularElement">
+         </action>
+      </actionSet>
+	</extension>		
+         			
+    <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation
+            targetID="org.eclipse.angularjs.ui.AngularActionSet">
+         <part
+               id="org.eclipse.search.SearchResultView">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.PackageExplorer">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.TypeHierarchy">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.CompilationUnitEditor">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.ClassFileEditor">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.PropertiesFileEditor">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.ProjectsView">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.PackagesView">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.TypesView">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.MembersView">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.SourceView">
+         </part>
+         <part
+               id="org.eclipse.wst.jsdt.ui.SourceView">
+         </part>
+         <part 
+               id="org.eclipse.wst.html.core.htmlsource.source">
+	     </part>
+         <part 
+               id="org.eclipse.jst.jsp.core.jspsource.source">
+	     </part>	     	     
+      </actionSetPartAssociation>
+   </extension>
+            		
+   <extension
+         point="org.eclipse.ui.bindings">
+      <!--  win32:  M1=CTRL,    M2=SHIFT, M3=ALT, M4=-
+            carbon: M1=COMMAND, M2=SHIFT, M3=ALT, M4=CTRL -->
+               
+		<key
+            sequence="M1+M2+Z"
+            commandId="org.eclipse.angularjs.ui.navigate.open.angular.element"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"/>
+                           
+   </extension>
+                           				
 	<!--Menus:-->
  	<extension
 		point="org.eclipse.ui.menus">

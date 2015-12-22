@@ -28,11 +28,14 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChange
 
 import com.eclipsesource.json.JsonValue;
 
+import tern.TernException;
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
 import tern.angular.modules.IDirectiveCollector;
 import tern.angular.modules.IDirectiveSyntax;
 import tern.angular.modules.Restriction;
+import tern.angular.protocol.outline.AngularOutline;
+import tern.angular.protocol.outline.AngularOutlineProvider;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.ITernProjectLifecycleListener;
 import tern.eclipse.ide.core.TernCorePlugin;
@@ -64,8 +67,11 @@ public class AngularProject implements IDirectiveSyntax,
 
 	private final CustomAngularModulesRegistry customDirectives;
 
+	private AngularOutlineProvider outlineProvider;;
+	
 	AngularProject(IIDETernProject ternProject) throws CoreException {
 		this.ternProject = ternProject;
+		this.outlineProvider = new AngularOutlineProvider(ternProject);
 		this.folders = new HashMap<ITernScriptPath, List<BaseModel>>();
 		this.customDirectives = new CustomAngularModulesRegistry(
 				ternProject.getProject());
@@ -275,5 +281,18 @@ public class AngularProject implements IDirectiveSyntax,
 
 	private void dispose() {
 		customDirectives.dispose();
+	}
+	
+	/**
+	 * Returns the angular outline which hosts modules, controllers, directives
+	 * of the angular project.
+	 * 
+	 * @return the angular outline which hosts modules, controllers, directives
+	 *         of the angular project.
+	 * @throws IOException
+	 * @throws TernException
+	 */
+	public AngularOutline getAngularOutline() throws IOException, TernException {
+		return outlineProvider.getOutline();
 	}
 }

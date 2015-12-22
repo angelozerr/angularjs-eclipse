@@ -62,6 +62,7 @@ import org.eclipse.ui.part.ViewPart;
 
 import tern.ITernFile;
 import tern.angular.AngularType;
+import tern.angular.protocol.outline.AngularOutline;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.ITernProjectLifecycleListener;
 import tern.eclipse.ide.core.TernCorePlugin;
@@ -279,11 +280,11 @@ public class AngularExplorerView extends ViewPart implements
 									.equals(currentTernProject);
 							if (projectChanged) {
 								ternProject.addServerListener(this);
-								ternProject.on("angular:modulesChanged", this);
+								ternProject.on(AngularOutline.ANGULAR_MODEL_CHANGED_EVENT, this);
 								if (currentTernProject != null) {
 									currentTernProject
 											.removeServerListener(this);
-									currentTernProject.off("angular:modulesChanged", this);
+									currentTernProject.off(AngularOutline.ANGULAR_MODEL_CHANGED_EVENT, this);
 								}
 							}
 							currentTernProject = ternProject;

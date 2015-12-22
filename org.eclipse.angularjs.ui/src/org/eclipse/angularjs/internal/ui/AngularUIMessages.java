@@ -75,6 +75,12 @@ public final class AngularUIMessages extends NLS {
 	public static String ExpressionPropertyPage_startSybol_label;
 	public static String ExpressionPropertyPage_endSybol_label;
 
+	public static String OpenAngularElementAction_label;
+	public static String OpenAngularElementAction_description;
+	public static String OpenAngularElementAction_tooltip;
+	public static String OpenAngularElementAction_dialogMessage;
+	public static String OpenAngularElementAction_dialogTitle;
+	
 	private AngularUIMessages() {
 	}
 
