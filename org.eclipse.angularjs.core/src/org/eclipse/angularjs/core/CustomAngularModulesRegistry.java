@@ -13,7 +13,6 @@ package org.eclipse.angularjs.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.angularjs.core.utils.StringUtils;
 import org.eclipse.angularjs.internal.core.Trace;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -39,6 +38,7 @@ import tern.eclipse.ide.core.TernCorePlugin;
 import tern.server.protocol.IJSONObjectHelper;
 import tern.server.protocol.completions.ITernCompletionCollector;
 import tern.server.protocol.completions.TernCompletionProposalRec;
+import tern.utils.StringUtils;
 
 public class CustomAngularModulesRegistry extends
 		AbstractAngularModulesRegistry implements IResourceChangeListener,

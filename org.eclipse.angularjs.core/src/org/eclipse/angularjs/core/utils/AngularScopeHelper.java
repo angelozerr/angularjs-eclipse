@@ -23,6 +23,7 @@ import tern.angular.protocol.Controller;
 import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.scriptpath.ITernScriptPath;
+import tern.utils.StringUtils;
 
 /**
  * Angular scope helper.

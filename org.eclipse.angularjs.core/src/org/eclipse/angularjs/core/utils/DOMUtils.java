@@ -48,6 +48,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import tern.utils.StringUtils;
+
 /**
  * Utilities for SSE DOM node {@link IDOMNode}.
  * 

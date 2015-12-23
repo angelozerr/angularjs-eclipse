@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.eclipse.angularjs.core.AngularCorePlugin;
 import org.eclipse.angularjs.core.AngularProject;
-import org.eclipse.angularjs.core.utils.StringUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -23,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.scriptpath.ITernScriptPath;
+import tern.utils.StringUtils;
 
 public class AngularLinkResource {
 

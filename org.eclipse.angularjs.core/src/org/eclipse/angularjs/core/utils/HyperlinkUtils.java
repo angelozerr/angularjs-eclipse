@@ -16,6 +16,8 @@ import org.eclipse.jface.text.Region;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 
+import tern.utils.StringUtils;
+
 public class HyperlinkUtils {
 
 	public static IRegion getNameRegion(IDOMAttr attr) {

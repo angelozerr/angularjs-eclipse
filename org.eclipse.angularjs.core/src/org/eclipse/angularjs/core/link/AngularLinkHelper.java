@@ -10,13 +10,13 @@
  */
 package org.eclipse.angularjs.core.link;
 
-import org.eclipse.angularjs.core.utils.StringUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.QualifiedName;
 
 import tern.eclipse.ide.core.TernCorePlugin;
 import tern.scriptpath.ITernScriptPath;
+import tern.utils.StringUtils;
 
 public class AngularLinkHelper {
 

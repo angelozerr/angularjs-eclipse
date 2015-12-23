@@ -495,6 +495,6 @@ public class AngularExplorerView extends ViewPart implements
 	
 	@Override
 	public void handleMessage(Object jsonObject, IJSONObjectHelper helper) {
-		System.err.println(jsonObject);
+		// System.err.println(jsonObject);
 	}
 }
