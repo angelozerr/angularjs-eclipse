@@ -12,6 +12,9 @@
    <bundle id="minimatch.java" >
       <category name="Tern IDE"/>
    </bundle>
+   <bundle id="javax.websocket-api">
+      <category name="Tern IDE"/>
+   </bundle>
    <feature id="tern-jsdt-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
