@@ -10,15 +10,17 @@
  */
 package org.eclipse.angularjs.internal.ui.views.actions;
 
-import org.eclipse.angularjs.core.AngularElement;
-import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.ImageResource;
-import org.eclipse.angularjs.internal.ui.views.AngularExplorerView;
+import org.eclipse.angularjs.internal.ui.views.AngularContentOutlinePage;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
+
+import tern.TernResourcesManager;
+import tern.angular.modules.IAngularElement;
+import tern.angular.modules.IModule;
 
 /**
  * This action unlink the selected controller to the current HTML/JSP file
@@ -27,42 +29,30 @@ import org.eclipse.jface.viewers.IStructuredSelection;
  */
 public class UnLinkToControllerAction extends Action {
 
-	private final AngularExplorerView explorer;
+	private final AngularContentOutlinePage page;
 
-	public UnLinkToControllerAction(AngularExplorerView explorer) {
-		this.explorer = explorer;
+	public UnLinkToControllerAction(AngularContentOutlinePage page) {
+		this.page = page;
 		super.setText(AngularUIMessages.UnLinkToControllerAction_text);
 		super.setToolTipText(AngularUIMessages.UnLinkToControllerAction_tooltip);
-		super.setImageDescriptor(ImageResource
-				.getImageDescriptor(ImageResource.IMG_ELCL_UNLINK_TO_CTRL));
+		super.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_UNLINK_TO_CTRL));
 	}
 
 	@Override
 	public void run() {
-		IResource resource = explorer.getCurrentResource();
-		if (resource != null) {
-			IStructuredSelection selection = (IStructuredSelection) explorer
-					.getViewer().getSelection();
-			if (!selection.isEmpty()) {
-				Object firstSelection = selection.getFirstElement();
-
-				Module module = null;
-				AngularElement controller = null;
-				String elementId = null;
-				if (firstSelection instanceof Module) {
-					module = (Module) firstSelection;
-				} else if (firstSelection instanceof AngularElement) {
-					controller = (AngularElement) firstSelection;
-					module = controller.getModule();
-				}
+		IResource resource = page.getCurrentFile();
+		IStructuredSelection selection = (IStructuredSelection) page.getViewer().getSelection();
+		if (!selection.isEmpty()) {
+			Object firstSelection = selection.getFirstElement();
+			if (firstSelection instanceof IAngularElement) {
+				IAngularElement element = (IAngularElement) firstSelection;
+				IModule module = element.getModule();
 				if (module != null) {
 					try {
-						AngularLinkHelper.removeController(resource, module
-								.getScriptPath(), module.getName(),
-								controller != null ? controller.getName()
-										: null, elementId);
-						explorer.updateEnabledLinkActions(true);
-						explorer.refreshTree(true);
+						AngularLinkHelper.removeController(resource, null, module.getName(),
+								element != null ? element.getName() : null, null);
+						page.updateEnabledLinkActions(true);
+						// explorer.refreshTree(true);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

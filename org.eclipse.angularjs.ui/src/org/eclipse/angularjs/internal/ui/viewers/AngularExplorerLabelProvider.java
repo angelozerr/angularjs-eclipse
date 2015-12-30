@@ -8,14 +8,14 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui.views.viewers;
+package org.eclipse.angularjs.internal.ui.viewers;
 
 import org.eclipse.angularjs.core.AngularElement;
 import org.eclipse.angularjs.core.BaseModel;
 import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.ImageResource;
-import org.eclipse.angularjs.internal.ui.views.AngularExplorerView;
+import org.eclipse.angularjs.internal.ui.views.AngularExplorerViewOLD;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.swt.graphics.Image;
 
@@ -27,9 +27,9 @@ import tern.eclipse.ide.ui.viewers.TernScriptPathLabelProvider;
  */
 public class AngularExplorerLabelProvider extends TernScriptPathLabelProvider {
 
-	private final AngularExplorerView view;
+	private final AngularExplorerViewOLD view;
 
-	public AngularExplorerLabelProvider(AngularExplorerView view) {
+	public AngularExplorerLabelProvider(AngularExplorerViewOLD view) {
 		this.view = view;
 	}
 

@@ -8,17 +8,13 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui.views.actions;
+package org.eclipse.angularjs.internal.ui.views.actionsOLD;
 
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
-import org.eclipse.angularjs.internal.ui.Trace;
-import org.eclipse.angularjs.internal.ui.views.AngularContentOutlinePage;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
+import org.eclipse.angularjs.internal.ui.views.AngularExplorerViewOLD;
 import org.eclipse.jface.action.Action;
 
 import tern.eclipse.ide.core.IIDETernProject;
-import tern.eclipse.ide.core.TernCorePlugin;
 import tern.eclipse.ide.ui.ImageResource;
 
 /**
@@ -27,25 +23,21 @@ import tern.eclipse.ide.ui.ImageResource;
  */
 public class TerminateTernServerAction extends Action {
 
-	private final AngularContentOutlinePage page;
+	private final AngularExplorerViewOLD explorer;
 
-	public TerminateTernServerAction(AngularContentOutlinePage page) {
-		this.page = page;
+	public TerminateTernServerAction(AngularExplorerViewOLD explorer) {
+		this.explorer = explorer;
 		super.setText(AngularUIMessages.TerminateTernServerAction_text);
 		super.setToolTipText(AngularUIMessages.TerminateTernServerAction_tooltip);
-		super.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_STOP_ENABLED));
+		super.setImageDescriptor(ImageResource
+				.getImageDescriptor(ImageResource.IMG_STOP_ENABLED));
 	}
 
 	@Override
 	public void run() {
-		try {
-			IProject project = page.getProject();
-			IIDETernProject ternProject = TernCorePlugin.getTernProject(project);
-			if (ternProject != null) {
-				ternProject.disposeServer();
-			}
-		} catch (CoreException e) {
-			Trace.trace(Trace.SEVERE, "Error while getting tern project.", e);
+		IIDETernProject ternProject = explorer.getCurrentTernProject();
+		if (ternProject != null) {
+			ternProject.disposeServer();
 		}
 	}
 }

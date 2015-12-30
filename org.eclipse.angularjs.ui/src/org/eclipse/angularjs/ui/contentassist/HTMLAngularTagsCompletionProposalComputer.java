@@ -185,7 +185,7 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 			// is angular directive attribute?
 			Directive directive = AngularDOMUtils.getAngularDirectiveByRegion(
 					element, contentAssistRequest.getRegion());
-			AngularType angularType = directive != null ? directive.getType()
+			AngularType angularType = directive != null ? directive.getDirectiveType()
 					: null;
 			if (angularType != null) {
 				if (angularType.equals(AngularType.unknown)

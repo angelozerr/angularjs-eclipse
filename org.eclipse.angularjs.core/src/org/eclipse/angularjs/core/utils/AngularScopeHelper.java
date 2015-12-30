@@ -18,8 +18,8 @@ import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.w3c.dom.Node;
 
 import tern.angular.AngularType;
+import tern.angular.modules.Controller;
 import tern.angular.modules.DOMDirectiveProvider;
-import tern.angular.protocol.Controller;
 import tern.angular.protocol.HTMLTernAngularHelper;
 import tern.angular.protocol.TernAngularQuery;
 import tern.scriptpath.ITernScriptPath;

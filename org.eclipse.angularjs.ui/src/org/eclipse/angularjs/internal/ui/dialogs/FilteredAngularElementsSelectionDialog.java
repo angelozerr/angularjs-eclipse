@@ -16,7 +16,7 @@ import java.util.List;
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.ImageResource;
-import org.eclipse.angularjs.internal.ui.views.viewers.AngularElementLabelProvider;
+import org.eclipse.angularjs.internal.ui.viewers.AngularElementLabelProvider;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -91,7 +91,7 @@ public class FilteredAngularElementsSelectionDialog extends FilteredItemsSelecti
 			if (AngularProject.hasAngularNature(project)) {
 				angularProject = AngularProject.getAngularProject(project);
 				try {
-					AngularOutline outline = angularProject.getAngularOutline();
+					AngularOutline outline = angularProject.getOutlineProvider().getOutline();
 					List<IJSNode> modules = outline.getChildren();
 					for (IJSNode module : modules) {
 						// loop for modules

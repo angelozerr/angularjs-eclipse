@@ -1,4 +1,4 @@
-package org.eclipse.angularjs.internal.ui.views.viewers;
+package org.eclipse.angularjs.internal.ui.viewers;
 
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.jface.viewers.ILabelDecorator;

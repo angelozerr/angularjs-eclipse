@@ -115,8 +115,8 @@ public class HTMLAngularHyperLinkDetector extends AbstractHyperlinkDetector {
 										file, textViewer.getDocument(),
 										ternProject,
 										AngularScopeHelper.getAngularValue(
-												attr, directive.getType()),
-										end, directive.getType());
+												attr, directive.getDirectiveType()),
+										end, directive.getDirectiveType());
 
 							} else {
 								// Hyperlink on attr name, try to open the

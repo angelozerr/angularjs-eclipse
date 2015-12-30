@@ -397,5 +397,28 @@
             id="org.eclipse.angularjs.ui.views.AngularExplorerView">
       </view>
    </extension>
-   
+   <extension
+         point="org.eclipse.ui.navigator.navigatorContent">
+      <navigatorContent
+            contentProvider="org.eclipse.angularjs.internal.ui.viewers.AngularOutlineContentProvider"
+            icon="$nl$/icons/full/eview16/explorer.png"
+            id="org.eclipse.angularjs.ui.navigatorContent"
+            labelProvider="org.eclipse.angularjs.internal.ui.viewers.AngularOutlineLabelProvider"
+            name="%angularNavigatorContent_name">
+         <triggerPoints>
+         </triggerPoints>
+      </navigatorContent>
+   </extension>
+   <extension
+         point="org.eclipse.ui.navigator.viewer">
+      <viewerContentBinding
+            viewerId="org.eclipse.angularjs.ui.outline">
+         <includes>
+            <contentExtension
+                  pattern="org.eclipse.angularjs.ui.navigatorContent">
+            </contentExtension>
+         </includes>
+      </viewerContentBinding>
+   </extension>
+      
 </plugin>        

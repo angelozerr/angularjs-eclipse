@@ -135,12 +135,12 @@ public class HTMLAngularTagInfoHoverProcessor extends HTMLTagInfoHoverProcessor
 						.getTernProject(project);
 				if (directive != null) {
 					String expression = AngularScopeHelper.getAngularValue(
-							attr, directive.getType());
+							attr, directive.getDirectiveType());
 					Integer expressionOffset = documentPosition
 							- attr.getValueRegionStartOffset();
 					String help = computeHelp(attr, expression,
 							expressionOffset, file, document, ternProject,
-							directive.getType());
+							directive.getDirectiveType());
 					if (!StringUtils.isEmpty(help)) {
 						return help;
 					}

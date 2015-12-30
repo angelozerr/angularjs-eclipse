@@ -8,7 +8,7 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui.views.viewers;
+package org.eclipse.angularjs.internal.ui.viewers;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.BaseModel;

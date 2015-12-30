@@ -8,11 +8,11 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui.views.actions;
+package org.eclipse.angularjs.internal.ui.views.actionsOLD;
 
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.ImageResource;
-import org.eclipse.angularjs.internal.ui.views.AngularExplorerView;
+import org.eclipse.angularjs.internal.ui.views.AngularExplorerViewOLD;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
@@ -23,9 +23,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
  */
 public class GoToDefinitionAction extends Action {
 
-	private final AngularExplorerView explorer;
+	private final AngularExplorerViewOLD explorer;
 
-	public GoToDefinitionAction(AngularExplorerView explorer) {
+	public GoToDefinitionAction(AngularExplorerViewOLD explorer) {
 		this.explorer = explorer;
 		super.setText(AngularUIMessages.GoToDefinitionAction_text);
 		super.setToolTipText(AngularUIMessages.GoToDefinitionAction_tooltip);

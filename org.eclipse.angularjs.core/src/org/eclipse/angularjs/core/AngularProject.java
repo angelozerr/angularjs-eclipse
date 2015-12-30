@@ -34,8 +34,8 @@ import tern.angular.modules.Directive;
 import tern.angular.modules.IDirectiveCollector;
 import tern.angular.modules.IDirectiveSyntax;
 import tern.angular.modules.Restriction;
-import tern.angular.protocol.outline.AngularOutline;
 import tern.angular.protocol.outline.AngularOutlineProvider;
+import tern.angular.protocol.outline.IAngularOutlineListener;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.ITernProjectLifecycleListener;
 import tern.eclipse.ide.core.TernCorePlugin;
@@ -50,11 +50,9 @@ import tern.server.TernServerAdapter;
  * Angular project.
  * 
  */
-public class AngularProject implements IDirectiveSyntax,
-		ITernProjectLifecycleListener {
+public class AngularProject implements IDirectiveSyntax, ITernProjectLifecycleListener {
 
-	private static final String ANGULAR_PROJECT = AngularProject.class
-			.getName();
+	private static final String ANGULAR_PROJECT = AngularProject.class.getName();
 
 	public static final String DEFAULT_START_SYMBOL = "{{";
 	public static final String DEFAULT_END_SYMBOL = "}}";
@@ -67,14 +65,13 @@ public class AngularProject implements IDirectiveSyntax,
 
 	private final CustomAngularModulesRegistry customDirectives;
 
-	private AngularOutlineProvider outlineProvider;;
-	
+	private AngularOutlineProvider outlineProvider;
+
 	AngularProject(IIDETernProject ternProject) throws CoreException {
 		this.ternProject = ternProject;
 		this.outlineProvider = new AngularOutlineProvider(ternProject);
 		this.folders = new HashMap<ITernScriptPath, List<BaseModel>>();
-		this.customDirectives = new CustomAngularModulesRegistry(
-				ternProject.getProject());
+		this.customDirectives = new CustomAngularModulesRegistry(ternProject.getProject());
 		AngularModulesManager.getInstance().addRegistry(this, customDirectives);
 		ternProject.setData(ANGULAR_PROJECT, this);
 		ternProject.addServerListener(new TernServerAdapter() {
@@ -85,20 +82,15 @@ public class AngularProject implements IDirectiveSyntax,
 		});
 		// initialize symbols from project preferences
 		initializeSymbols();
-		AngularCorePreferencesSupport.getInstance()
-				.getEclipsePreferences(ternProject.getProject())
+		AngularCorePreferencesSupport.getInstance().getEclipsePreferences(ternProject.getProject())
 				.addPreferenceChangeListener(new IPreferenceChangeListener() {
 
 					@Override
 					public void preferenceChange(PreferenceChangeEvent event) {
-						if (AngularCoreConstants.EXPRESSION_START_SYMBOL
-								.equals(event.getKey())) {
-							AngularProject.this.startSymbol = event
-									.getNewValue().toString();
-						} else if (AngularCoreConstants.EXPRESSION_END_SYMBOL
-								.equals(event.getKey())) {
-							AngularProject.this.endSymbol = event.getNewValue()
-									.toString();
+						if (AngularCoreConstants.EXPRESSION_START_SYMBOL.equals(event.getKey())) {
+							AngularProject.this.startSymbol = event.getNewValue().toString();
+						} else if (AngularCoreConstants.EXPRESSION_END_SYMBOL.equals(event.getKey())) {
+							AngularProject.this.endSymbol = event.getNewValue().toString();
 						}
 					}
 				});
@@ -108,19 +100,14 @@ public class AngularProject implements IDirectiveSyntax,
 	 * Initialize start/end symbols.
 	 */
 	private void initializeSymbols() {
-		this.startSymbol = AngularCorePreferencesSupport.getInstance()
-				.getStartSymbol(getProject());
-		this.endSymbol = AngularCorePreferencesSupport.getInstance()
-				.getEndSymbol(getProject());
+		this.startSymbol = AngularCorePreferencesSupport.getInstance().getStartSymbol(getProject());
+		this.endSymbol = AngularCorePreferencesSupport.getInstance().getEndSymbol(getProject());
 	}
 
-	public static AngularProject getAngularProject(IProject project)
-			throws CoreException {
+	public static AngularProject getAngularProject(IProject project) throws CoreException {
 		if (!hasAngularNature(project)) {
-			throw new CoreException(
-					new Status(IStatus.ERROR, AngularCorePlugin.PLUGIN_ID,
-							"The project " + project.getName()
-									+ " is not an angular project."));
+			throw new CoreException(new Status(IStatus.ERROR, AngularCorePlugin.PLUGIN_ID,
+					"The project " + project.getName() + " is not an angular project."));
 		}
 		IIDETernProject ternProject = TernCorePlugin.getTernProject(project);
 		AngularProject angularProject = ternProject.getData(ANGULAR_PROJECT);
@@ -134,8 +121,7 @@ public class AngularProject implements IDirectiveSyntax,
 		return ternProject.getProject();
 	}
 
-	public static IIDETernProject getTernProject(IProject project)
-			throws CoreException {
+	public static IIDETernProject getTernProject(IProject project) throws CoreException {
 		return TernCorePlugin.getTernProject(project);
 	}
 
@@ -151,7 +137,7 @@ public class AngularProject implements IDirectiveSyntax,
 		if (project.isAccessible()) {
 			try {
 				if (TernCorePlugin.hasTernNature(project)) {
-					IIDETernProject ternProject = TernCorePlugin.getTernProject(project); 
+					IIDETernProject ternProject = TernCorePlugin.getTernProject(project);
 					if (ternProject.hasPlugin(TernPlugin.angular1)) {
 						return true;
 					}
@@ -195,61 +181,50 @@ public class AngularProject implements IDirectiveSyntax,
 		this.folders.clear();
 	}
 
-	public Directive getDirective(String tagName, String name,
-			Restriction restriction) {
-		return AngularModulesManager.getInstance().getDirective(this, tagName,
-				name, restriction);
+	public Directive getDirective(String tagName, String name, Restriction restriction) {
+		return AngularModulesManager.getInstance().getDirective(this, tagName, name, restriction);
 	}
 
-	public void collectDirectives(String tagName, String directiveName,
-			List<Directive> existingDirectives, Restriction restriction,
-			IDirectiveCollector collector) {
-		AngularModulesManager.getInstance()
-				.collectDirectives(this, tagName, directiveName, this,
-						existingDirectives, restriction, collector);
+	public void collectDirectives(String tagName, String directiveName, List<Directive> existingDirectives,
+			Restriction restriction, IDirectiveCollector collector) {
+		AngularModulesManager.getInstance().collectDirectives(this, tagName, directiveName, this, existingDirectives,
+				restriction, collector);
 
 	}
 
 	@Override
 	public boolean isUseOriginalName() {
-		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveUseOriginalName(getProject());
+		return AngularCorePreferencesSupport.getInstance().isDirectiveUseOriginalName(getProject());
 	}
 
 	@Override
 	public boolean isStartsWithNothing() {
-		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveStartsWithNothing(getProject());
+		return AngularCorePreferencesSupport.getInstance().isDirectiveStartsWithNothing(getProject());
 	}
 
 	@Override
 	public boolean isStartsWithX() {
-		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveStartsWithX(getProject());
+		return AngularCorePreferencesSupport.getInstance().isDirectiveStartsWithX(getProject());
 	}
 
 	@Override
 	public boolean isStartsWithData() {
-		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveStartsWithData(getProject());
+		return AngularCorePreferencesSupport.getInstance().isDirectiveStartsWithData(getProject());
 	}
 
 	@Override
 	public boolean isColonDelimiter() {
-		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveColonDelimiter(getProject());
+		return AngularCorePreferencesSupport.getInstance().isDirectiveColonDelimiter(getProject());
 	}
 
 	@Override
 	public boolean isMinusDelimiter() {
-		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveMinusDelimiter(getProject());
+		return AngularCorePreferencesSupport.getInstance().isDirectiveMinusDelimiter(getProject());
 	}
 
 	@Override
 	public boolean isUnderscoreDelimiter() {
-		return AngularCorePreferencesSupport.getInstance()
-				.isDirectiveUnderscoreDelimiter(getProject());
+		return AngularCorePreferencesSupport.getInstance().isDirectiveUnderscoreDelimiter(getProject());
 	}
 
 	/**
@@ -282,17 +257,26 @@ public class AngularProject implements IDirectiveSyntax,
 	private void dispose() {
 		customDirectives.dispose();
 	}
-	
+
 	/**
-	 * Returns the angular outline which hosts modules, controllers, directives
-	 * of the angular project.
+	 * Returns the angular outline provider which hosts modules, controllers,
+	 * directives of the angular project.
 	 * 
-	 * @return the angular outline which hosts modules, controllers, directives
-	 *         of the angular project.
+	 * @return the angular outline provider which hosts modules, controllers,
+	 *         directives of the angular project.
 	 * @throws IOException
 	 * @throws TernException
 	 */
-	public AngularOutline getAngularOutline() throws IOException, TernException {
-		return outlineProvider.getOutline();
+	public AngularOutlineProvider getOutlineProvider() throws IOException, TernException {
+		outlineProvider.init();
+		return outlineProvider;
+	}
+
+	public void addAngularOutlineListener(IAngularOutlineListener listener) {
+		outlineProvider.addAngularOutlineListener(listener);
+	}
+
+	public void removeAngularOutlineListener(IAngularOutlineListener listener) {
+		outlineProvider.removeAngularOutlineListener(listener);
 	}
 }

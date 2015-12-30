@@ -8,11 +8,11 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui.views.actions;
+package org.eclipse.angularjs.internal.ui.views.actionsOLD;
 
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.ImageResource;
-import org.eclipse.angularjs.internal.ui.views.AngularContentOutlinePage;
+import org.eclipse.angularjs.internal.ui.views.AngularExplorerViewOLD;
 import org.eclipse.jface.action.Action;
 
 /**
@@ -21,18 +21,19 @@ import org.eclipse.jface.action.Action;
  */
 public class RefreshExplorerAction extends Action {
 
-	private final AngularContentOutlinePage page;
+	private final AngularExplorerViewOLD explorer;
 
-	public RefreshExplorerAction(AngularContentOutlinePage page) {
-		this.page = page;
+	public RefreshExplorerAction(AngularExplorerViewOLD explorer) {
+		this.explorer = explorer;
 		super.setText(AngularUIMessages.RefreshExplorerAction_text);
 		super.setToolTipText(AngularUIMessages.RefreshExplorerAction_tooltip);
-		super.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_REFRESH));
+		super.setImageDescriptor(ImageResource
+				.getImageDescriptor(ImageResource.IMG_ELCL_REFRESH));
 	}
 
 	@Override
 	public void run() {
-		page.getViewer().refresh();
+		explorer.refreshTree(false);
 	}
 
 }

@@ -37,6 +37,8 @@ public final class AngularUIMessages extends NLS {
 	public static String AngularTyping_Close_EL;
 
 	// Angular Explorer View
+	public static String AngularOutline_computing;
+	
 	public static String GoToDefinitionAction_text;
 	public static String GoToDefinitionAction_tooltip;
 	public static String LinkToControllerAction_text;
@@ -80,7 +82,7 @@ public final class AngularUIMessages extends NLS {
 	public static String OpenAngularElementAction_tooltip;
 	public static String OpenAngularElementAction_dialogMessage;
 	public static String OpenAngularElementAction_dialogTitle;
-	
+
 	private AngularUIMessages() {
 	}
 
