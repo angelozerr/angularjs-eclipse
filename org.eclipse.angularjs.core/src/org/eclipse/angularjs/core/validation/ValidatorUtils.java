@@ -180,7 +180,8 @@ public class ValidatorUtils {
 					Directive directive = AngularDOMUtils.getAngularDirective(
 							project, attr);
 					if (directive != null) {
-						switch (directive.getDirectiveType()) {
+						AngularType type = directive.getDirectiveType();
+						switch (type) {
 						case module:
 						case controller:
 							try {
@@ -191,12 +192,12 @@ public class ValidatorUtils {
 										file,
 										structuredDocumentRegion
 												.getParentDocument(),
-										ternProject, directive.getAngularType());
+										ternProject, type);
 								if (!exists) {
 									reporter.addMessage(
 											origin,
 											createMessage(attr,
-													directive.getAngularType(), file));
+													type, file));
 								}
 							} catch (Exception e) {
 								Trace.trace(Trace.SEVERE,
