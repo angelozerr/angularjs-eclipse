@@ -1,7 +1,5 @@
 package org.eclipse.angularjs.internal.ui.views;
 
-import org.eclipse.angularjs.core.AngularElement;
-import org.eclipse.angularjs.core.Module;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.views.actions.LexicalSortingAction;
