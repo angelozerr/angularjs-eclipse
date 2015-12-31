@@ -1,61 +1,28 @@
 package org.eclipse.angularjs.internal.ui.views.actions;
 
-import org.eclipse.angularjs.core.AngularElement;
 import org.eclipse.angularjs.core.BaseModel;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
-import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.angularjs.internal.ui.views.AngularContentOutlinePage;
-import org.eclipse.jface.action.Action;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
-import org.eclipse.ui.navigator.CommonViewer;
 
 import tern.angular.modules.IAngularElement;
+import tern.eclipse.ide.ui.views.actions.AbstractLexicalSortingAction;
 
-public class LexicalSortingAction extends Action {
-	private final AngularContentOutlinePage page;
-	private LexicalSorter sorter;
+public class LexicalSortingAction extends AbstractLexicalSortingAction {
 
 	public LexicalSortingAction(AngularContentOutlinePage page) {
-		super(AngularUIMessages.LexicalSortingAction_text, SWT.TOGGLE);
-		this.page = page;
-		this.sorter = new LexicalSorter();
-		super.setToolTipText(AngularUIMessages.LexicalSortingAction_tooltip);
-		super.setDescription(AngularUIMessages.LexicalSortingAction_description);
-		super.setImageDescriptor(ImageResource.getImageDescriptor(ImageResource.IMG_ELCL_SORT));
-
-		boolean checked = AngularUIPlugin.getDefault().getPreferenceStore()
-				.getBoolean("LexicalSortingAction.isChecked");
-		valueChanged(checked, false);
+		super(page, AngularUIMessages.LexicalSortingAction_text, AngularUIMessages.LexicalSortingAction_tooltip,
+				AngularUIMessages.LexicalSortingAction_description, new LexicalSorter());
 	}
 
 	@Override
-	public void run() {
-		valueChanged(isChecked(), true);
+	protected IPreferenceStore getPreferenceStore() {
+		return AngularUIPlugin.getDefault().getPreferenceStore();
 	}
 
-	private void valueChanged(final boolean on, boolean store) {
-		setChecked(on);
-		final CommonViewer viewer = page.getViewer();
-		BusyIndicator.showWhile(viewer.getControl().getDisplay(), new Runnable() {
-			@Override
-			public void run() {
-				if (on) {
-					viewer.setSorter(sorter);
-				} else {
-					viewer.setSorter(null);
-				}
-			}
-		});
-
-		if (store) {
-			AngularUIPlugin.getDefault().getPreferenceStore().setValue("LexicalSortingAction.isChecked", on);
-		}
-	}
-
-	class LexicalSorter extends ViewerSorter {
+	static class LexicalSorter extends ViewerSorter {
 		@Override
 		public int category(Object element) {
 			if (element instanceof IAngularElement) {
