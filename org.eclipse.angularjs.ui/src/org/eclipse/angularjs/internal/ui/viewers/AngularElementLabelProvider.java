@@ -7,7 +7,9 @@ import org.eclipse.swt.graphics.Image;
 
 import tern.ITernProject;
 import tern.angular.AngularType;
+import tern.angular.modules.IAngularElement;
 import tern.server.protocol.outline.IJSNode;
+import tern.server.protocol.outline.JSNode;
 
 public class AngularElementLabelProvider extends LabelProvider implements ILabelDecorator {
 
@@ -15,9 +17,8 @@ public class AngularElementLabelProvider extends LabelProvider implements ILabel
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof IJSNode) {
-			String kind = ((IJSNode) element).getKind();
-			AngularType type = AngularType.get(kind);
+		if (element instanceof IAngularElement) {
+			AngularType type = ((IAngularElement) element).getAngularType();
 			if (type == null) {
 				return null;
 			}
@@ -38,6 +39,10 @@ public class AngularElementLabelProvider extends LabelProvider implements ILabel
 				return ImageResource.getImage(ImageResource.IMG_SERVICE);
 			default:
 				return null;
+			}
+		} else if (element instanceof JSNode) {
+			if (((JSNode) element).isProperty()) {
+				return ImageResource.getImage(ImageResource.IMG_PROPERTY);
 			}
 		}
 		return super.getImage(element);

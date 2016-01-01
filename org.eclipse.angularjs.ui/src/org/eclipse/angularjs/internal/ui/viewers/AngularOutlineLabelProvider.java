@@ -43,13 +43,12 @@ public class AngularOutlineLabelProvider extends AbstractTernOutlineLabelProvide
 
 	@Override
 	protected StyledString getStyledText(IJSNode element) {
-		//JSNode node = ((JSNode) element);
 		StyledString buff = new StyledString(StringUtils.isEmpty(element.getName()) ? "" : element.getName());
-		/*String type = node.getType();
-		if (!StringUtils.isEmpty(type)) {
+		String value = element.getValue();
+		if (!StringUtils.isEmpty(value)) {
 			buff.append(" : ", StyledString.DECORATIONS_STYLER);
-			buff.append(type, StyledString.DECORATIONS_STYLER);
-		}*/
+			buff.append(value, StyledString.DECORATIONS_STYLER);
+		}
 		return buff;
 	}
 }

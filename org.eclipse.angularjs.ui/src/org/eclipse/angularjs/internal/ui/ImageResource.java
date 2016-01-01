@@ -46,8 +46,10 @@ public class ImageResource {
 	public static final String IMG_PROVIDER = "provider";
 	public static final String IMG_SERVICE = "service";
 	public static final String IMG_FILTER = "filter";
+	public static final String IMG_PROPERTY = "property";
+	
 	public static final String IMG_FOLDER = "folder";
-
+	
 	public static final String IMG_ELCL_REFRESH = "refresh";
 	public static final String IMG_ELCL_GOTO_DEF = "goto_def";
 	public static final String IMG_ELCL_LINK_TO_CTRL = "link_to_ctrl";
@@ -145,6 +147,7 @@ public class ImageResource {
 				+ ".png");
 		registerImage(IMG_FACTORY, URL_OBJ + IMG_FACTORY + ".png");
 		registerImage(IMG_FILTER, URL_OBJ + IMG_FILTER + ".png");
+		registerImage(IMG_PROPERTY, URL_OBJ + IMG_PROPERTY + ".png");
 		registerImage(IMG_PROVIDER, URL_OBJ + IMG_PROVIDER + ".png");
 		registerImage(IMG_SERVICE, URL_OBJ + IMG_SERVICE + ".png");
 		registerImage(IMG_FOLDER, URL_OBJ + IMG_FOLDER + ".gif");
