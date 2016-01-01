@@ -25,7 +25,6 @@ import org.eclipse.angularjs.internal.ui.views.actionsOLD.GoToDefinitionAction;
 import org.eclipse.angularjs.internal.ui.views.actionsOLD.LexicalSortingAction;
 import org.eclipse.angularjs.internal.ui.views.actionsOLD.LinkToControllerAction;
 import org.eclipse.angularjs.internal.ui.views.actionsOLD.RefreshExplorerAction;
-import org.eclipse.angularjs.internal.ui.views.actionsOLD.TerminateTernServerAction;
 import org.eclipse.angularjs.internal.ui.views.actionsOLD.UnLinkToControllerAction;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -88,7 +87,7 @@ public class AngularExplorerViewOLD extends ViewPart implements
 	private IResource currentResource;
 	private TreeViewer viewer;
 
-	private TerminateTernServerAction terminateAction;
+	//private TerminateTernServerAction terminateAction;
 	private LinkToControllerAction linkAction;
 	private UnLinkToControllerAction unLinkAction;
 	private GoToDefinitionAction openAction;
@@ -213,8 +212,8 @@ public class AngularExplorerViewOLD extends ViewPart implements
 	public void registerActions() {
 		IToolBarManager manager = getViewSite().getActionBars()
 				.getToolBarManager();
-		this.terminateAction = new TerminateTernServerAction(this);
-		manager.add(terminateAction);
+//		this.terminateAction = new TerminateTernServerAction(this);
+//		manager.add(terminateAction);
 		sortAction = new LexicalSortingAction(this);
 		manager.add(sortAction);
 		this.linkAction = new LinkToControllerAction(this);
@@ -262,7 +261,7 @@ public class AngularExplorerViewOLD extends ViewPart implements
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (part.equals(this) || part.equals(currentEditor))
 			return;
-		this.terminateAction.setEnabled(false);
+		//this.terminateAction.setEnabled(false);
 		currentEditor = part;
 		if (part != null && part instanceof IEditorPart) {
 			currentResource = null;
@@ -288,8 +287,8 @@ public class AngularExplorerViewOLD extends ViewPart implements
 								}
 							}
 							currentTernProject = ternProject;
-							this.terminateAction.setEnabled(!currentTernProject
-									.isServerDisposed());
+//							this.terminateAction.setEnabled(!currentTernProject
+//									.isServerDisposed());
 							currentResource = resource;
 							if (projectChanged) {
 								// refresh
@@ -455,12 +454,12 @@ public class AngularExplorerViewOLD extends ViewPart implements
 
 	@Override
 	public void onStart(ITernServer server) {
-		terminateAction.setEnabled(true);
+		//terminateAction.setEnabled(true);
 	}
 
 	@Override
 	public void onStop(ITernServer server) {
-		terminateAction.setEnabled(false);
+		//terminateAction.setEnabled(false);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.views.actions.LexicalSortingAction;
 import org.eclipse.angularjs.internal.ui.views.actions.LinkToControllerAction;
 import org.eclipse.angularjs.internal.ui.views.actions.RefreshExplorerAction;
-import org.eclipse.angularjs.internal.ui.views.actions.TerminateTernServerAction;
 import org.eclipse.angularjs.internal.ui.views.actions.UnLinkToControllerAction;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -24,7 +23,6 @@ import tern.eclipse.ide.ui.views.AbstractTernContentOutlinePage;
 
 public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 
-	private TerminateTernServerAction terminateAction;
 	private LinkToControllerAction linkAction;
 	private UnLinkToControllerAction unLinkAction;
 	// private GoToDefinitionAction openAction;
@@ -38,6 +36,7 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 		this.project = project;
 	}
 
+	@Override
 	public IProject getProject() {
 		return project;
 	}
@@ -59,8 +58,6 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 
 	@Override
 	protected void registerActions(IToolBarManager manager) {
-		this.terminateAction = new TerminateTernServerAction(this);
-		manager.add(terminateAction);
 		sortAction = new LexicalSortingAction(this);
 		manager.add(sortAction);
 		this.linkAction = new LinkToControllerAction(this);
@@ -71,6 +68,7 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 		// manager.add(openAction);
 		this.refreshAction = new RefreshExplorerAction(this);
 		manager.add(refreshAction);
+		super.registerActions(manager);
 	}
 
 	@Override
