@@ -19,6 +19,8 @@ import tern.TernResourcesManager;
 import tern.angular.AngularType;
 import tern.angular.modules.IAngularElement;
 import tern.angular.modules.IModule;
+import tern.eclipse.ide.core.resources.TernDocumentFile;
+import tern.eclipse.ide.ui.utils.EditorUtils;
 import tern.eclipse.ide.ui.views.AbstractTernContentOutlinePage;
 
 public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
@@ -48,7 +50,7 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 
 	@Override
 	protected void init(CommonViewer viewer) {
-		viewer.setInput(project);
+		viewer.setInput(new TernDocumentFile(currentFile, EditorUtils.getDocument(currentFile)));
 	}
 
 	@Override

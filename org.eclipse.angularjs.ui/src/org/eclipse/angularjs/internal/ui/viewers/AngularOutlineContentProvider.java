@@ -15,40 +15,55 @@ import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.Viewer;
 
 import tern.angular.protocol.outline.AngularOutline;
 import tern.angular.protocol.outline.IAngularOutlineListener;
 import tern.eclipse.ide.core.IIDETernProject;
 import tern.eclipse.ide.core.TernCorePlugin;
+import tern.eclipse.ide.core.resources.TernDocumentFile;
 import tern.eclipse.ide.ui.views.AbstractTernOutlineContentProvider;
 import tern.server.TernPlugin;
 import tern.server.protocol.outline.TernOutlineCollector;
 
 public class AngularOutlineContentProvider extends AbstractTernOutlineContentProvider
-		implements IAngularOutlineListener {
+		implements IAngularOutlineListener, IDocumentListener {
 
 	private static final int UPDATE_DELAY = 500;
 
-	private IProject project;
+	private TernDocumentFile document;
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (this.document != null) {
+			this.document.getDocument().removeDocumentListener(this);
+		}
+	}
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if (this.project != null) {
+		if (this.document != null) {
+			document.getDocument().removeDocumentListener(this);
 			try {
+				IProject project = document.getFile().getProject();
 				AngularProject angularProject = AngularProject.getAngularProject(project);
 				angularProject.removeAngularOutlineListener(this);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		if (newInput instanceof IProject) {
-			this.project = (IProject) newInput;
+		if (newInput instanceof TernDocumentFile) {
+			this.document = (TernDocumentFile) newInput;
 		} else if (newInput instanceof IAdaptable) {
-			this.project = (IProject) ((IAdaptable) newInput).getAdapter(IProject.class);
+			this.document = (TernDocumentFile) ((IAdaptable) newInput).getAdapter(TernDocumentFile.class);
 		}
-		if (this.project != null) {
+		if (this.document != null) {
+			document.getDocument().addDocumentListener(this);
 			try {
+				IProject project = document.getFile().getProject();
 				AngularProject angularProject = AngularProject.getAngularProject(project);
 				angularProject.addAngularOutlineListener(this);
 			} catch (Exception e) {
@@ -60,6 +75,7 @@ public class AngularOutlineContentProvider extends AbstractTernOutlineContentPro
 
 	@Override
 	protected TernOutlineCollector loadOutline() throws Exception {
+		IProject project = document.getFile().getProject();
 		IIDETernProject ternProject = TernCorePlugin.getTernProject(project);
 		if (ternProject == null || !ternProject.hasPlugin(TernPlugin.angular1)) {
 			return null;
@@ -75,4 +91,12 @@ public class AngularOutlineContentProvider extends AbstractTernOutlineContentPro
 		this.refreshJob.schedule(UPDATE_DELAY);
 	}
 
+	@Override
+	public void documentChanged(DocumentEvent event) {
+		changed(null);
+	}
+
+	@Override
+	public void documentAboutToBeChanged(DocumentEvent event) {
+	}
 }
