@@ -31,10 +31,10 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 	private RefreshExplorerAction refreshAction;
 	private LexicalSortingAction sortAction;
 
-	private IFile currentFile;
 	private final IProject project;
 
-	public AngularContentOutlinePage(IProject project) {
+	public AngularContentOutlinePage(IProject project, AngularExplorerView view) {
+		super(view);
 		this.project = project;
 	}
 
@@ -50,6 +50,7 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 
 	@Override
 	protected void init(CommonViewer viewer) {
+		IFile currentFile = getCurrentFile();
 		viewer.setInput(new TernDocumentFile(currentFile, EditorUtils.getDocument(currentFile)));
 	}
 
@@ -85,16 +86,8 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 		control.setMenu(menu);
 	}
 
-	public void setCurrentFile(IFile currentFile) {
-		this.currentFile = currentFile;
-	}
-
 	private boolean isHTMLFile(IFile resource) {
 		return (resource != null && TernResourcesManager.isHTMLFile(resource));
-	}
-
-	public IFile getCurrentFile() {
-		return currentFile;
 	}
 
 	public void updateEnabledLinkActions(boolean isLinked) {
@@ -108,7 +101,7 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 		this.unLinkAction.setEnabled(false);
 		IStructuredSelection selection = (IStructuredSelection) getViewer().getSelection();
 		if (!selection.isEmpty()) {
-			boolean htmlFile = isHTMLFile(currentFile);
+			boolean htmlFile = isHTMLFile(getCurrentFile());
 			if (htmlFile) {
 				Object firstSelection = selection.getFirstElement();
 				if (firstSelection instanceof IAngularElement) {
@@ -124,4 +117,5 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 			}
 		}
 	}
+
 }
