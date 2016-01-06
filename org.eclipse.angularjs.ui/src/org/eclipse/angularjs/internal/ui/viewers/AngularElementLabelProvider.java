@@ -19,28 +19,28 @@ public class AngularElementLabelProvider extends LabelProvider implements ILabel
 	public Image getImage(Object element) {
 		if (element instanceof IAngularElement) {
 			AngularType type = ((IAngularElement) element).getAngularType();
-			if (type == null) {
-				return null;
+			if (type != null) {
+				switch (type) {
+				case module:
+					return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
+				case controller:
+					return ImageResource.getImage(ImageResource.IMG_CONTROLLER);
+				case directive:
+					return ImageResource.getImage(ImageResource.IMG_DIRECTIVE);
+				case filter:
+					return ImageResource.getImage(ImageResource.IMG_FILTER);
+				case factory:
+					return ImageResource.getImage(ImageResource.IMG_FACTORY);
+				case provider:
+					return ImageResource.getImage(ImageResource.IMG_PROVIDER);
+				case service:
+					return ImageResource.getImage(ImageResource.IMG_SERVICE);
+				default:
+					return null;
+				}
 			}
-			switch (type) {
-			case module:
-				return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
-			case controller:
-				return ImageResource.getImage(ImageResource.IMG_CONTROLLER);
-			case directive:
-				return ImageResource.getImage(ImageResource.IMG_DIRECTIVE);
-			case filter:
-				return ImageResource.getImage(ImageResource.IMG_FILTER);
-			case factory:
-				return ImageResource.getImage(ImageResource.IMG_FACTORY);
-			case provider:
-				return ImageResource.getImage(ImageResource.IMG_PROVIDER);
-			case service:
-				return ImageResource.getImage(ImageResource.IMG_SERVICE);
-			default:
-				return null;
-			}
-		} else if (element instanceof JSNode) {
+		}
+		if (element instanceof JSNode) {
 			if (((JSNode) element).isProperty()) {
 				return ImageResource.getImage(ImageResource.IMG_PROPERTY);
 			}

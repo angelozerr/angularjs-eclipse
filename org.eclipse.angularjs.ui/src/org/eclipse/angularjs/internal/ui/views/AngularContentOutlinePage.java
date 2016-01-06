@@ -55,7 +55,7 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 	}
 
 	@Override
-	protected IFile getFile() {
+	public IFile getFile() {
 		return null;
 	}
 
@@ -118,4 +118,20 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 		}
 	}
 
+	@Override
+	public void setCurrentFile(IFile currentFile) {
+		super.setCurrentFile(currentFile);
+		CommonViewer viewer = getViewer();
+		if (viewer != null) {
+			viewer.setInput(new TernDocumentFile(currentFile, EditorUtils.getDocument(currentFile)));
+		}
+	}
+
+	public TernDocumentFile getTernFile() {
+		CommonViewer viewer = getViewer();
+		if (viewer != null) {
+			return (TernDocumentFile) viewer.getInput();
+		}
+		return null;
+	}
 }

@@ -2,16 +2,20 @@ package org.eclipse.angularjs.internal.ui.views;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
+import tern.eclipse.ide.core.IIDETernProject;
+import tern.eclipse.ide.core.TernCorePlugin;
+import tern.eclipse.ide.core.resources.TernDocumentFile;
 import tern.eclipse.ide.ui.views.AbstractTernOutlineView;
+import tern.server.TernPlugin;
+import tern.server.protocol.outline.TernOutlineCollector;
 
 public class AngularExplorerView extends AbstractTernOutlineView {
 
@@ -29,11 +33,8 @@ public class AngularExplorerView extends AbstractTernOutlineView {
 	@Override
 	protected IContentOutlinePage createOutlinePage(IWorkbenchPart part, IFile file) {
 		IProject project = file.getProject();
-		AngularContentOutlinePage page = pageProjects.get(project);
-		if (page == null) {
-			page = new AngularContentOutlinePage(project, this);
-			pageProjects.put(project, page);
-		}		
+		AngularContentOutlinePage page = new AngularContentOutlinePage(project, this);
+		pageProjects.put(project, page);
 		return page;
 	}
 
@@ -46,23 +47,26 @@ public class AngularExplorerView extends AbstractTernOutlineView {
 		}
 		return null;
 	}
-	// @Override
-	// protected PageRec getPageRec(IWorkbenchPart part, IFile file) {
-	// return pageRecProjects.get(file.getProject());
-	// }
-	//
-	// @Override
-	// protected PageRec createPageRec(IWorkbenchPart part, IContentOutlinePage
-	// page, IFile file) {
-	// PageRec pageRec = super.createPageRec(part, page, file);
-	// pageRecProjects.put(file.getProject(), pageRec);
-	// return pageRec;
-	// }
 
 	@Override
 	public void dispose() {
 		super.dispose();
 		pageProjects.clear();
+	}
+
+	@Override
+	protected TernOutlineCollector loadOutline() throws Exception {
+		IPage page = getCurrentPage();
+		if (!(page instanceof AngularContentOutlinePage)) {
+			return null;
+		}
+		TernDocumentFile document = ((AngularContentOutlinePage) page).getTernFile();
+		IProject project = document.getFile().getProject();
+		IIDETernProject ternProject = TernCorePlugin.getTernProject(project);
+		if (ternProject == null || !ternProject.hasPlugin(TernPlugin.angular1)) {
+			return null;
+		}
+		return AngularProject.getAngularProject(project).getOutlineProvider(document);
 	}
 
 }

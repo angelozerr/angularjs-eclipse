@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences.PreferenceChange
 
 import com.eclipsesource.json.JsonValue;
 
+import tern.ITernFile;
 import tern.TernException;
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
@@ -271,6 +272,11 @@ public class AngularProject implements IDirectiveSyntax, ITernProjectLifecycleLi
 		outlineProvider.init();
 		return outlineProvider;
 	}
+	
+	public AngularOutlineProvider getOutlineProvider(ITernFile ternFile) throws IOException, TernException {
+		outlineProvider.refresh(ternFile);
+		return outlineProvider;
+	}
 
 	public void addAngularOutlineListener(IAngularOutlineListener listener) {
 		outlineProvider.addAngularOutlineListener(listener);
@@ -279,4 +285,6 @@ public class AngularProject implements IDirectiveSyntax, ITernProjectLifecycleLi
 	public void removeAngularOutlineListener(IAngularOutlineListener listener) {
 		outlineProvider.removeAngularOutlineListener(listener);
 	}
+
+
 }

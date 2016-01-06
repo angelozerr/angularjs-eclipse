@@ -12,10 +12,12 @@
 package org.eclipse.angularjs.internal.ui.viewers;
 
 import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.text.DocumentEvent;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentListener;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -45,50 +47,75 @@ public class AngularOutlineContentProvider extends AbstractTernOutlineContentPro
 
 	@Override
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+		super.setViewer(viewer);
+		// Get old document/project
+		IDocument oldDocument = null;
+		IProject oldProject = null;
 		if (this.document != null) {
-			document.getDocument().removeDocumentListener(this);
-			try {
-				IProject project = document.getFile().getProject();
-				AngularProject angularProject = AngularProject.getAngularProject(project);
-				angularProject.removeAngularOutlineListener(this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			oldDocument = document.getDocument();
+			oldProject = document.getFile().getProject();
 		}
+		// Get new document/project
+		IDocument newDocument = null;
+		IProject newProject = null;
 		if (newInput instanceof TernDocumentFile) {
 			this.document = (TernDocumentFile) newInput;
 		} else if (newInput instanceof IAdaptable) {
 			this.document = (TernDocumentFile) ((IAdaptable) newInput).getAdapter(TernDocumentFile.class);
 		}
 		if (this.document != null) {
-			document.getDocument().addDocumentListener(this);
-			try {
-				IProject project = document.getFile().getProject();
-				AngularProject angularProject = AngularProject.getAngularProject(project);
-				angularProject.addAngularOutlineListener(this);
-			} catch (Exception e) {
-				e.printStackTrace();
+			newDocument = document.getDocument();
+			newProject = document.getFile().getProject();
+		}
+		if (oldDocument != newDocument) {
+			// document has changed
+			if (oldDocument != null) {
+				oldDocument.removeDocumentListener(this);
+			}
+			if (newDocument != null) {
+				newDocument.addDocumentListener(this);
 			}
 		}
-		super.inputChanged(viewer, oldInput, newInput);
+		if (oldProject != newProject) {
+			// project has changed
+			if (oldProject != null) {
+				try {
+					AngularProject angularProject = AngularProject.getAngularProject(oldProject);
+					angularProject.removeAngularOutlineListener(this);
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error while getting angular project.", e);
+				}
+			}
+			if (newProject != null) {
+				try {
+					AngularProject angularProject = AngularProject.getAngularProject(newProject);
+					angularProject.addAngularOutlineListener(this);
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error while getting angular project.", e);
+				}
+				// project has changed, refresh the angular outline
+				super.refresh();
+			}
+		}
 	}
 
-	@Override
-	protected TernOutlineCollector loadOutline() throws Exception {
-		IProject project = document.getFile().getProject();
-		IIDETernProject ternProject = TernCorePlugin.getTernProject(project);
-		if (ternProject == null || !ternProject.hasPlugin(TernPlugin.angular1)) {
-			return null;
-		}
-		return AngularProject.getAngularProject(project).getOutlineProvider();
-	}
+//	@Override
+//	protected TernOutlineCollector loadOutline() throws Exception {
+//		IProject project = document.getFile().getProject();
+//		IIDETernProject ternProject = TernCorePlugin.getTernProject(project);
+//		if (ternProject == null || !ternProject.hasPlugin(TernPlugin.angular1)) {
+//			return null;
+//		}
+//		return AngularProject.getAngularProject(project).getOutlineProvider(document);
+//	}
 
 	@Override
 	public void changed(AngularOutline outline) {
-		if (this.refreshJob.getState() != Job.NONE) {
-			this.refreshJob.cancel();
+		Job refreshJob = this.getViewer().getRefreshJob();
+		if (refreshJob.getState() != Job.NONE) {
+			refreshJob.cancel();
 		}
-		this.refreshJob.schedule(UPDATE_DELAY);
+		refreshJob.schedule(UPDATE_DELAY);
 	}
 
 	@Override
