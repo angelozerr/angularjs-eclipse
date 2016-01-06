@@ -19,6 +19,10 @@ import tern.eclipse.ide.ui.views.AbstractTernOutlineLabelProvider;
 import tern.server.protocol.outline.IJSNode;
 import tern.utils.StringUtils;
 
+/**
+ * Label provider for angular outline.
+ *
+ */
 public class AngularOutlineLabelProvider extends AbstractTernOutlineLabelProvider {
 
 	@Override
