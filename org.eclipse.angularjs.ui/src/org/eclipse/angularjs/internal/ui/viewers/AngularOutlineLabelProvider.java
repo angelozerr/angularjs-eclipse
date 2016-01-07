@@ -26,6 +26,16 @@ import tern.utils.StringUtils;
 public class AngularOutlineLabelProvider extends AbstractTernOutlineLabelProvider {
 
 	@Override
+	protected String getUnavailableText() {
+		return null;
+	}
+	
+	@Override
+	protected Image getUnavailableImage() {
+		return null;
+	}
+	
+	@Override
 	protected String getComputingText() {
 		return AngularUIMessages.AngularOutline_computing;
 	}

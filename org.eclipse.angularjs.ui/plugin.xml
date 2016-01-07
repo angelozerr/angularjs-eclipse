@@ -400,7 +400,7 @@
    <extension
          point="org.eclipse.ui.navigator.navigatorContent">
       <navigatorContent
-            contentProvider="org.eclipse.angularjs.internal.ui.viewers.AngularOutlineContentProvider"
+            contentProvider="tern.eclipse.ide.ui.views.TernOutlineContentProvider"
             icon="$nl$/icons/full/eview16/explorer.png"
             id="org.eclipse.angularjs.ui.navigatorContent"
             labelProvider="org.eclipse.angularjs.internal.ui.viewers.AngularOutlineLabelProvider"

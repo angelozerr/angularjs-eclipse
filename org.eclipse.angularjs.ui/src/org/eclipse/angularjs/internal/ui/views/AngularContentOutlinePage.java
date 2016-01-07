@@ -1,7 +1,9 @@
 package org.eclipse.angularjs.internal.ui.views;
 
+import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.angularjs.core.link.AngularLinkHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
+import org.eclipse.angularjs.internal.ui.Trace;
 import org.eclipse.angularjs.internal.ui.views.actions.LexicalSortingAction;
 import org.eclipse.angularjs.internal.ui.views.actions.LinkToControllerAction;
 import org.eclipse.angularjs.internal.ui.views.actions.RefreshExplorerAction;
@@ -19,10 +21,12 @@ import tern.TernResourcesManager;
 import tern.angular.AngularType;
 import tern.angular.modules.IAngularElement;
 import tern.angular.modules.IModule;
+import tern.angular.protocol.outline.AngularOutline;
+import tern.angular.protocol.outline.IAngularOutlineListener;
 import tern.eclipse.ide.core.resources.TernDocumentFile;
 import tern.eclipse.ide.ui.views.AbstractTernContentOutlinePage;
 
-public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
+public class AngularContentOutlinePage extends AbstractTernContentOutlinePage implements IAngularOutlineListener {
 
 	private LinkToControllerAction linkAction;
 	private UnLinkToControllerAction unLinkAction;
@@ -103,11 +107,36 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 		}
 	}
 
-	public TernDocumentFile getTernFile() {
-		CommonViewer viewer = getViewer();
-		if (viewer != null) {
-			return (TernDocumentFile) viewer.getInput();
+	@Override
+	public void changed(AngularOutline outline) {
+		documentChanged(null);
+	}
+
+	@Override
+	protected boolean isRefreshOutline(IFile oldFile, IFile newFile) {
+		IProject oldProject = oldFile != null ? oldFile.getProject() : null;
+		IProject newProject = newFile != null ? newFile.getProject() : null;
+		if (oldProject != newProject) {
+			// project has changed
+			if (oldProject != null) {
+				try {
+					AngularProject angularProject = AngularProject.getAngularProject(oldProject);
+					angularProject.removeAngularOutlineListener(this);
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error while getting angular project.", e);
+				}
+			}
+			if (newProject != null) {
+				try {
+					AngularProject angularProject = AngularProject.getAngularProject(newProject);
+					angularProject.addAngularOutlineListener(this);
+				} catch (Exception e) {
+					Trace.trace(Trace.SEVERE, "Error while getting angular project.", e);
+				}
+				// project has changed, refresh the angular outline
+				return true;
+			}
 		}
-		return null;
+		return false;
 	}
 }

@@ -6,8 +6,7 @@ import java.util.Map;
 import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.IPage;
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 
 import tern.eclipse.ide.core.IIDETernProject;
@@ -53,18 +52,19 @@ public class AngularExplorerView extends AbstractTernOutlineView {
 	}
 
 	@Override
-	protected TernOutlineCollector loadOutline() throws Exception {
-		IPage page = getCurrentPage();
-		if (!(page instanceof AngularContentOutlinePage)) {
-			return null;
-		}
-		TernDocumentFile document = ((AngularContentOutlinePage) page).getTernFile();
-		IProject project = document.getFile().getProject();
+	public TernOutlineCollector loadOutline(IFile file, IDocument document) throws Exception {
+		IProject project = file.getProject();
 		IIDETernProject ternProject = TernCorePlugin.getTernProject(project);
 		if (ternProject == null || !ternProject.hasPlugin(TernPlugin.angular1)) {
 			return null;
 		}
-		return AngularProject.getAngularProject(project).getOutlineProvider(document);
+		TernDocumentFile ternFile = new TernDocumentFile(file, document);
+		return AngularProject.getAngularProject(project).getOutlineProvider(ternFile);
+	}
+
+	@Override
+	public boolean isOutlineAvailable(IFile file) {
+		return true;
 	}
 
 }
