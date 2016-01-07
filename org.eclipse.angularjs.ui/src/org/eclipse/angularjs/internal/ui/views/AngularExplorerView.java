@@ -31,16 +31,14 @@ public class AngularExplorerView extends AbstractTernOutlineView {
 	}
 
 	@Override
-	protected IContentOutlinePage createOutlinePage(IWorkbenchPart part, IFile file) {
-		IProject project = file.getProject();
+	protected IContentOutlinePage createOutlinePage(IProject project) {
 		AngularContentOutlinePage page = new AngularContentOutlinePage(project, this);
 		pageProjects.put(project, page);
 		return page;
 	}
 
 	@Override
-	protected IContentOutlinePage getOutlinePage(IWorkbenchPart part, IFile file) {
-		IProject project = file.getProject();
+	protected IContentOutlinePage getOutlinePage(IProject project) {
 		IContentOutlinePage page = pageProjects.get(project);
 		if (page != null && page.getControl() != null && !page.getControl().isDisposed()) {
 			return page;

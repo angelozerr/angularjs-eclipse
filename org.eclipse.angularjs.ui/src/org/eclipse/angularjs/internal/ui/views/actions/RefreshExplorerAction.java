@@ -32,7 +32,7 @@ public class RefreshExplorerAction extends Action {
 
 	@Override
 	public void run() {
-		page.refresh();
+		page.refreshOutline();
 	}
 
 }

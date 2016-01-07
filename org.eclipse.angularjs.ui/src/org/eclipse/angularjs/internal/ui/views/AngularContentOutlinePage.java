@@ -20,7 +20,6 @@ import tern.angular.AngularType;
 import tern.angular.modules.IAngularElement;
 import tern.angular.modules.IModule;
 import tern.eclipse.ide.core.resources.TernDocumentFile;
-import tern.eclipse.ide.ui.utils.EditorUtils;
 import tern.eclipse.ide.ui.views.AbstractTernContentOutlinePage;
 
 public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
@@ -31,27 +30,13 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 	private RefreshExplorerAction refreshAction;
 	private LexicalSortingAction sortAction;
 
-	private final IProject project;
-
 	public AngularContentOutlinePage(IProject project, AngularExplorerView view) {
-		super(view);
-		this.project = project;
-	}
-
-	@Override
-	public IProject getProject() {
-		return project;
+		super(project, view);
 	}
 
 	@Override
 	protected String getViewerId() {
 		return AngularUIPlugin.PLUGIN_ID + ".outline";
-	}
-
-	@Override
-	protected void init(CommonViewer viewer) {
-		IFile currentFile = getCurrentFile();
-		viewer.setInput(new TernDocumentFile(currentFile, EditorUtils.getDocument(currentFile)));
 	}
 
 	@Override
@@ -115,15 +100,6 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage {
 					}
 				}
 			}
-		}
-	}
-
-	@Override
-	public void setCurrentFile(IFile currentFile) {
-		super.setCurrentFile(currentFile);
-		CommonViewer viewer = getViewer();
-		if (viewer != null) {
-			viewer.setInput(new TernDocumentFile(currentFile, EditorUtils.getDocument(currentFile)));
 		}
 	}
 
