@@ -56,7 +56,7 @@ public class LinkToControllerAction extends Action {
 				}
 				if (module != null) {
 					try {
-						AngularLinkHelper.setController(module.getScriptPath(),
+						AngularLinkHelper.setController(
 								module.getName(),
 								angularElement != null ? angularElement.getName()
 										: null, resource, elementId);

@@ -50,7 +50,7 @@ public class LinkToControllerAction extends Action {
 				IModule module = element.getModule();
 				if (module != null) {
 					try {
-						AngularLinkHelper.setController(null, module.getName(),
+						AngularLinkHelper.setController(module.getName(),
 								!element.isType(AngularType.module) ? element.getName() : null, resource, null);
 						page.updateEnabledLinkActions(true);
 						// explorer.refreshTree(true);

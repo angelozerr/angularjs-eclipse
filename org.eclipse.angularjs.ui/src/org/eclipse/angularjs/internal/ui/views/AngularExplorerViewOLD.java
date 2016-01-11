@@ -202,7 +202,7 @@ public class AngularExplorerViewOLD extends ViewPart implements
 			IResource resource = getCurrentResource();
 			if (resource != null && module != null) {
 				boolean isLinked = AngularLinkHelper.isSameController(resource,
-						module.getScriptPath(), module.getName(),
+						 module.getName(),
 						controller != null ? controller.getName() : null, null);
 				updateEnabledLinkActions(isLinked);
 			}

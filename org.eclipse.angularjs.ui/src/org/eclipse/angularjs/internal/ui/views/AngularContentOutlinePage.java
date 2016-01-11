@@ -98,7 +98,7 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage im
 					IAngularElement element = (IAngularElement) firstSelection;
 					IModule module = element.getModule();
 					if (module != null) {
-						boolean isLinked = AngularLinkHelper.isSameController(getCurrentFile(), null, module.getName(),
+						boolean isLinked = AngularLinkHelper.isSameController(getCurrentFile(), module.getName(),
 								element.isType(AngularType.module) ? null : element.getName(), null);
 						updateEnabledLinkActions(isLinked);
 					}

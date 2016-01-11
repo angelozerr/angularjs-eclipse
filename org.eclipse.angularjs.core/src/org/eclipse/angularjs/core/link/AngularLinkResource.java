@@ -13,15 +13,9 @@ package org.eclipse.angularjs.core.link;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.angularjs.core.AngularCorePlugin;
-import org.eclipse.angularjs.core.AngularProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 
-import tern.eclipse.ide.core.IIDETernProject;
-import tern.scriptpath.ITernScriptPath;
 import tern.utils.StringUtils;
 
 public class AngularLinkResource {
@@ -34,52 +28,39 @@ public class AngularLinkResource {
 
 	private final IResource resource;
 
-	public AngularLinkResource(IResource resource, String resourceInfo)
-			throws CoreException {
+	public AngularLinkResource(IResource resource, String resourceInfo) throws CoreException {
 		this.resource = resource;
 		if (resourceInfo != null) {
 			String[] infos = resourceInfo.split(SEPARATOR);
 			AngularLink link = null;
-			ITernScriptPath scriptPath = null;
 			String module = null;
 			String controller = null;
 			String elementId = null;
-			IIDETernProject ternProject = AngularProject
-					.getTernProject(resource.getProject());
 			for (int i = 0; i < infos.length; i++) {
-				switch (i % 4) {
+				switch (i % 3) {
 				case 0:
-					scriptPath = ternProject.getScriptPath(infos[i]);
-					break;
-				case 1:
 					module = infos[i].trim();
 					break;
-				case 2:
+				case 1:
 					controller = infos[i].trim();
 					break;
-				case 3:
+				case 2:
 					elementId = infos[i].trim();
-					addLink(scriptPath, module, controller, elementId);
+					addLink(module, controller, elementId);
 					break;
 				}
 			}
 		}
 	}
 
-	public void addLink(ITernScriptPath scriptPath, String module,
-			String controller, String elementId) {
-		if (scriptPath == null) {
-			return;
-		}
+	public void addLink(String module, String controller, String elementId) {
 		if (!StringUtils.isEmpty(elementId)) {
 			if (elementLinks == null) {
 				elementLinks = new ArrayList<AngularLink>();
 			}
-			elementLinks.add(new AngularLink(elementId, scriptPath, module,
-					controller));
+			elementLinks.add(new AngularLink(elementId, module, controller));
 		} else {
-			this.resourceLink = new AngularLink(elementId, scriptPath, module,
-					controller);
+			this.resourceLink = new AngularLink(elementId, module, controller);
 		}
 	}
 
@@ -110,8 +91,6 @@ public class AngularLinkResource {
 	}
 
 	private void write(AngularLink link, StringBuilder s) {
-		s.append(link.getScriptPath().getPath());
-		s.append(SEPARATOR);
 		write(link.getModule(), s);
 		s.append(SEPARATOR);
 		write(link.getController(), s);
@@ -128,8 +107,7 @@ public class AngularLinkResource {
 	}
 
 	public void save() throws CoreException {
-		resource.setPersistentProperty(AngularLinkHelper.CONTROLLER_INFO,
-				this.toString());
+		resource.setPersistentProperty(AngularLinkHelper.CONTROLLER_INFO, this.toString());
 		resource.setSessionProperty(AngularLinkHelper.CONTROLLER_INFO, this);
 	}
 }

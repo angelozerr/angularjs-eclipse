@@ -41,8 +41,13 @@ public class AngularElementLabelProvider extends LabelProvider implements ILabel
 			}
 		}
 		if (element instanceof JSNode) {
-			if (((JSNode) element).isProperty()) {
+			JSNode node = (JSNode) element;
+			if (node.isProperty()) {
 				return ImageResource.getImage(ImageResource.IMG_PROPERTY);
+			} else if ("provider.$routeProvider".equals(node.getName())) {
+				return ImageResource.getImage(ImageResource.IMG_ROUTE_PROVIDER);
+			} else if ("when".equals(node.getKind())) {
+				return ImageResource.getImage(ImageResource.IMG_ROUTE_PROVIDER_WHEN);
 			}
 		}
 		return super.getImage(element);

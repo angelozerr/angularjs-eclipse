@@ -47,6 +47,8 @@ public class ImageResource {
 	public static final String IMG_SERVICE = "service";
 	public static final String IMG_FILTER = "filter";
 	public static final String IMG_PROPERTY = "property";
+	public static final String IMG_ROUTE_PROVIDER = "routeProvider";
+	public static final String IMG_ROUTE_PROVIDER_WHEN = "routeProvider_when";
 	
 	public static final String IMG_FOLDER = "folder";
 	
@@ -150,6 +152,9 @@ public class ImageResource {
 		registerImage(IMG_PROPERTY, URL_OBJ + IMG_PROPERTY + ".png");
 		registerImage(IMG_PROVIDER, URL_OBJ + IMG_PROVIDER + ".png");
 		registerImage(IMG_SERVICE, URL_OBJ + IMG_SERVICE + ".png");
+		registerImage(IMG_ROUTE_PROVIDER, URL_OBJ + IMG_ROUTE_PROVIDER + ".gif");
+		registerImage(IMG_ROUTE_PROVIDER_WHEN, URL_OBJ + IMG_ROUTE_PROVIDER_WHEN + ".gif");
+		
 		registerImage(IMG_FOLDER, URL_OBJ + IMG_FOLDER + ".gif");
 
 		registerImage(IMG_ELCL_REFRESH, ELCL_OBJ + IMG_ELCL_REFRESH + ".gif");

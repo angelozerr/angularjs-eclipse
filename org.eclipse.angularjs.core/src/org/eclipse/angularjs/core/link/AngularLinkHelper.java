@@ -23,14 +23,14 @@ public class AngularLinkHelper {
 	static final QualifiedName CONTROLLER_INFO = new QualifiedName(
 			TernCorePlugin.PLUGIN_ID + ".resourceprops", "ControllerInfo");
 
-	public static void setController(ITernScriptPath scriptPath, String module,
+	public static void setController(String module,
 			String controller, IResource resource, String elementId)
 			throws Exception {
 		AngularLinkResource linkResource = getControllerInfo(resource);
 		if (linkResource == null) {
 			linkResource = new AngularLinkResource(resource, null);
 		}
-		linkResource.addLink(scriptPath, module, controller, elementId);
+		linkResource.addLink(module, controller, elementId);
 		linkResource.save();
 	}
 
@@ -65,7 +65,7 @@ public class AngularLinkHelper {
 	}
 
 	public static boolean isSameController(IResource resource,
-			ITernScriptPath scriptPath, String module, String controller,
+			String module, String controller,
 			String elementId) {
 		try {
 			AngularLinkResource info = getControllerInfo(resource);
@@ -73,7 +73,7 @@ public class AngularLinkHelper {
 				if (elementId != null) {
 					if (info.getElementLinks() != null) {
 						for (AngularLink elementLink : info.getElementLinks()) {
-							if (isSameController(elementLink, scriptPath,
+							if (isSameController(elementLink, 
 									module, controller, elementId)) {
 								return true;
 							}
@@ -81,7 +81,7 @@ public class AngularLinkHelper {
 					}
 				}
 				if (info.getResourceLink() != null) {
-					return isSameController(info.getResourceLink(), scriptPath,
+					return isSameController(info.getResourceLink(), 
 							module, controller, elementId);
 				}
 			}
@@ -92,15 +92,15 @@ public class AngularLinkHelper {
 	}
 
 	private static boolean isSameController(AngularLink link,
-			ITernScriptPath scriptPath, String module, String controller,
+			 String module, String controller,
 			String elementId) {
-		IResource r1 = (IResource) link.getScriptPath().getAdapter(IResource.class);
-		IResource r2 = (IResource) scriptPath.getAdapter(IResource.class);
-		if (r1 == null || r2 == null ||
-				!r1.getProject().equals(r2.getProject())) {
-			// not the same project
-			return false;
-		}
+//		IResource r1 = (IResource) link.getScriptPath().getAdapter(IResource.class);
+//		IResource r2 = (IResource) scriptPath.getAdapter(IResource.class);
+//		if (r1 == null || r2 == null ||
+//				!r1.getProject().equals(r2.getProject())) {
+//			// not the same project
+//			return false;
+//		}
 		if (!link.getModule().equals(module)) {
 			// not the same module
 			return false;

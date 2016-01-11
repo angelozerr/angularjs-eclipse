@@ -38,11 +38,10 @@ public class AngularScopeHelper {
 		return attr.getValue();
 	}
 
-	public static ITernScriptPath populateScope(Node element, IFile file,
-			AngularType angularType, TernAngularQuery query) throws Exception {
+	public static ITernScriptPath populateScope(Node element, IFile file, AngularType angularType,
+			TernAngularQuery query) throws Exception {
 		ITernScriptPath scriptPath = null;
-		HTMLTernAngularHelper.populateScope(element,
-				DOMDirectiveProvider.getInstance(), file.getProject(), query);
+		HTMLTernAngularHelper.populateScope(element, DOMDirectiveProvider.getInstance(), file.getProject(), query);
 		AngularLinkResource info = null;
 		if (angularType != AngularType.module) {
 			// Check if query has module defined.
@@ -52,14 +51,10 @@ public class AngularScopeHelper {
 					AngularLink resourceLink = info.getResourceLink();
 					if (resourceLink != null) {
 						// Load needed files
-						scriptPath = resourceLink.getScriptPath();
 						query.getScope().setModule(resourceLink.getModule());
 						if (angularType != AngularType.controller) {
-							if (!query.hasControllers()
-									&& !StringUtils.isEmpty(resourceLink
-											.getController())) {
-								query.getScope().getControllers()
-										.add(resourceLink.getController());
+							if (!query.hasControllers() && !StringUtils.isEmpty(resourceLink.getController())) {
+								query.getScope().getControllers().add(resourceLink.getController());
 							}
 						}
 					}
