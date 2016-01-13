@@ -81,6 +81,9 @@ public final class AngularUIMessages extends NLS {
 	public static String OpenAngularElementAction_dialogMessage;
 	public static String OpenAngularElementAction_dialogTitle;
 
+	public static String ProtractorLaunchShortcut_Error;
+	public static String ProtractorLaunchShortcut_Protractor_Failed;
+
 	private AngularUIMessages() {
 	}
 

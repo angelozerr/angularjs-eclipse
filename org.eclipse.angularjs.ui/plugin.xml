@@ -25,7 +25,7 @@
 			id="org.eclipse.angularjs.internal.ui.AngularNatureTester"
 			type="org.eclipse.core.resources.IResource"
 			namespace="org.eclipse.angularjs.ui"
-			properties="isAngularProject"
+			properties="isAngularProject,isProtractorFile"
 			class="org.eclipse.angularjs.internal.ui.AngularNatureTester">
 		</propertyTester>
 	</extension>
@@ -207,7 +207,7 @@
               category="org.eclipse.angularjs.preferences"
 	          class="org.eclipse.angularjs.internal.ui.preferences.html.HTMLAngularGlobalPreferencesPage"
 	          id="org.eclipse.angularjs.html.preferences"
-	          name="%HTMLAngularGlobalPreferencesPag.name"/>	          
+	          name="%HTMLAngularGlobalPreferencesPage.name"/>	          
 	    <!-- Angular Editor preferences page -->
 		<page
 	          category="org.eclipse.angularjs.html.preferences"
@@ -225,7 +225,13 @@
 	          category="org.eclipse.angularjs.html.preferences.editor"
 	          class="org.eclipse.angularjs.internal.ui.preferences.html.HTMLAngularTypingPreferencePage"
 	          id="org.eclipse.angularjs.html.preferences.editor.typing"
-	          name="%HTMLAngularTypingPreferencePage.name"/>	                   
+	          name="%HTMLAngularTypingPreferencePage.name"/>
+       <!-- Protractor preferences page -->  
+       <page
+              category="org.eclipse.angularjs.preferences"
+	          class="org.eclipse.angularjs.internal.ui.preferences.protractor.ProtractorPreferencesPage"
+	          id="org.eclipse.angularjs.preferences.protractor"
+	          name="%ProtractorPreferencesPage.name"/>	          	                   
    </extension>	
 		     
 	<extension point="org.eclipse.core.runtime.preferences">
@@ -420,5 +426,43 @@
          </includes>
       </viewerContentBinding>
    </extension>
+   
+   <!-- Protractor -->
+   
+   <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            category="org.eclipse.ui.externaltools"
+            class="org.eclipse.angularjs.internal.ui.protractor.launchConfigurations.ProtractorLaunchShortcut"
+            description="%ProtractorLaunchShortcut.description"
+            helpContextId="org.eclipse.ui.externaltools.launchShortcutHelpContext.protractorShortcut"
+            icon="icons/full/obj16/protractor.png"
+            id="org.eclipse.angularjs.ui.protractor.ProtractorLaunchShortcut"
+            label="%ProtractorLaunchShortcut.label"
+            modes="run, debug">
+        <contextualLaunch>
+           <enablement>
+             <with variable="selection">
+               <count value="1"/>
+               <iterate>
+                 <adapt type="org.eclipse.core.resources.IResource">
+					<test property="org.eclipse.angularjs.ui.isProtractorFile" />
+				</adapt>
+               </iterate>
+             </with>
+           </enablement>
+           <contextLabel
+         	  mode="run"
+         	  label="%ProtractorLaunchShortcut.run.label"/>
+           <contextLabel
+         	  mode="debug"
+         	  label="%ProtractorLaunchShortcut.debug.label"/>         	  
+  		 </contextualLaunch>
+        <configurationType
+              id="org.eclipse.angularjs.core.protractor">
+        </configurationType>
+      </shortcut>
+      
+  </extension>   
       
 </plugin>        

@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  tern.server.nodejs,
  tern.eclipse.ide.core,
  org.eclipse.wst.validation,
- org.eclipse.core.filesystem
+ org.eclipse.core.filesystem,
+ tern.eclipse.ide.server.nodejs.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.angularjs.core.AngularCorePlugin

@@ -17,7 +17,7 @@ package org.eclipse.angularjs.core;
 public class AngularCoreConstants {
 
 	/**
-	 * Preferences constants for ANgularJS directives.
+	 * Preferences constants for AngularJS directives.
 	 */
 	public static final String DIRECTIVE_USE_ORIGINAL_NAME = "directiveUseOriginalName"; //$NON-NLS-1$
 	public static String DIRECTIVE_STARTS_WITH_NOTHING = "directiveStartsWithNothing"; //$NON-NLS-1$
@@ -28,4 +28,12 @@ public class AngularCoreConstants {
 	public static final String DIRECTIVE_UNDERSCORE_DELIMITER = "directiveUnderscoreDelimiter"; //$NON-NLS-1$
 	public static final String EXPRESSION_START_SYMBOL = "startSymbol"; //$NON-NLS-1$
 	public static final String EXPRESSION_END_SYMBOL = "endSymbol"; //$NON-NLS-1$
+	
+	/**
+	 * Protactor
+	 */
+	public static final String PROTRACTOR_CLI_FILE = "protractorCliFile"; //$NON-NLS-1$
+	public static final String PROTRACTOR_DEBUGGER = "protractorNodeJSDebugger"; //$NON-NLS-1$
+	public static final String PROTRACTOR_NODEJS_INSTALL = "protractorNodeJSInstall"; //$NON-NLS-1$
+	public static final String PROTRACTOR_NODEJS_PATH = "protractorNodeJSPath"; //$NON-NLS-1$
 }

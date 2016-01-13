@@ -8,16 +8,21 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.core.preferences;
+package org.eclipse.angularjs.core;
 
-import org.eclipse.angularjs.core.AngularCoreConstants;
-import org.eclipse.angularjs.core.AngularCorePlugin;
-import org.eclipse.angularjs.core.AngularProject;
+import java.io.File;
+
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
 import tern.eclipse.ide.core.preferences.PreferencesSupport;
+import tern.eclipse.ide.server.nodejs.core.INodejsInstall;
+import tern.eclipse.ide.server.nodejs.core.TernNodejsCoreConstants;
+import tern.eclipse.ide.server.nodejs.core.TernNodejsCorePlugin;
 import tern.utils.StringUtils;
 
 public class AngularCorePreferencesSupport {
@@ -113,5 +118,54 @@ public class AngularCorePreferencesSupport {
 		return preferencesSupport.getPreferencesValue(
 				AngularCoreConstants.EXPRESSION_END_SYMBOL,
 				AngularProject.DEFAULT_END_SYMBOL, project);
+	}
+	
+	// ----------------------- Protractor
+	
+	/**
+	 * Returns the node install from the workspace preferences.
+	 * 
+	 * @return
+	 */
+	public INodejsInstall getNodejsInstall() {
+		String id = preferencesSupport
+				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_INSTALL);
+		return TernNodejsCorePlugin.getNodejsInstallManager()
+				.findNodejsInstall(id);
+	}
+	
+	/**
+	 * returns the node.js install path.
+	 * 
+	 * @return
+	 */
+	public File getInstallPath() {
+		INodejsInstall install = getNodejsInstall();
+		if (install != null) {
+			if (install.isNative()) {
+				String path = preferencesSupport
+						.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_PATH);
+				if (!StringUtils.isEmpty(path)) {
+					return new File(path);
+				}
+			} else {
+				return install.getPath();
+			}
+		}
+		return new File("node");
+	}
+	
+	public String getDebugger() {
+		return preferencesSupport
+				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_DEBUGGER);
+	}
+
+	public IFile getProtractorCliFile() {
+		String repositoryName = preferencesSupport
+				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_CLI_FILE);
+		if (repositoryName != null) {
+			return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(repositoryName));
+		}
+		return null;
 	}
 }

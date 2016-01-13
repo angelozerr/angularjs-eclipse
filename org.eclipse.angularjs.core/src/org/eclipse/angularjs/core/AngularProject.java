@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.angularjs.internal.core.Trace;
-import org.eclipse.angularjs.internal.core.preferences.AngularCorePreferencesSupport;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
@@ -285,6 +284,5 @@ public class AngularProject implements IDirectiveSyntax, ITernProjectLifecycleLi
 	public void removeAngularOutlineListener(IAngularOutlineListener listener) {
 		outlineProvider.removeAngularOutlineListener(listener);
 	}
-
 
 }

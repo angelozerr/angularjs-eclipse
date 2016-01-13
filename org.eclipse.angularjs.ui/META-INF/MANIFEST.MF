@@ -27,7 +27,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.wst.jsdt.web.core,
  org.eclipse.core.expressions,
  org.eclipse.ui.views,
- org.eclipse.ui.navigator
+ org.eclipse.ui.navigator,
+ org.eclipse.debug.ui,
+ tern.eclipse.ide.server.nodejs.core,
+ tern.server.nodejs
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.angularjs.ui.contentassist,
