@@ -57,6 +57,9 @@ public class ImageResource {
 	public static final String IMG_ELCL_LINK_TO_CTRL = "link_to_ctrl";
 	public static final String IMG_ELCL_UNLINK_TO_CTRL = "unlink_to_ctrl";	
 
+	// Protractor
+	public static final String IMG_PROTRACTOR = "protractor";
+	
 	static {
 		try {
 			String pathSuffix = "icons/";
@@ -163,6 +166,9 @@ public class ImageResource {
 				+ ".gif");
 		registerImage(IMG_ELCL_UNLINK_TO_CTRL, ELCL_OBJ
 				+ IMG_ELCL_UNLINK_TO_CTRL + ".gif");
+		
+		// Protractor
+		registerImage(IMG_PROTRACTOR, URL_OBJ + IMG_PROTRACTOR + ".png");
 	}
 
 	/**

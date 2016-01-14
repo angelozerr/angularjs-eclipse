@@ -1,5 +1,5 @@
 /**
- *  Copyright (c) 2013-2014 Angelo ZERR.
+ *  Copyright (c) 2013-2016 Angelo ZERR.
  *  All rights reserved. This program and the accompanying materials
  *  are made available under the terms of the Eclipse Public License v1.0
  *  which accompanies this distribution, and is available at
@@ -14,6 +14,10 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.editors.text.EditorsUI;
 
+/**
+ * Angular UI preference initializer.
+ *
+ */
 public class AngularUIPreferenceInitializer extends AbstractPreferenceInitializer {
 
 	@Override
@@ -23,12 +27,6 @@ public class AngularUIPreferenceInitializer extends AbstractPreferenceInitialize
 		EditorsUI.useAnnotationsPreferencePage(store);
 		EditorsUI.useQuickDiffPreferencePage(store);
 		PreferenceConstants.initializeDefaultValues();
-
-	/*	IPreferenceStore dltkStore = DLTKUIPlugin.getDefault()
-				.getPreferenceStore();
-		dltkStore.setDefault(
-				org.eclipse.dltk.ui.PreferenceConstants.CODEASSIST_SORTER,
-				"org.eclipse.php.ui.AlphabeticSorter"); //$NON-NLS-1$*/
 	}
 
 }

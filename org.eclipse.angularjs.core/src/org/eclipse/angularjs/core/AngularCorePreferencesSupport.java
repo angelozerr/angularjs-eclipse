@@ -157,7 +157,7 @@ public class AngularCorePreferencesSupport {
 	
 	public String getDebugger() {
 		return preferencesSupport
-				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_DEBUGGER);
+				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_DEBUGGER);
 	}
 
 	public IFile getProtractorCliFile() {

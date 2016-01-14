@@ -15,6 +15,7 @@ import java.io.File;
 import org.eclipse.angularjs.core.AngularCorePreferencesSupport;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
+import org.eclipse.angularjs.internal.ui.preferences.protractor.ProtractorPreferencesPage;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -25,13 +26,17 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.ui.ILaunchShortcut2;
 import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import tern.eclipse.ide.server.nodejs.core.debugger.INodejsDebugger;
 import tern.eclipse.ide.server.nodejs.core.debugger.NodejsDebuggersManager;
+import tern.utils.StringUtils;
 
 /**
  * Protractor launch shortcut.
@@ -78,6 +83,14 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 				launcher.setSaveLaunch(isSaveLaunch());
 
 				launcher.start();
+			} catch (ProtractorConfigException e) {
+				Shell shell = AngularUIPlugin.getActiveWorkbenchWindow().getShell();
+				if (MessageDialog.openConfirm(shell, AngularUIMessages.ProtractorLaunchShortcut_Error,
+						e.getMessage() + " Do you want to update Protractor preferences?")) {
+					PreferencesUtil.createPreferenceDialogOn(shell, ProtractorPreferencesPage.PAGE_ID,
+							new String[] { ProtractorPreferencesPage.PAGE_ID }, null).open();
+				}
+				return;
 			} catch (Exception e) {
 				reportError("Error while starting protractor", e);
 			}
@@ -88,22 +101,40 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 		return false;
 	}
 
-	private IFile getProtractorCliFile(IFile protractorConfigFile) {
+	private IFile getProtractorCliFile(IFile protractorConfigFile) throws ProtractorConfigException {
 		IProject project = protractorConfigFile.getProject();
 		IFile cliFile = project.getFile("node_modules/protractor/lib/cli.js");
 		if (cliFile.exists()) {
 			return cliFile;
 		}
-		return AngularCorePreferencesSupport.getInstance().getProtractorCliFile();
+		cliFile = AngularCorePreferencesSupport.getInstance().getProtractorCliFile();
+		if (cliFile.exists()) {
+			return cliFile;
+		}
+		throw new ProtractorConfigException("Cannot find protractor/lib/cli.js");
 	}
 
-	private INodejsDebugger getDebugger() {
-		String debugger = AngularCorePreferencesSupport.getInstance().getDebugger();
-		return NodejsDebuggersManager.getDebugger(debugger);
+	private INodejsDebugger getDebugger() throws ProtractorConfigException {
+		String debuggerId = AngularCorePreferencesSupport.getInstance().getDebugger();
+		if (StringUtils.isEmpty(debuggerId)) {
+			throw new ProtractorConfigException("Cannot find debugger.");
+		}
+		INodejsDebugger debugger = NodejsDebuggersManager.getDebugger(debuggerId);
+		if (debugger != null) {
+			return debugger;
+		}
+		throw new ProtractorConfigException("Cannot find debugger with id" + debuggerId);
 	}
 
-	private File getNodeInstallPath() {
-		return AngularCorePreferencesSupport.getInstance().getInstallPath();
+	private File getNodeInstallPath() throws ProtractorConfigException {
+		File nodeInstallPath = AngularCorePreferencesSupport.getInstance().getInstallPath();
+		if (nodeInstallPath == null) {
+			throw new ProtractorConfigException("Cannot find node install path in a preference.");
+		}
+		if (nodeInstallPath.exists()) {
+			return nodeInstallPath;
+		}
+		throw new ProtractorConfigException("Cannot find node install path " + nodeInstallPath.toString());
 	}
 
 	@Override
