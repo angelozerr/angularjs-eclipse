@@ -15,12 +15,14 @@ import org.eclipse.angularjs.core.AngularCorePlugin;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.ImageResource;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -29,6 +31,7 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import tern.eclipse.ide.server.nodejs.ui.preferences.DebuggerFieldEditor;
 import tern.eclipse.ide.server.nodejs.ui.preferences.NodeJSConfigEditor;
 import tern.eclipse.ide.ui.preferences.FileComboFieldEditor;
+import tern.eclipse.ide.ui.preferences.WorkspaceFileFieldEditor;
 
 /**
  * Protractor preferences page.
@@ -38,6 +41,8 @@ public class ProtractorPreferencesPage extends FieldEditorPreferencePage impleme
 
 	public static final String PAGE_ID = "org.eclipse.angularjs.preferences.protractor";
 
+	private WorkspaceFileFieldEditor defaultProtractorCliFileField;
+	private BooleanFieldEditor saveLaunchField;
 	private DebuggerFieldEditor debuggerField;
 	private NodeJSConfigEditor nodeJSConfigEditor;
 
@@ -53,6 +58,17 @@ public class ProtractorPreferencesPage extends FieldEditorPreferencePage impleme
 	}
 
 	protected void createDebuggerContent(Composite parent) {
+
+		defaultProtractorCliFileField = new WorkspaceFileFieldEditor(AngularCoreConstants.PROTRACTOR_DEFAULT_CLI_FILE,
+				AngularUIMessages.ProtractorPreferencesPage_defaultCliFile_label, parent);
+		addField(defaultProtractorCliFileField);
+
+		saveLaunchField = new BooleanFieldEditor(AngularCoreConstants.PROTRACTOR_SAVE_LAUNCH,
+				AngularUIMessages.ProtractorPreferencesPage_saveLaunch_label, parent);
+		addField(saveLaunchField);
+		
+		createSeparator(parent);
+
 		// Debugger setup
 		debuggerField = new DebuggerFieldEditor(AngularCoreConstants.PROTRACTOR_NODEJS_DEBUGGER,
 				AngularUIMessages.ProtractorPreferencesPage_debugger_label, parent);
@@ -64,6 +80,8 @@ public class ProtractorPreferencesPage extends FieldEditorPreferencePage impleme
 		gd.horizontalIndent = 25;
 		debuggerWikiLink.setLayoutData(gd);
 
+		createSeparator(parent);
+
 		// Node configuration panel
 		nodeJSConfigEditor = new NodeJSConfigEditor(parent, AngularCoreConstants.PROTRACTOR_NODEJS_INSTALL,
 				AngularCoreConstants.PROTRACTOR_NODEJS_PATH);
@@ -74,11 +92,18 @@ public class ProtractorPreferencesPage extends FieldEditorPreferencePage impleme
 
 	}
 
+	private void createSeparator(Composite parent) {
+		Label separator = new Label(parent, SWT.HORIZONTAL | SWT.SEPARATOR);
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 4;
+		separator.setLayoutData(gd);
+	}
+
 	@Override
 	public void init(IWorkbench workbench) {
 
 	}
-	
+
 	@Override
 	protected IPreferenceStore doGetPreferenceStore() {
 		return new ScopedPreferenceStore(InstanceScope.INSTANCE, AngularCorePlugin.PLUGIN_ID);

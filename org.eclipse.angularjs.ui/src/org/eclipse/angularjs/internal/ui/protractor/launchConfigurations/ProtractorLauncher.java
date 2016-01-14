@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 
 import tern.TernException;
 import tern.eclipse.ide.server.nodejs.core.debugger.INodejsDebugger;
+import tern.eclipse.ide.server.nodejs.core.debugger.VariableHelper;
 import tern.server.nodejs.process.INodejsLaunchConfiguration;
 import tern.server.nodejs.process.INodejsProcess;
 
@@ -53,13 +54,17 @@ public class ProtractorLauncher implements INodejsLaunchConfiguration {
 	@Override
 	public List<String> createNodeArgs() {
 		List<String> args = new ArrayList<String>();
-		args.add(protractorConfigFile.getProjectRelativePath().toOSString());
+		// here we need to generate file system path because Webclispe cannot support
+		// program args like ${workspace_loc:\test-protractor\spec.js}
+		args.add(protractorConfigFile.getLocation().toOSString());
+		// Uncomment that once Webclipse can support it.
+		// args.add(VariableHelper.getWorkspaceLoc(protractorConfigFile));
 		return args;
 	}
 
 	@Override
 	public String generateLaunchConfigurationName() {
-		return "Protractor for " + protractorCliFile.getProjectRelativePath().toString();
+		return "Protractor for " + protractorConfigFile.getFullPath().toString();
 	}
 
 	@Override

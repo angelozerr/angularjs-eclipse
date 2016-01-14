@@ -32,9 +32,9 @@ public class AngularCoreConstants {
 	/**
 	 * Protactor
 	 */
-	public static final String PROTRACTOR_CLI_FILE = "protractorCliFile"; //$NON-NLS-1$
+	public static final String PROTRACTOR_DEFAULT_CLI_FILE = "protractorDefaultCliFile"; //$NON-NLS-1$
 	public static final String PROTRACTOR_NODEJS_DEBUGGER = "protractorNodeJSDebugger"; //$NON-NLS-1$
 	public static final String PROTRACTOR_NODEJS_INSTALL = "protractorNodeJSInstall"; //$NON-NLS-1$
 	public static final String PROTRACTOR_NODEJS_PATH = "protractorNodeJSPath"; //$NON-NLS-1$
-	
+	public static final String PROTRACTOR_SAVE_LAUNCH = "protractorSaveLaunch"; //$NON-NLS-1$
 }

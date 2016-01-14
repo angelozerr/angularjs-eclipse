@@ -21,19 +21,16 @@ import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
 import tern.eclipse.ide.core.preferences.PreferencesSupport;
 import tern.eclipse.ide.server.nodejs.core.INodejsInstall;
-import tern.eclipse.ide.server.nodejs.core.TernNodejsCoreConstants;
 import tern.eclipse.ide.server.nodejs.core.TernNodejsCorePlugin;
 import tern.utils.StringUtils;
 
 public class AngularCorePreferencesSupport {
 
-	private static final Preferences store = AngularCorePlugin.getDefault()
-			.getPluginPreferences();
+	private static final Preferences store = AngularCorePlugin.getDefault().getPluginPreferences();
 	private PreferencesSupport preferencesSupport;
 
 	private AngularCorePreferencesSupport() {
-		preferencesSupport = new PreferencesSupport(
-				AngularCorePlugin.PLUGIN_ID, store);
+		preferencesSupport = new PreferencesSupport(AngularCorePlugin.PLUGIN_ID, store);
 	}
 
 	private static AngularCorePreferencesSupport instance = null;
@@ -46,13 +43,11 @@ public class AngularCorePreferencesSupport {
 	}
 
 	public boolean isDirectiveUseOriginalName(IProject project) {
-		return getBool(project,
-				AngularCoreConstants.DIRECTIVE_USE_ORIGINAL_NAME);
+		return getBool(project, AngularCoreConstants.DIRECTIVE_USE_ORIGINAL_NAME);
 	}
 
 	public boolean isDirectiveStartsWithNothing(IProject project) {
-		return getBool(project,
-				AngularCoreConstants.DIRECTIVE_STARTS_WITH_NOTHING);
+		return getBool(project, AngularCoreConstants.DIRECTIVE_STARTS_WITH_NOTHING);
 	}
 
 	public boolean isDirectiveStartsWithX(IProject project) {
@@ -72,13 +67,11 @@ public class AngularCorePreferencesSupport {
 	}
 
 	public boolean isDirectiveUnderscoreDelimiter(IProject project) {
-		return getBool(project,
-				AngularCoreConstants.DIRECTIVE_UNDERSCORE_DELIMITER);
+		return getBool(project, AngularCoreConstants.DIRECTIVE_UNDERSCORE_DELIMITER);
 	}
 
 	public boolean getBool(IProject project, String key) {
-		String result = preferencesSupport.getPreferencesValue(key, null,
-				project);
+		String result = preferencesSupport.getPreferencesValue(key, null, project);
 		return StringUtils.asBoolean(result, false);
 	}
 
@@ -101,8 +94,7 @@ public class AngularCorePreferencesSupport {
 	 *         the given project.
 	 */
 	public String getStartSymbol(IProject project) {
-		return preferencesSupport.getPreferencesValue(
-				AngularCoreConstants.EXPRESSION_START_SYMBOL,
+		return preferencesSupport.getPreferencesValue(AngularCoreConstants.EXPRESSION_START_SYMBOL,
 				AngularProject.DEFAULT_START_SYMBOL, project);
 	}
 
@@ -115,25 +107,22 @@ public class AngularCorePreferencesSupport {
 	 *         given project.
 	 */
 	public String getEndSymbol(IProject project) {
-		return preferencesSupport.getPreferencesValue(
-				AngularCoreConstants.EXPRESSION_END_SYMBOL,
+		return preferencesSupport.getPreferencesValue(AngularCoreConstants.EXPRESSION_END_SYMBOL,
 				AngularProject.DEFAULT_END_SYMBOL, project);
 	}
-	
+
 	// ----------------------- Protractor
-	
+
 	/**
 	 * Returns the node install from the workspace preferences.
 	 * 
 	 * @return
 	 */
 	public INodejsInstall getNodejsInstall() {
-		String id = preferencesSupport
-				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_INSTALL);
-		return TernNodejsCorePlugin.getNodejsInstallManager()
-				.findNodejsInstall(id);
+		String id = preferencesSupport.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_INSTALL);
+		return TernNodejsCorePlugin.getNodejsInstallManager().findNodejsInstall(id);
 	}
-	
+
 	/**
 	 * returns the node.js install path.
 	 * 
@@ -154,18 +143,27 @@ public class AngularCorePreferencesSupport {
 		}
 		return new File("node");
 	}
-	
+
 	public String getDebugger() {
-		return preferencesSupport
-				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_DEBUGGER);
+		return preferencesSupport.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_DEBUGGER);
 	}
 
 	public IFile getProtractorCliFile() {
-		String repositoryName = preferencesSupport
-				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_CLI_FILE);
-		if (repositoryName != null) {
-			return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(repositoryName));
+		String protractorCliFile = preferencesSupport
+				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_DEFAULT_CLI_FILE);
+		if (!StringUtils.isEmpty(protractorCliFile)) {
+			return ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(protractorCliFile));
 		}
 		return null;
+	}
+
+	public boolean isProtractorSaveLaunch() {
+		String saveLaunch = preferencesSupport
+				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_SAVE_LAUNCH);
+		try {
+			return Boolean.parseBoolean(saveLaunch);
+		} catch (Throwable e) {
+			return false;
+		}
 	}
 }

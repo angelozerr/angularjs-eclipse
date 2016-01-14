@@ -29,6 +29,7 @@ import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -87,8 +88,10 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 				Shell shell = AngularUIPlugin.getActiveWorkbenchWindow().getShell();
 				if (MessageDialog.openConfirm(shell, AngularUIMessages.ProtractorLaunchShortcut_Error,
 						e.getMessage() + " Do you want to update Protractor preferences?")) {
-					PreferencesUtil.createPreferenceDialogOn(shell, ProtractorPreferencesPage.PAGE_ID,
-							new String[] { ProtractorPreferencesPage.PAGE_ID }, null).open();
+					if (PreferencesUtil.createPreferenceDialogOn(shell, ProtractorPreferencesPage.PAGE_ID,
+							new String[] { ProtractorPreferencesPage.PAGE_ID }, null).open() == Window.OK) {
+						launch(resource, mode);
+					}
 				}
 				return;
 			} catch (Exception e) {
@@ -98,17 +101,17 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 	}
 
 	private boolean isSaveLaunch() {
-		return false;
+		return AngularCorePreferencesSupport.getInstance().isProtractorSaveLaunch();
 	}
 
 	private IFile getProtractorCliFile(IFile protractorConfigFile) throws ProtractorConfigException {
 		IProject project = protractorConfigFile.getProject();
 		IFile cliFile = project.getFile("node_modules/protractor/lib/cli.js");
-		if (cliFile.exists()) {
+		if (cliFile != null && cliFile.exists()) {
 			return cliFile;
 		}
 		cliFile = AngularCorePreferencesSupport.getInstance().getProtractorCliFile();
-		if (cliFile.exists()) {
+		if (cliFile != null && cliFile.exists()) {
 			return cliFile;
 		}
 		throw new ProtractorConfigException("Cannot find protractor/lib/cli.js");

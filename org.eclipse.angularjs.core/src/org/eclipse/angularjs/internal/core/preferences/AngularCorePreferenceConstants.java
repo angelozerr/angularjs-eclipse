@@ -50,6 +50,8 @@ public class AngularCorePreferenceConstants {
 			node.put(AngularCoreConstants.PROTRACTOR_NODEJS_INSTALL, INodejsInstall.NODE_NATIVE);
 			node.put(AngularCoreConstants.PROTRACTOR_NODEJS_PATH, IDENodejsProcessHelper.getNodejsPath());
 		}
+		// Save launch
+		node.putBoolean(AngularCoreConstants.PROTRACTOR_SAVE_LAUNCH, true);
 	}
 
 	// Don't instantiate
