@@ -1,4 +1,4 @@
-package org.eclipse.angularjs.internal.ui.launchConfigurations;
+package org.eclipse.angularjs.core.launchConfigurations;
 
 import tern.TernException;
 

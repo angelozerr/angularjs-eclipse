@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.angularjs.core.launchConfigurations.IProtractorLaunchConfigurationConstants;
+import org.eclipse.angularjs.core.launchConfigurations.ProtractorConfigException;
+import org.eclipse.angularjs.core.launchConfigurations.ProtractorLaunchHelper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
 
 import tern.TernException;
 import tern.eclipse.ide.server.nodejs.core.debugger.INodejsDebugger;
-import tern.eclipse.ide.server.nodejs.core.debugger.NodejsDebuggersManager;
-import tern.eclipse.ide.server.nodejs.core.debugger.VariableHelper;
 import tern.server.nodejs.process.INodejsLaunchConfiguration;
 import tern.server.nodejs.process.INodejsProcess;
 
@@ -48,27 +48,38 @@ public class ProtractorLauncher implements INodejsLaunchConfiguration {
 		this.mode = mode;
 	}
 
-	public ProtractorLauncher(ILaunchConfiguration configuration, String mode) throws CoreException {
-		this(getFile(configuration, IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CONFIG_FILE),
-				getFile(configuration, IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CLI_FILE),
-				getDebugger(configuration),
-				getFilesystem(configuration, IProtractorLaunchConfigurationConstants.ATTR_NODE_INSTALL_PATH), mode);
+	public ProtractorLauncher(ILaunchConfiguration configuration, String mode)
+			throws CoreException, ProtractorConfigException {
+		this(getProtractorConfigFile(configuration), getProtractorCliFile(configuration), getDebugger(configuration),
+				getNodeInstallPath(configuration), mode);
 	}
 
-	private static File getFilesystem(ILaunchConfiguration configuration, String name) throws CoreException {
-		String file = configuration.getAttribute(name, (String) null);
-		return new File(file);
+	private static IFile getProtractorConfigFile(ILaunchConfiguration configuration)
+			throws ProtractorConfigException, CoreException {
+		String param = configuration.getAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CONFIG_FILE,
+				(String) null);
+		return ProtractorLaunchHelper.getProtractorConfigFile(param);
 	}
 
-	private static INodejsDebugger getDebugger(ILaunchConfiguration configuration) throws CoreException {
+	private static IFile getProtractorCliFile(ILaunchConfiguration configuration)
+			throws ProtractorConfigException, CoreException {
+		String param = configuration.getAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CLI_FILE,
+				(String) null);
+		return ProtractorLaunchHelper.getProtractorCliFile(param);
+	}
+
+	private static File getNodeInstallPath(ILaunchConfiguration configuration)
+			throws ProtractorConfigException, CoreException {
+		String param = configuration.getAttribute(IProtractorLaunchConfigurationConstants.ATTR_NODE_INSTALL_PATH,
+				(String) null);
+		return ProtractorLaunchHelper.getNodeInstallPath(param);
+	}
+
+	private static INodejsDebugger getDebugger(ILaunchConfiguration configuration)
+			throws CoreException, ProtractorConfigException {
 		String debuggerId = configuration.getAttribute(IProtractorLaunchConfigurationConstants.ATTR_DEBUGGER,
 				(String) null);
-		return NodejsDebuggersManager.getDebugger(debuggerId);
-	}
-
-	private static IFile getFile(ILaunchConfiguration configuration, String name) throws CoreException {
-		String file = configuration.getAttribute(name, (String) null);
-		return VariableHelper.getResource(file);
+		return ProtractorLaunchHelper.getDebugger(debuggerId);
 	}
 
 	public void start() throws TernException {
