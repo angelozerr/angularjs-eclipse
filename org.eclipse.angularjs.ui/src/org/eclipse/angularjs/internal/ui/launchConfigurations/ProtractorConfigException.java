@@ -1,4 +1,4 @@
-package org.eclipse.angularjs.internal.ui.protractor.launchConfigurations;
+package org.eclipse.angularjs.internal.ui.launchConfigurations;
 
 import tern.TernException;
 

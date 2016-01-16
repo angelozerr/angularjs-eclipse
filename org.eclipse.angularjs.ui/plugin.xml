@@ -429,11 +429,27 @@
    
    <!-- Protractor -->
    
+  <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+     <launchConfigurationTypeImage
+        icon="icons/full/obj16/protractor.png"
+        configTypeID="org.eclipse.angularjs.core.protractor"
+        id="org.eclipse.angularjs.core.protractor.image">
+    </launchConfigurationTypeImage>
+  </extension>
+     
+  <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+    <launchConfigurationTabGroup
+        type="org.eclipse.angularjs.core.protractor"
+        class="org.eclipse.angularjs.internal.ui.launchConfigurations.ProtractorLaunchTabGroup"
+        id="org.eclipse.angularjs.core.protractor.tabgroup">
+    </launchConfigurationTabGroup>
+  </extension>
+     
    <extension
          point="org.eclipse.debug.ui.launchShortcuts">
       <shortcut
             category="org.eclipse.ui.externaltools"
-            class="org.eclipse.angularjs.internal.ui.protractor.launchConfigurations.ProtractorLaunchShortcut"
+            class="org.eclipse.angularjs.internal.ui.launchConfigurations.ProtractorLaunchShortcut"
             description="%ProtractorLaunchShortcut.description"
             helpContextId="org.eclipse.ui.externaltools.launchShortcutHelpContext.protractorShortcut"
             icon="icons/full/obj16/protractor.png"

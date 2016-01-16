@@ -46,5 +46,17 @@
          <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
       </validator>
    </extension>
-   	   	
+
+  <!-- Protractor -->
+     	   	
+  <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+    <launchConfigurationType
+        name="%ProtractorLaunchConfigurationDelegate.name"
+        delegate="org.eclipse.angularjs.internal.core.launchConfigurations.ProtractorLaunchConfigurationDelegate"
+        modes="run,debug"
+        id="org.eclipse.angularjs.core.protractor"
+        category="org.eclipse.ui.externaltools" >
+    </launchConfigurationType>
+  </extension>
+     	   	
 </plugin>        

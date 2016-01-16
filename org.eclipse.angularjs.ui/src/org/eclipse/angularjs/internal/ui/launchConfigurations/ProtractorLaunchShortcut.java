@@ -8,11 +8,12 @@
  *  Contributors:
  *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
  */
-package org.eclipse.angularjs.internal.ui.protractor.launchConfigurations;
+package org.eclipse.angularjs.internal.ui.launchConfigurations;
 
 import java.io.File;
 
 import org.eclipse.angularjs.core.AngularCorePreferencesSupport;
+import org.eclipse.angularjs.core.launchConfigurations.IProtractorLaunchConfigurationConstants;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.preferences.protractor.ProtractorPreferencesPage;
@@ -23,7 +24,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationType;
+import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
+import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.ILaunchShortcut2;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -37,6 +42,7 @@ import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import tern.eclipse.ide.server.nodejs.core.debugger.INodejsDebugger;
 import tern.eclipse.ide.server.nodejs.core.debugger.NodejsDebuggersManager;
+import tern.eclipse.ide.server.nodejs.core.debugger.VariableHelper;
 import tern.utils.StringUtils;
 
 /**
@@ -65,25 +71,48 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 	}
 
 	protected void launch(IResource resource, final String mode) {
+
 		if (resource != null && resource.getType() == IResource.FILE) {
 			try {
 				// protractor config file to start
 				IFile protractorConfigFile = (IFile) resource;
 
-				// debugger to use
-				INodejsDebugger debugger = getDebugger();
+				// Get protractor launch type
+				ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+				ILaunchConfigurationType launchType = manager.getLaunchConfigurationType(
+						IProtractorLaunchConfigurationConstants.ID_PROTRACTOR_LAUNCH_CONFIGURATION_TYPE);
 
-				// nodejs install path
-				File nodeInstallPath = getNodeInstallPath();
+				ILaunchConfigurationWorkingCopy workingCopy = null;
+				// Try to find existing launch
+				ILaunchConfiguration configuration = getExistingLaunchConfiguration(launchType, protractorConfigFile);
+				if (configuration != null) {
+					// Get working copy
+					workingCopy = configuration.getWorkingCopy();
+				} else {
+					// Create protractor launch working copy.
+					// debugger to use
+					INodejsDebugger debugger = getDebugger();
 
-				// protractor/lib/cli.js
-				IFile protractorCliFile = getProtractorCliFile(protractorConfigFile);
-				ProtractorLauncher launcher = new ProtractorLauncher(protractorConfigFile, protractorCliFile, debugger,
-						nodeInstallPath);
-				launcher.setLaunchMode(mode);
-				launcher.setSaveLaunch(isSaveLaunch());
+					// nodejs install path
+					File nodeInstallPath = getNodeInstallPath();
 
-				launcher.start();
+					// protractor/lib/cli.js
+					IFile protractorCliFile = getProtractorCliFile(protractorConfigFile);
+
+					String launchName = "Protractor for " + protractorConfigFile.getFullPath().toString();
+					workingCopy = launchType.newInstance(null, manager.generateLaunchConfigurationName(launchName));
+					workingCopy.setAttribute(IProtractorLaunchConfigurationConstants.ATTR_NODE_INSTALL_PATH,
+							nodeInstallPath.toString());
+					workingCopy.setAttribute(IProtractorLaunchConfigurationConstants.ATTR_DEBUGGER, debugger.getId());
+					workingCopy.setAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CLI_FILE,
+							VariableHelper.getWorkspaceLoc(protractorCliFile));
+				}
+				workingCopy.setAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CONFIG_FILE,
+						VariableHelper.getWorkspaceLoc(protractorConfigFile));
+
+				// launch protractor
+				workingCopy.launch(mode, null);
+				workingCopy.doSave();
 			} catch (ProtractorConfigException e) {
 				Shell shell = AngularUIPlugin.getActiveWorkbenchWindow().getShell();
 				if (MessageDialog.openConfirm(shell, AngularUIMessages.ProtractorLaunchShortcut_Error,
@@ -100,8 +129,18 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 		}
 	}
 
-	private boolean isSaveLaunch() {
-		return AngularCorePreferencesSupport.getInstance().isProtractorSaveLaunch();
+	private ILaunchConfiguration getExistingLaunchConfiguration(ILaunchConfigurationType type,
+			IFile protractorConfigFile) throws CoreException {
+		String attr = VariableHelper.getWorkspaceLoc(protractorConfigFile);
+		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+		ILaunchConfiguration[] configs = manager.getLaunchConfigurations(type);
+		for (ILaunchConfiguration config : configs) {
+			if (attr.equals(config.getAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CONFIG_FILE,
+					(String) null))) {
+				return config;
+			}
+		}
+		return null;
 	}
 
 	private IFile getProtractorCliFile(IFile protractorConfigFile) throws ProtractorConfigException {
