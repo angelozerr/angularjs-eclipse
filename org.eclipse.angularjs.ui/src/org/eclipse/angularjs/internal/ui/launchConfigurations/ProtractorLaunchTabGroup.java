@@ -10,7 +10,8 @@ public class ProtractorLaunchTabGroup extends AbstractLaunchConfigurationTabGrou
 
 	@Override
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] { new RefreshTab(), new CommonTab() };
+		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[] { new MainTab(), new ProtractorTab(),
+				new RefreshTab(), new CommonTab() };
 		setTabs(tabs);
 	}
 

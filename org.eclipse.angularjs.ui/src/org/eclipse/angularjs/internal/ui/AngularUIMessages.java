@@ -89,6 +89,11 @@ public final class AngularUIMessages extends NLS {
 	public static String ProtractorPreferencesPage_defaultCliFile_label;
 	public static String ProtractorPreferencesPage_saveLaunch_label;
 	public static String ProtractorPreferencesPage_debugger_label;
+	
+	public static String Protractor_MainTab_location_label;
+	public static String Protractor_MainTab_Select_a_protractor_config_file;
+	public static String Protractor_ProtractorTab_name;
+	public static String Protractor_ProtractorTab_cliFile;
 
 
 	private AngularUIMessages() {

@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.angularjs.core.launchConfigurations.IProtractorLaunchConfigurationConstants;
 import org.eclipse.angularjs.core.launchConfigurations.ProtractorConfigException;
 import org.eclipse.angularjs.core.launchConfigurations.ProtractorLaunchHelper;
+import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.debug.core.ILaunchConfiguration;
@@ -56,7 +57,7 @@ public class ProtractorLauncher implements INodejsLaunchConfiguration {
 
 	private static IFile getProtractorConfigFile(ILaunchConfiguration configuration)
 			throws ProtractorConfigException, CoreException {
-		String param = configuration.getAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CONFIG_FILE,
+		String param = configuration.getAttribute(IExternalToolConstants.ATTR_LOCATION,
 				(String) null);
 		return ProtractorLaunchHelper.getProtractorConfigFile(param);
 	}

@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.wst.validation,
  org.eclipse.core.filesystem,
  tern.eclipse.ide.server.nodejs.core,
- org.eclipse.debug.core
+ org.eclipse.debug.core,
+ org.eclipse.core.externaltools
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.eclipse.angularjs.core.AngularCorePlugin

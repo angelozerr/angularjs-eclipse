@@ -23,6 +23,4 @@ public interface IProtractorLaunchConfigurationConstants {
 	String ATTR_DEBUGGER = "debugger";
 
 	String ATTR_PROTRACTOR_CLI_FILE = "protractor_cli_file";
-
-	String ATTR_PROTRACTOR_CONFIG_FILE = "protractor_config_file";
 }

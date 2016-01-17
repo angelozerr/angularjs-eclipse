@@ -19,6 +19,7 @@ import org.eclipse.angularjs.core.launchConfigurations.ProtractorLaunchHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.preferences.protractor.ProtractorPreferencesPage;
+import org.eclipse.core.externaltools.internal.IExternalToolConstants;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -107,7 +108,7 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 					workingCopy.setAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CLI_FILE,
 							VariableHelper.getWorkspaceLoc(protractorCliFile));
 				}
-				workingCopy.setAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CONFIG_FILE,
+				workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION,
 						VariableHelper.getWorkspaceLoc(protractorConfigFile));
 
 				// launch protractor
@@ -148,7 +149,7 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfiguration[] configs = manager.getLaunchConfigurations(type);
 		for (ILaunchConfiguration config : configs) {
-			if (attr.equals(config.getAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CONFIG_FILE,
+			if (attr.equals(config.getAttribute(IExternalToolConstants.ATTR_LOCATION,
 					(String) null))) {
 				return config;
 			}
