@@ -36,5 +36,4 @@ public class AngularCoreConstants {
 	public static final String PROTRACTOR_NODEJS_DEBUGGER = "protractorNodeJSDebugger"; //$NON-NLS-1$
 	public static final String PROTRACTOR_NODEJS_INSTALL = "protractorNodeJSInstall"; //$NON-NLS-1$
 	public static final String PROTRACTOR_NODEJS_PATH = "protractorNodeJSPath"; //$NON-NLS-1$
-	public static final String PROTRACTOR_SAVE_LAUNCH = "protractorSaveLaunch"; //$NON-NLS-1$
 }

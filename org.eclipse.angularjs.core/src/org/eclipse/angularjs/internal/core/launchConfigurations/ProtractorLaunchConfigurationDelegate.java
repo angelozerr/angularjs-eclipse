@@ -10,35 +10,23 @@
  */
 package org.eclipse.angularjs.internal.core.launchConfigurations;
 
-import org.eclipse.angularjs.core.AngularCorePlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.model.LaunchConfigurationDelegate;
 
-import tern.TernException;
+import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.AbstractNodejsCliFileLaunchConfigurationDelegate;
+import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.AbstractNodejsCliFileLauncher;
+import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.NodejsCliFileConfigException;
 
 /**
  * Protractor launch configuration delegate.
  *
  */
-public class ProtractorLaunchConfigurationDelegate extends LaunchConfigurationDelegate {
+public class ProtractorLaunchConfigurationDelegate extends AbstractNodejsCliFileLaunchConfigurationDelegate {
 
 	@Override
-	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
-			throws CoreException {
-		if (monitor.isCanceled()) {
-			return;
-		}
-
-		try {
-			new ProtractorLauncher(configuration, mode).start();
-		} catch (TernException e) {
-			throw new CoreException(
-					new Status(IStatus.ERROR, AngularCorePlugin.PLUGIN_ID, "Error while launching protractor.", e));
-		}
+	protected AbstractNodejsCliFileLauncher createLauncher(ILaunchConfiguration configuration, String mode)
+			throws NodejsCliFileConfigException, CoreException {
+		return new ProtractorLauncher(configuration, mode);
 	}
+
 }

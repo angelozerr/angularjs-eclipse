@@ -18,9 +18,4 @@ public interface IProtractorLaunchConfigurationConstants {
 
 	String ID_PROTRACTOR_LAUNCH_CONFIGURATION_TYPE = "org.eclipse.angularjs.core.protractor";
 
-	String ATTR_NODE_INSTALL_PATH = "nodeinstallpath";
-
-	String ATTR_DEBUGGER = "debugger";
-
-	String ATTR_PROTRACTOR_CLI_FILE = "protractor_cli_file";
 }

@@ -14,8 +14,6 @@ import java.io.File;
 
 import org.eclipse.angularjs.core.AngularCorePreferencesSupport;
 import org.eclipse.angularjs.core.launchConfigurations.IProtractorLaunchConfigurationConstants;
-import org.eclipse.angularjs.core.launchConfigurations.ProtractorConfigException;
-import org.eclipse.angularjs.core.launchConfigurations.ProtractorLaunchHelper;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
 import org.eclipse.angularjs.internal.ui.AngularUIPlugin;
 import org.eclipse.angularjs.internal.ui.preferences.protractor.ProtractorPreferencesPage;
@@ -44,7 +42,9 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 
 import tern.eclipse.ide.server.nodejs.core.debugger.INodejsDebugger;
-import tern.eclipse.ide.server.nodejs.core.debugger.VariableHelper;
+import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.INodejsCliFileLaunchConfigurationConstants;
+import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.NodejsCliFileConfigException;
+import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.NodejsCliFileHelper;
 
 /**
  * Protractor launch shortcut.
@@ -92,7 +92,7 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 				} else {
 					// Create protractor launch working copy.
 					// debugger to use
-					INodejsDebugger debugger = getDebugger();
+					INodejsDebugger debugger = getDefaultDebugger();
 
 					// nodejs install path
 					File nodeInstallPath = getNodeInstallPath();
@@ -102,25 +102,26 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 
 					String launchName = "Protractor for " + protractorConfigFile.getFullPath().toString();
 					workingCopy = launchType.newInstance(null, manager.generateLaunchConfigurationName(launchName));
-					workingCopy.setAttribute(IProtractorLaunchConfigurationConstants.ATTR_NODE_INSTALL_PATH,
+					workingCopy.setAttribute(INodejsCliFileLaunchConfigurationConstants.ATTR_NODE_INSTALL_PATH,
 							nodeInstallPath.toString());
-					workingCopy.setAttribute(IProtractorLaunchConfigurationConstants.ATTR_DEBUGGER, debugger.getId());
-					workingCopy.setAttribute(IProtractorLaunchConfigurationConstants.ATTR_PROTRACTOR_CLI_FILE,
-							VariableHelper.getWorkspaceLoc(protractorCliFile));
+					workingCopy.setAttribute(INodejsCliFileLaunchConfigurationConstants.ATTR_DEBUGGER,
+							debugger.getId());
+					workingCopy.setAttribute(INodejsCliFileLaunchConfigurationConstants.ATTR_CLI_FILE,
+							NodejsCliFileHelper.getWorkspaceLoc(protractorCliFile));
 				}
 				workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION,
-						VariableHelper.getWorkspaceLoc(protractorConfigFile));
+						NodejsCliFileHelper.getWorkspaceLoc(protractorConfigFile));
 
 				// launch protractor
 				workingCopy.launch(mode, null);
 				workingCopy.doSave();
-			} catch (ProtractorConfigException e) {
+			} catch (NodejsCliFileConfigException e) {
 				reportConfigError(resource, mode, e);
 				return;
 			} catch (CoreException e) {
 				Throwable cause = e.getCause();
-				if (cause instanceof ProtractorConfigException) {
-					reportConfigError(resource, mode, (ProtractorConfigException) cause);
+				if (cause instanceof NodejsCliFileConfigException) {
+					reportConfigError(resource, mode, (NodejsCliFileConfigException) cause);
 				} else {
 					reportError("Error while executing protractor", e);
 				}
@@ -131,7 +132,7 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 		}
 	}
 
-	private void reportConfigError(IResource resource, final String mode, ProtractorConfigException e) {
+	private void reportConfigError(IResource resource, final String mode, NodejsCliFileConfigException e) {
 		Shell shell = AngularUIPlugin.getActiveWorkbenchWindow().getShell();
 		if (MessageDialog.openConfirm(shell, AngularUIMessages.ProtractorLaunchShortcut_Error,
 				e.getMessage() + " Do you want to update Protractor preferences?")) {
@@ -145,19 +146,18 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 
 	private ILaunchConfiguration getExistingLaunchConfiguration(ILaunchConfigurationType type,
 			IFile protractorConfigFile) throws CoreException {
-		String attr = VariableHelper.getWorkspaceLoc(protractorConfigFile);
+		String attr = NodejsCliFileHelper.getWorkspaceLoc(protractorConfigFile);
 		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfiguration[] configs = manager.getLaunchConfigurations(type);
 		for (ILaunchConfiguration config : configs) {
-			if (attr.equals(config.getAttribute(IExternalToolConstants.ATTR_LOCATION,
-					(String) null))) {
+			if (attr.equals(config.getAttribute(IExternalToolConstants.ATTR_LOCATION, (String) null))) {
 				return config;
 			}
 		}
 		return null;
 	}
 
-	private IFile getProtractorCliFile(IFile protractorConfigFile) throws ProtractorConfigException, CoreException {
+	private IFile getProtractorCliFile(IFile protractorConfigFile) throws NodejsCliFileConfigException, CoreException {
 		IProject project = protractorConfigFile.getProject();
 		IFile cliFile = project.getFile("node_modules/protractor/lib/cli.js");
 		if (cliFile != null && cliFile.exists()) {
@@ -166,12 +166,12 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 		return AngularCorePreferencesSupport.getInstance().getProtractorCliFile();
 	}
 
-	private INodejsDebugger getDebugger() throws ProtractorConfigException, CoreException {
+	private INodejsDebugger getDefaultDebugger() throws NodejsCliFileConfigException, CoreException {
 		String debuggerId = AngularCorePreferencesSupport.getInstance().getDebugger();
-		return ProtractorLaunchHelper.getDebugger(debuggerId);
+		return NodejsCliFileHelper.getDebugger(debuggerId);
 	}
 
-	private File getNodeInstallPath() throws ProtractorConfigException, CoreException {
+	private File getNodeInstallPath() throws NodejsCliFileConfigException, CoreException {
 		return AngularCorePreferencesSupport.getInstance().getInstallPath();
 	}
 

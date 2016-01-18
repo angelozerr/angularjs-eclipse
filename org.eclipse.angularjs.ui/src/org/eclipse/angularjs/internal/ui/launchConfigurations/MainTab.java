@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.externaltools.internal.launchConfigurations.ExternalToolsMainTab;
 import org.eclipse.ui.externaltools.internal.ui.FileSelectionDialog;
 
-import tern.eclipse.ide.server.nodejs.core.debugger.VariableHelper;
+import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.NodejsCliFileHelper;
 
 /**
  * Main tab
@@ -112,7 +112,7 @@ public class MainTab extends ExternalToolsMainTab {
 				if (location != null) {
 					String expandedLocation = manager.performStringSubstitution(location);
 					if (expandedLocation != null) {
-						file = VariableHelper.getFileForLocation(expandedLocation);
+						file = NodejsCliFileHelper.getFileForLocation(expandedLocation);
 					}
 				}
 			} catch (CoreException e) {
@@ -192,7 +192,7 @@ public class MainTab extends ExternalToolsMainTab {
 		Object file = result.getFirstElement();
 		if (file instanceof IFile) {
 			fNewFile = (IFile) file;
-			locationField.setText(VariableHelper.getWorkspaceLoc(fNewFile)); // $NON-NLS-1$
+			locationField.setText(NodejsCliFileHelper.getWorkspaceLoc(fNewFile)); // $NON-NLS-1$
 		}
 	}
 

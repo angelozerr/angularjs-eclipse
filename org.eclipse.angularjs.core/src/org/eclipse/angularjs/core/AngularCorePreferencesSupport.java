@@ -12,19 +12,17 @@ package org.eclipse.angularjs.core;
 
 import java.io.File;
 
-import org.eclipse.angularjs.core.launchConfigurations.ProtractorConfigException;
-import org.eclipse.angularjs.core.launchConfigurations.ProtractorLaunchHelper;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 
 import tern.eclipse.ide.core.preferences.PreferencesSupport;
 import tern.eclipse.ide.server.nodejs.core.INodejsInstall;
 import tern.eclipse.ide.server.nodejs.core.TernNodejsCorePlugin;
+import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.NodejsCliFileConfigException;
+import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.NodejsCliFileHelper;
 import tern.utils.StringUtils;
 
 public class AngularCorePreferencesSupport {
@@ -130,16 +128,17 @@ public class AngularCorePreferencesSupport {
 	 * returns the node.js install path.
 	 * 
 	 * @return
-	 * @throws CoreException 
-	 * @throws ProtractorConfigException 
+	 * @throws CoreException
+	 * @throws NodejsCliFileConfigException
+	 * @throws NodejsCliFileConfigException
 	 */
-	public File getInstallPath() throws ProtractorConfigException, CoreException {
+	public File getInstallPath() throws NodejsCliFileConfigException, CoreException, NodejsCliFileConfigException {
 		INodejsInstall install = getNodejsInstall();
 		if (install != null) {
 			if (install.isNative()) {
 				String path = preferencesSupport
 						.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_PATH);
-				return ProtractorLaunchHelper.getNodeInstallPath(path);
+				return NodejsCliFileHelper.getNodeInstallPath(path);
 			} else {
 				return install.getPath();
 			}
@@ -151,19 +150,10 @@ public class AngularCorePreferencesSupport {
 		return preferencesSupport.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_DEBUGGER);
 	}
 
-	public IFile getProtractorCliFile() throws ProtractorConfigException, CoreException {
+	public IFile getProtractorCliFile() throws NodejsCliFileConfigException, CoreException {
 		String protractorCliFile = preferencesSupport
 				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_DEFAULT_CLI_FILE);
-		return ProtractorLaunchHelper.getProtractorCliFile(protractorCliFile);
+		return NodejsCliFileHelper.getCliFile(protractorCliFile);
 	}
 
-	public boolean isProtractorSaveLaunch() {
-		String saveLaunch = preferencesSupport
-				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_SAVE_LAUNCH);
-		try {
-			return Boolean.parseBoolean(saveLaunch);
-		} catch (Throwable e) {
-			return false;
-		}
-	}
 }
