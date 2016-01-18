@@ -10,8 +10,6 @@
  */
 package org.eclipse.angularjs.internal.ui.launchConfigurations;
 
-import java.io.File;
-
 import org.eclipse.angularjs.core.AngularCorePreferencesSupport;
 import org.eclipse.angularjs.core.launchConfigurations.IProtractorLaunchConfigurationConstants;
 import org.eclipse.angularjs.internal.ui.AngularUIMessages;
@@ -74,6 +72,7 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 	protected void launch(IResource resource, final String mode) {
 
 		if (resource != null && resource.getType() == IResource.FILE) {
+			ILaunchConfiguration configuration = null;
 			try {
 				// protractor config file to start
 				IFile protractorConfigFile = (IFile) resource;
@@ -85,7 +84,7 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 
 				ILaunchConfigurationWorkingCopy workingCopy = null;
 				// Try to find existing launch
-				ILaunchConfiguration configuration = getExistingLaunchConfiguration(launchType, protractorConfigFile);
+				configuration = getExistingLaunchConfiguration(launchType, protractorConfigFile);
 				if (configuration != null) {
 					// Get working copy
 					workingCopy = configuration.getWorkingCopy();
@@ -94,16 +93,15 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 					// debugger to use
 					INodejsDebugger debugger = getDefaultDebugger();
 
-					// nodejs install path
-					File nodeInstallPath = getNodeInstallPath();
-
 					// protractor/lib/cli.js
 					IFile protractorCliFile = getProtractorCliFile(protractorConfigFile);
 
 					String launchName = "Protractor for " + protractorConfigFile.getFullPath().toString();
 					workingCopy = launchType.newInstance(null, manager.generateLaunchConfigurationName(launchName));
-					workingCopy.setAttribute(INodejsCliFileLaunchConfigurationConstants.ATTR_NODE_INSTALL_PATH,
-							nodeInstallPath.toString());
+					workingCopy.setAttribute(INodejsCliFileLaunchConfigurationConstants.ATTR_NODE_INSTALL,
+							getDefaultNodeInstall());
+					workingCopy.setAttribute(INodejsCliFileLaunchConfigurationConstants.ATTR_NODE_PATH,
+							getDefaultNodePath());
 					workingCopy.setAttribute(INodejsCliFileLaunchConfigurationConstants.ATTR_DEBUGGER,
 							debugger.getId());
 					workingCopy.setAttribute(INodejsCliFileLaunchConfigurationConstants.ATTR_CLI_FILE,
@@ -120,7 +118,7 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 				return;
 			} catch (CoreException e) {
 				Throwable cause = e.getCause();
-				if (cause instanceof NodejsCliFileConfigException) {
+				if ((cause instanceof NodejsCliFileConfigException) && configuration == null) {
 					reportConfigError(resource, mode, (NodejsCliFileConfigException) cause);
 				} else {
 					reportError("Error while executing protractor", e);
@@ -163,16 +161,20 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 		if (cliFile != null && cliFile.exists()) {
 			return cliFile;
 		}
-		return AngularCorePreferencesSupport.getInstance().getProtractorCliFile();
+		return AngularCorePreferencesSupport.getInstance().getDefaultProtractorCliFile();
 	}
 
 	private INodejsDebugger getDefaultDebugger() throws NodejsCliFileConfigException, CoreException {
-		String debuggerId = AngularCorePreferencesSupport.getInstance().getDebugger();
+		String debuggerId = AngularCorePreferencesSupport.getInstance().getDefaultProtractorDebugger();
 		return NodejsCliFileHelper.getDebugger(debuggerId);
 	}
 
-	private File getNodeInstallPath() throws NodejsCliFileConfigException, CoreException {
-		return AngularCorePreferencesSupport.getInstance().getInstallPath();
+	protected String getDefaultNodeInstall() {
+		return AngularCorePreferencesSupport.getInstance().getDefaultProtractorNodeInstall();
+	}
+
+	protected String getDefaultNodePath() {
+		return AngularCorePreferencesSupport.getInstance().getDefaultProtractorNodePath();
 	}
 
 	@Override

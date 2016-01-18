@@ -65,7 +65,7 @@ public class ProtractorPreferencesPage extends AbstractNodejsCliFilePreferencesP
 	}
 
 	@Override
-	protected String getNodeJSPathlPreferenceName() {
+	protected String getNodeJSPathPreferenceName() {
 		return AngularCoreConstants.PROTRACTOR_NODEJS_PATH;
 	}
 }

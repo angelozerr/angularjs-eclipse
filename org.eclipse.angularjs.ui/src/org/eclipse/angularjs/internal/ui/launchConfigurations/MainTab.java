@@ -39,16 +39,8 @@ import tern.eclipse.ide.server.nodejs.core.debugger.launchConfigurations.NodejsC
 public class MainTab extends ExternalToolsMainTab {
 
 	private String fCurrentLocation = null;
-	private Button fSetInputHandlerButton;
 	private IFile fNewFile;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#initializeFrom(org.eclipse.
-	 * debug.core.ILaunchConfiguration)
-	 */
 	@Override
 	public void initializeFrom(ILaunchConfiguration configuration) {
 		super.initializeFrom(configuration);
@@ -60,13 +52,6 @@ public class MainTab extends ExternalToolsMainTab {
 		updateCheckButtons(configuration);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.debug.ui.ILaunchConfigurationTab#performApply(org.eclipse.
-	 * debug.core.ILaunchConfigurationWorkingCopy)
-	 */
 	@Override
 	public void performApply(ILaunchConfigurationWorkingCopy configuration) {
 		super.performApply(configuration);
@@ -195,17 +180,6 @@ public class MainTab extends ExternalToolsMainTab {
 			locationField.setText(NodejsCliFileHelper.getWorkspaceLoc(fNewFile)); // $NON-NLS-1$
 		}
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.ui.externaltools.internal.launchConfigurations.
-	 * ExternalToolsMainTab#getWorkingDirectoryLabel()
-	 */
-	// @Override
-	// protected String getWorkingDirectoryLabel() {
-	// return JSBuildFileLaunchConfigurationMessages.AntMainTab_3;
-	// }
 
 	private void updateTargetsTab() {
 		// the location has changed...set the targets tab to

@@ -114,43 +114,19 @@ public class AngularCorePreferencesSupport {
 
 	// ----------------------- Protractor
 
-	/**
-	 * Returns the node install from the workspace preferences.
-	 * 
-	 * @return
-	 */
-	public INodejsInstall getNodejsInstall() {
-		String id = preferencesSupport.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_INSTALL);
-		return TernNodejsCorePlugin.getNodejsInstallManager().findNodejsInstall(id);
+	public String getDefaultProtractorNodeInstall() {
+		return preferencesSupport.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_INSTALL);
 	}
 
-	/**
-	 * returns the node.js install path.
-	 * 
-	 * @return
-	 * @throws CoreException
-	 * @throws NodejsCliFileConfigException
-	 * @throws NodejsCliFileConfigException
-	 */
-	public File getInstallPath() throws NodejsCliFileConfigException, CoreException, NodejsCliFileConfigException {
-		INodejsInstall install = getNodejsInstall();
-		if (install != null) {
-			if (install.isNative()) {
-				String path = preferencesSupport
-						.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_PATH);
-				return NodejsCliFileHelper.getNodeInstallPath(path);
-			} else {
-				return install.getPath();
-			}
-		}
-		return new File("node");
+	public String getDefaultProtractorNodePath() {
+		return preferencesSupport.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_PATH);
 	}
 
-	public String getDebugger() {
+	public String getDefaultProtractorDebugger() {
 		return preferencesSupport.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_NODEJS_DEBUGGER);
 	}
 
-	public IFile getProtractorCliFile() throws NodejsCliFileConfigException, CoreException {
+	public IFile getDefaultProtractorCliFile() throws NodejsCliFileConfigException, CoreException {
 		String protractorCliFile = preferencesSupport
 				.getWorkspacePreferencesValue(AngularCoreConstants.PROTRACTOR_DEFAULT_CLI_FILE);
 		return NodejsCliFileHelper.getCliFile(protractorCliFile);
