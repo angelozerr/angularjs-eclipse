@@ -385,6 +385,14 @@
 	    </highlighting>
 	 </extension>
    
+   <!-- dark theme defaults -->
+   <extension
+	    point="org.eclipse.e4.ui.css.swt.theme">
+	   <stylesheet uri="css/dark/preferencestyle.css"> 
+	       <themeid refid="org.eclipse.e4.ui.css.theme.e4_dark"></themeid>
+	   </stylesheet>
+   </extension>
+   
    <!--======================================================================================-->
 	<!-- Angular View                                      						             -->
 	<!--======================================================================================-->
@@ -426,7 +434,7 @@
          </includes>
       </viewerContentBinding>
    </extension>
-   
+           
    <!-- Protractor -->
    
   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
