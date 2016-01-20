@@ -15,6 +15,12 @@
    <bundle id="javax.websocket-api">
       <category name="Tern IDE"/>
    </bundle>
+   <bundle id="tern.eclipse.ide.debugger.nodeclipse">
+      <category name="Tern Debuggers"/>
+   </bundle>
+   <bundle id="tern.eclipse.ide.debugger.webclipse">
+      <category name="Tern Debuggers"/>
+   </bundle>   
    <feature id="tern-jsdt-feature" version="0.0.0">
       <category name="Tern IDE"/>
    </feature>
@@ -30,6 +36,11 @@
    <feature id="tern.eclipse.ide.tools.feature.source" version="0.0.0">
       <category name="Tern Tooling Development Resources"/>
    </feature>
+   <category-def name="Tern Debuggers" label="Tern Debuggers">
+      <description>
+         Provides JavaScript debuggers to debug tern server and modules.
+      </description>
+   </category-def>   
    <feature id="angularjs-eclipse-feature" version="0.0.0">
       <category name="AngularJS Eclipse Tooling"/>
    </feature>
