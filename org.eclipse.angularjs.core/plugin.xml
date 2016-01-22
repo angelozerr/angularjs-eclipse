@@ -54,8 +54,7 @@
         name="%ProtractorLaunchConfigurationDelegate.name"
         delegate="org.eclipse.angularjs.internal.core.launchConfigurations.ProtractorLaunchConfigurationDelegate"
         modes="run,debug"
-        id="org.eclipse.angularjs.core.protractor"
-        category="org.eclipse.ui.externaltools" >
+        id="org.eclipse.angularjs.core.protractor">
     </launchConfigurationType>
   </extension>
      	   	

@@ -456,7 +456,6 @@
    <extension
          point="org.eclipse.debug.ui.launchShortcuts">
       <shortcut
-            category="org.eclipse.ui.externaltools"
             class="org.eclipse.angularjs.internal.ui.launchConfigurations.ProtractorLaunchShortcut"
             description="%ProtractorLaunchShortcut.description"
             helpContextId="org.eclipse.ui.externaltools.launchShortcutHelpContext.protractorShortcut"
