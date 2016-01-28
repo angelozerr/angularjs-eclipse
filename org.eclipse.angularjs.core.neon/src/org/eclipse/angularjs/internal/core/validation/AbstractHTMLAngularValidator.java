@@ -1,3 +1,13 @@
+/**
+ *  Copyright (c) 2013-2016 Angelo ZERR.
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *
+ *  Contributors:
+ *  Angelo Zerr <angelo.zerr@gmail.com> - initial API and implementation
+ */
 package org.eclipse.angularjs.internal.core.validation;
 
 import org.eclipse.angularjs.core.AngularProject;
@@ -9,44 +19,61 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
-import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
 import tern.angular.modules.Restriction;
 
+/**
+ * Abstract class for WTP custom html validator (coming from Eclipse Neon).
+ *
+ */
 public abstract class AbstractHTMLAngularValidator {
 
-	protected static final ValidationMessage IGNORE_VALIDATION_MESSAGE = new ValidationMessage("", 0,
-			ValidationMessage.IGNORE);
+	private IProject project;
 
-	private AngularProject angularProject;
-
+	/**
+	 * Cache the project of the given document if project has angular nature.
+	 * 
+	 * @param doc
+	 */
 	public void init(IStructuredDocument doc) {
-		this.angularProject = null;
+		this.project = null;
 		if (doc instanceof IDocument) {
 			IFile file = DOMUtils.getFile((IDocument) doc);
 			IProject project = file.getProject();
 			if (AngularProject.hasAngularNature(project)) {
-				try {
-					this.angularProject = AngularProject.getAngularProject(project);
-				} catch (CoreException e) {
-					Trace.trace(Trace.SEVERE, "Error while getting angular project", e);
-				}
+				// project has angular nature, cache the project
+				this.project = project;
 			}
 		}
 	}
 
-	public final boolean canValidate(IDOMElement target) {
-		if (this.angularProject != null) {
-			return doCanValidate(target);
-		}
-		return false;
+	/**
+	 * Returns true if the project has angular nature and false otherwise.
+	 * 
+	 * @return true if the project has angular nature and false otherwise.
+	 */
+	protected boolean hasAngularNature() {
+		return project != null && AngularProject.hasAngularNature(project);
 	}
 
+	/**
+	 * Returns the angular directive
+	 * 
+	 * @param tagName
+	 * @param attrName
+	 * @param restriction
+	 * @return
+	 */
 	protected Directive getDirective(String tagName, String attrName, Restriction restriction) {
-		return AngularModulesManager.getInstance().getDirective(angularProject, tagName, attrName, restriction);
+		try {
+			AngularProject angularProject = AngularProject.getAngularProject(project);
+			return AngularModulesManager.getInstance().getDirective(angularProject, tagName, attrName, restriction);
+		} catch (CoreException e) {
+			// should never done
+			Trace.trace(Trace.SEVERE, "Error while getting angular project", e);
+		}
+		return null;
 	}
-	
-	protected abstract boolean doCanValidate(IDOMElement target);
 }
