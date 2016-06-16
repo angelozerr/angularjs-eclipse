@@ -97,13 +97,11 @@ public class DOMUtils {
 				return (IDOMNode) node;
 			}
 
-			if (model != null) {
-				int lastOffset = offset;
-				node = model.getIndexedRegion(offset);
-				while (node == null && lastOffset >= 0) {
-					lastOffset--;
-					node = model.getIndexedRegion(lastOffset);
-				}
+			int lastOffset = offset;
+			node = model.getIndexedRegion(offset);
+			while (node == null && lastOffset >= 0) {
+				lastOffset--;
+				node = model.getIndexedRegion(lastOffset);
 			}
 		}
 		return (IDOMNode) node;
@@ -549,8 +547,7 @@ public class DOMUtils {
 		if (model == null)
 			return null;
 		if (!(model instanceof IDOMModel)) {
-			if (model != null)
-				model.releaseFromRead();
+			model.releaseFromRead();
 			return null;
 		}
 		return (IDOMModel) model;

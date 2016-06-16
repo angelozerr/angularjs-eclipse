@@ -263,7 +263,7 @@ public class AngularExplorerViewOLD extends ViewPart implements
 			return;
 		//this.terminateAction.setEnabled(false);
 		currentEditor = part;
-		if (part != null && part instanceof IEditorPart) {
+		if (part instanceof IEditorPart) {
 			currentResource = null;
 			Object sel = ((IEditorPart) part).getEditorInput();
 			if (sel instanceof IAdaptable) {

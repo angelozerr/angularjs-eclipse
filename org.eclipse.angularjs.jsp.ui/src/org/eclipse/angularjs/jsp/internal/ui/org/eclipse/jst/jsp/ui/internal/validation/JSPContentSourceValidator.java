@@ -182,8 +182,7 @@ public class JSPContentSourceValidator extends JSPContentValidator implements IS
 			}
 		}
 		finally {
-			if (model != null)
-				model.releaseFromRead();
+			model.releaseFromRead();
 		}
 	}
 
