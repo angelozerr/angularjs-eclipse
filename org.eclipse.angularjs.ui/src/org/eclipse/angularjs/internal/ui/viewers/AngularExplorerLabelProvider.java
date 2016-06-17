@@ -48,26 +48,11 @@ public class AngularExplorerLabelProvider extends TernScriptPathLabelProvider {
 			switch (((BaseModel) element).getType()) {
 			case Module:
 				Module module = (Module) element;
-//				if (resource != null
-//						&& AngularLinkHelper.isSameController(resource,
-//								module.getScriptPath(), module.getName(), null,
-//								null)) {
-//					return ImageResource
-//							.getImage(ImageResource.IMG_ANGULARJS_CHECKED);
-//				}
 				return ImageResource.getImage(ImageResource.IMG_ANGULARJS);
 			case AngularElement:
 				AngularElement angularElement = (AngularElement) element;
 				switch (angularElement.getAngularType()) {
 				case controller:
-//					if (resource != null
-//							&& AngularLinkHelper.isSameController(resource,
-//									angularElement.getScriptPath(),
-//									angularElement.getModule().getName(),
-//									angularElement.getName(), null)) {
-//						return ImageResource
-//								.getImage(ImageResource.IMG_CONTROLLER_CHECKED);
-//					}
 					return ImageResource.getImage(ImageResource.IMG_CONTROLLER);
 				case directive:
 					return ImageResource.getImage(ImageResource.IMG_DIRECTIVE);

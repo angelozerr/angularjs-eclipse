@@ -34,7 +34,6 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jst.jsp.core.internal.contentproperties.JSPFContentProperties;
 import org.eclipse.jst.jsp.core.internal.provisional.contenttype.ContentTypeIdForJSP;
 import org.eclipse.jst.jsp.ui.internal.Logger;
-//import org.eclipse.jst.jsp.ui.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.html.core.internal.document.HTMLDocumentTypeConstants;
 import org.eclipse.wst.html.core.internal.validate.HTMLValidationAdapterFactory;
 import org.eclipse.wst.sse.core.StructuredModelManager;
@@ -153,7 +152,7 @@ public class JSPContentSourceValidator extends JSPContentValidator implements IS
 
 			// this will be the wrong region if it's Text (instead of Element)
 			// we don't know how to validate Text
-			IndexedRegion ir = getCoveringNode(dirtyRegion); // model.getIndexedRegion(dirtyRegion.getOffset());
+			IndexedRegion ir = getCoveringNode(dirtyRegion);
 			if (ir instanceof Text) {
 				while (ir != null && ir instanceof Text) {
 					// it's assumed that this gets the IndexedRegion to
@@ -242,10 +241,6 @@ public class JSPContentSourceValidator extends JSPContentValidator implements IS
 			return false;
 		return adapter.hasFeature(HTMLDocumentTypeConstants.HTML);
 	}
-
-	/*private HTMLValidationReporter getReporter(IReporter reporter, IFile file, IDOMModel model) {
-		return new HTMLValidationReporter(this, reporter, file, model);
-	}*/
 
 	/**
 	 * Gets current validation configuration based on current project (which

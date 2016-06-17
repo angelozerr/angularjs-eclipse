@@ -74,14 +74,11 @@ public class Trace {
 			return;
 
 		if (level == SEVERE) {
-			// if (!logged.contains(s)) {
 			AngularPHPUIPlugin
 					.getDefault()
 					.getLog()
 					.log(new Status(IStatus.ERROR,
 							AngularPHPUIPlugin.PLUGIN_ID, s, t));
-			// logged.add(s);
-			// }
 		}
 
 		if (!AngularPHPUIPlugin.getDefault().isDebugging())

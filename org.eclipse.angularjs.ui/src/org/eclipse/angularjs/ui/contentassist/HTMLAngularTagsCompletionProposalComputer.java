@@ -328,7 +328,6 @@ public class HTMLAngularTagsCompletionProposalComputer extends
 					element, file, angularType, query);
 
 			// Execute Tern completion
-			// final ITernServer ternServer = ternProject.getTernServer();
 			ITernCompletionCollector collector = new ITernCompletionCollector() {
 
 				@Override

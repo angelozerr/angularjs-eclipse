@@ -77,12 +77,10 @@ public class MainTab extends ExternalToolsMainTab {
 
 	private void updateProjectName(ILaunchConfigurationWorkingCopy configuration) {
 		IFile file = getIFile(configuration);
-		String projectName = ""; // IAntCoreConstants.EMPTY_STRING;
+		String projectName = "";
 		if (file != null) {
 			projectName = file.getProject().getName();
 		}
-		// configuration.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROJECT_NAME,
-		// projectName);
 	}
 
 	private IFile getIFile(ILaunchConfigurationWorkingCopy configuration) {
@@ -118,8 +116,6 @@ public class MainTab extends ExternalToolsMainTab {
 	public void createControl(Composite parent) {
 		Composite mainComposite = new Composite(parent, SWT.NONE);
 		setControl(mainComposite);
-		// PlatformUI.getWorkbench().getHelpSystem().setHelp(mainComposite,
-		// IAntUIHelpContextIds.ANT_MAIN_TAB);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
@@ -145,17 +141,9 @@ public class MainTab extends ExternalToolsMainTab {
 		super.setDefaults(configuration);
 		// prevent a new blank configuration from being dirty when first created
 		// and not yet edited
-		// setMappedResources(configuration);
 	}
 
 	private void updateCheckButtons(ILaunchConfiguration configuration) {
-		/*
-		 * boolean setInputHandler = true; try { setInputHandler =
-		 * configuration.getAttribute(IAntUIConstants.SET_INPUTHANDLER, true); }
-		 * catch (CoreException ce) {
-		 * AntUIPlugin.log(JSBuildFileLaunchConfigurationMessages.AntMainTab_1,
-		 * ce); } fSetInputHandlerButton.setSelection(setInputHandler);
-		 */
 	}
 
 	/*
@@ -187,10 +175,6 @@ public class MainTab extends ExternalToolsMainTab {
 		ILaunchConfigurationTab[] tabs = getLaunchConfigurationDialog().getTabs();
 		for (int i = 0; i < tabs.length; i++) {
 			ILaunchConfigurationTab tab = tabs[i];
-			/*
-			 * if (tab instanceof AntTargetsTab) { ((AntTargetsTab)
-			 * tab).setDirty(true); break; }
-			 */
 		}
 	}
 

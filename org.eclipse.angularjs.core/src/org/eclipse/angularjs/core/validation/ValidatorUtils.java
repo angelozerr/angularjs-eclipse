@@ -273,10 +273,7 @@ public class ValidatorUtils {
 		String messageText = NLS.bind(
 				AngularCoreMessages.Validation_AngularElementNotFound,
 				type.name(), textContent);
-		// nbElements,
-		// textContent);
-		int severity = IMessage.HIGH_SEVERITY; // getSeverity(reference,
-												// nbElements);
+		int severity = IMessage.HIGH_SEVERITY;
 		return createMessage(start, length, messageText, severity,
 				node.getStructuredDocument(), resource);
 	}

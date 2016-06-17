@@ -130,7 +130,6 @@ public class FilteredAngularElementsSelectionDialog extends FilteredItemsSelecti
 		@Override
 		public int compare(IJSNode leftInfo, IJSNode rightInfo) {
 			int result = compareName(leftInfo.getName(), rightInfo.getName());
-			// if (result != 0)
 			return result;
 		}
 
@@ -312,31 +311,6 @@ public class FilteredAngularElementsSelectionDialog extends FilteredItemsSelecti
 					return new int[] { 0, patternLength };
 				}
 				break;
-			// case SearchPattern.R_CAMELCASE_SAME_PART_COUNT_MATCH:
-			// countMatch = true;
-			// // $FALL-THROUGH$
-			// case SearchPattern.RULE_CAMELCASE_MATCH:
-			// if (patternLength <= nameLength) {
-			// int[] regions =
-			// StringOperation.getCamelCaseMatchingRegions(pattern, 0,
-			// patternLength, name, 0, nameLength, countMatch);
-			// if (regions != null) return regions;
-			// if (name.substring(0, patternLength).equalsIgnoreCase(pattern)) {
-			// return new int[] { 0, patternLength };
-			// }
-			// }
-			// break;
-			// //case SearchPattern.R_CAMELCASE_SAME_PART_COUNT_MATCH |
-			// SearchPattern.R_CASE_SENSITIVE:
-			// //countMatch = true;
-			// //$FALL-THROUGH$
-			// case SearchPattern.RULE_CAMELCASE_MATCH |
-			// SearchPattern.RULE_CASE_SENSITIVE:
-			// if (patternLength <= nameLength) {
-			// return StringOperation.getCamelCaseMatchingRegions(pattern, 0,
-			// patternLength, name, 0, nameLength, countMatch);
-			// }
-			// break;
 			case SearchPattern.RULE_PATTERN_MATCH:
 				return StringUtils.getPatternMatchingRegions(pattern, 0, patternLength, name, 0, nameLength, false);
 			case SearchPattern.RULE_PATTERN_MATCH | SearchPattern.RULE_CASE_SENSITIVE:

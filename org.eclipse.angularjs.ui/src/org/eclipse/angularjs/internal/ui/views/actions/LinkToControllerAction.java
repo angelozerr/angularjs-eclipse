@@ -53,7 +53,6 @@ public class LinkToControllerAction extends Action {
 						AngularLinkHelper.setController(module.getName(),
 								!element.isType(AngularType.module) ? element.getName() : null, resource, null);
 						page.updateEnabledLinkActions(true);
-						// explorer.refreshTree(true);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

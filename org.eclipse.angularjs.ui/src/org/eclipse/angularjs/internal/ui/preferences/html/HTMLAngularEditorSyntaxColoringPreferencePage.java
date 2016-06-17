@@ -759,10 +759,6 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 		return label;
 	}
 
-	// protected Label createDescriptionLabel(Composite parent) {
-	// return null;
-	// }
-
 	/**
 	 * Set up all the style preference keys in the overlay store
 	 */
@@ -972,10 +968,6 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 			styles.add(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
 			styles.add(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_PUBREF);
 			styles.add(IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
-			// styles.add(IStyleConstantsXML.CDATA_BORDER);
-			// styles.add(IStyleConstantsXML.CDATA_TEXT);
-			// styles.add(IStyleConstantsXML.PI_BORDER);
-			// styles.add(IStyleConstantsXML.PI_CONTENT);
 			fStylePreferenceKeysWithHTML = styles;
 		}
 		return fStylePreferenceKeysWithHTML;
@@ -1128,26 +1120,6 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 				IStyleConstantsXML.DOCTYPE_EXTERNAL_ID);
 		fContextToStyleMap.put(DOMRegionContext.XML_DOCTYPE_EXTERNAL_ID_SYSREF,
 				IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF);
-
-		/*
-		 * fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_OPEN,
-		 * IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
-		 * fContextToStyleMap.put(AngularRegionContext.ANGULAR_EXPRESSION_CLOSE,
-		 * IStyleConstantsForAngular.ANGULAR_EXPRESSION_BORDER);
-		 * fContextToStyleMap
-		 * .put(AngularRegionContext.ANGULAR_EXPRESSION_CONTENT,
-		 * IStyleConstantsForAngular.ANGULAR_EXPRESSION);
-		 */
-		// fContextToStyleMap.put(DOMRegionContext.XML_PI_OPEN,
-		// IStyleConstantsXML.PI_BORDER);
-		// fContextToStyleMap.put(DOMRegionContext.XML_PI_CONTENT,
-		// IStyleConstantsXML.PI_CONTENT);
-		// fContextToStyleMap.put(DOMRegionContext.XML_CDATA_OPEN,
-		// IStyleConstantsXML.CDATA_BORDER);
-		// fContextToStyleMap.put(DOMRegionContext.XML_CDATA_TEXT,
-		// IStyleConstantsXML.CDATA_TEXT);
-		// fContextToStyleMap.put(DOMRegionContext.XML_CDATA_CLOSE,
-		// IStyleConstantsXML.CDATA_BORDER);
 	}
 
 	private void initStyleToDescriptionMap() {
@@ -1181,14 +1153,6 @@ public final class HTMLAngularEditorSyntaxColoringPreferencePage extends
 		fStyleToDescriptionMap.put(
 				IStyleConstantsXML.DOCTYPE_EXTERNAL_ID_SYSREF,
 				XMLUIMessages.DOCTYPE_System_Reference_UI_); // =
-		// fStyleToDescriptionMap.put(IStyleConstantsXML.PI_BORDER,
-		// XMLUIMessages.Processing_Instruction_Del_UI_);
-		// fStyleToDescriptionMap.put(IStyleConstantsXML.PI_CONTENT,
-		// XMLUIMessages.Processing_Instruction_Con_UI__UI_);
-		// fStyleToDescriptionMap.put(IStyleConstantsXML.CDATA_BORDER,
-		// XMLUIMessages.CDATA_Delimiters_UI_);
-		// fStyleToDescriptionMap.put(IStyleConstantsXML.CDATA_TEXT,
-		// XMLUIMessages.CDATA_Content_UI_);
 	}
 
 	protected void performDefaults() {

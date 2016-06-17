@@ -94,13 +94,6 @@ public class AngularLinkHelper {
 	private static boolean isSameController(AngularLink link,
 			 String module, String controller,
 			String elementId) {
-//		IResource r1 = (IResource) link.getScriptPath().getAdapter(IResource.class);
-//		IResource r2 = (IResource) scriptPath.getAdapter(IResource.class);
-//		if (r1 == null || r2 == null ||
-//				!r1.getProject().equals(r2.getProject())) {
-//			// not the same project
-//			return false;
-//		}
 		if (!link.getModule().equals(module)) {
 			// not the same module
 			return false;
