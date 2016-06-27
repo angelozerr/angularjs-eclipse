@@ -42,24 +42,6 @@ public class HTMLAngularTernTypeCollector extends HTMLTernTypeCollector {
 					object, "angularType"));
 			this.info = HTMLAngularPrinter.getAngularInfo(type, name, module,
 					controller, angularType, doc, origin);
-			// TernCompletionItem item = new TernCompletionItem(name, type, doc,
-			// url, origin);
-			// info.append("<b>Angular ");
-			// info.append(angularType.name());
-			// info.append("</b>");
-			// info.append("<br/>");
-			// info.append("<dl>");
-			// // Signature
-			// info.append("<dt>Signature:</dt>");
-			// info.append("<dd>");
-			// info.append(item.getSignature());
-			// info.append("</dd>");
-			// // Origin
-			// info.append("<dt>Origin:</dt>");
-			// info.append("<dd>");
-			// info.append(item.getOrigin());
-			// info.append("</dd>");
-			// info.append("</dl>");
 		}
 	}
 

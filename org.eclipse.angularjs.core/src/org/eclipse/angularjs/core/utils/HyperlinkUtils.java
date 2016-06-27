@@ -23,11 +23,6 @@ public class HyperlinkUtils {
 	public static IRegion getNameRegion(IDOMAttr attr) {
 		int regOffset = attr.getNameRegionStartOffset();
 		int regLength = attr.getNameRegionText().length();
-		/*String attValue = attr.getValueRegionText();
-		if (StringUtils.isQuoted(attValue)) {
-			regOffset++;
-			regLength -= 2;
-		}*/
 		return new Region(regOffset, regLength);
 	}
 
@@ -52,39 +47,6 @@ public class HyperlinkUtils {
 				- element.getStartOffset());
 	}
 
-	/**public static IRegion getHyperlinkRegion(Node node) {
-		if (node != null)
-			switch (node.getNodeType()) {
-			case 3: // '\003'
-			case 10: // '\n'
-				IDOMNode docNode = (IDOMNode) node;
-				return new Region(docNode.getStartOffset(),
-						docNode.getEndOffset() - docNode.getStartOffset());
-
-			case 1: // '\001'
-				IDOMElement element = (IDOMElement) node;
-				int endOffset;
-				if (element.hasEndTag() && element.isClosed())
-					endOffset = element.getStartEndOffset();
-				else
-					endOffset = element.getEndOffset();
-				return new Region(element.getStartOffset(), endOffset
-						- element.getStartOffset());
-
-			case 2: // '\002'
-				IDOMAttr att = (IDOMAttr) node;
-				int regOffset = att.getValueRegionStartOffset();
-				int regLength = att.getValueRegionText().length();
-				String attValue = att.getValueRegionText();
-				if (StringUtils.isQuoted(attValue)) {
-					regOffset++;
-					regLength -= 2;
-				}
-				return new Region(regOffset, regLength);
-			}
-		return null;
-	}**/
-	
 	public static String getExpressionContent(final String expr) {
 		String expression = expr;
 		if (expression

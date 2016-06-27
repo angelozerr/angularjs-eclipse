@@ -516,8 +516,6 @@ public class DOMUtils {
 			return null;
 		if (!file.exists())
 			return null;
-		// if (!canHandle(file))
-		// return null;
 
 		IModelManager manager = StructuredModelManager.getModelManager();
 		if (manager == null)

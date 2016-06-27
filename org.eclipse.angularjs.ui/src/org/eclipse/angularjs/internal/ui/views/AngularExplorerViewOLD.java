@@ -87,7 +87,6 @@ public class AngularExplorerViewOLD extends ViewPart implements
 	private IResource currentResource;
 	private TreeViewer viewer;
 
-	//private TerminateTernServerAction terminateAction;
 	private LinkToControllerAction linkAction;
 	private UnLinkToControllerAction unLinkAction;
 	private GoToDefinitionAction openAction;
@@ -212,8 +211,6 @@ public class AngularExplorerViewOLD extends ViewPart implements
 	public void registerActions() {
 		IToolBarManager manager = getViewSite().getActionBars()
 				.getToolBarManager();
-//		this.terminateAction = new TerminateTernServerAction(this);
-//		manager.add(terminateAction);
 		sortAction = new LexicalSortingAction(this);
 		manager.add(sortAction);
 		this.linkAction = new LinkToControllerAction(this);
@@ -261,7 +258,6 @@ public class AngularExplorerViewOLD extends ViewPart implements
 	public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 		if (part.equals(this) || part.equals(currentEditor))
 			return;
-		//this.terminateAction.setEnabled(false);
 		currentEditor = part;
 		if (part instanceof IEditorPart) {
 			currentResource = null;
@@ -287,8 +283,6 @@ public class AngularExplorerViewOLD extends ViewPart implements
 								}
 							}
 							currentTernProject = ternProject;
-//							this.terminateAction.setEnabled(!currentTernProject
-//									.isServerDisposed());
 							currentResource = resource;
 							if (projectChanged) {
 								// refresh
@@ -454,12 +448,10 @@ public class AngularExplorerViewOLD extends ViewPart implements
 
 	@Override
 	public void onStart(ITernServer server) {
-		//terminateAction.setEnabled(true);
 	}
 
 	@Override
 	public void onStop(ITernServer server) {
-		//terminateAction.setEnabled(false);
 	}
 
 	@Override

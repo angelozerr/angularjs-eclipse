@@ -11,7 +11,6 @@
 package org.eclipse.angularjs.jsp.org.eclipse.jst.jsp.core.internal.validation;
 
 import org.eclipse.core.resources.IFile;
-//import org.eclipse.jst.jsp.core.internal.validation.LocalizedMessage;
 import org.eclipse.wst.html.core.internal.validate.MessageFactory;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;

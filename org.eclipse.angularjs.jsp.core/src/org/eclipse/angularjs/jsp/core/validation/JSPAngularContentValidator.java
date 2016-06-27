@@ -22,11 +22,8 @@ import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocumentRegion;
 import org.eclipse.wst.validation.ValidationResult;
 import org.eclipse.wst.validation.ValidationState;
-//import org.eclipse.wst.html.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMModel;
-
-//import org.eclipse.jst.jsp.core.internal.validation.JSPContentValidator;
 
 /**
  * This class extends {@link JSPContentValidator} which validates HTML content

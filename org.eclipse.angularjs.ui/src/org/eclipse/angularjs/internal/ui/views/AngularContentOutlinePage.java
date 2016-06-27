@@ -30,7 +30,6 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage im
 
 	private LinkToControllerAction linkAction;
 	private UnLinkToControllerAction unLinkAction;
-	// private GoToDefinitionAction openAction;
 	private RefreshExplorerAction refreshAction;
 	private LexicalSortingAction sortAction;
 
@@ -56,8 +55,6 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage im
 		manager.add(linkAction);
 		this.unLinkAction = new UnLinkToControllerAction(this);
 		manager.add(unLinkAction);
-		// this.openAction = new GoToDefinitionAction(this);
-		// manager.add(openAction);
 		this.refreshAction = new RefreshExplorerAction(this);
 		manager.add(refreshAction);
 		super.registerActions(manager);
@@ -68,7 +65,6 @@ public class AngularContentOutlinePage extends AbstractTernContentOutlinePage im
 		MenuManager contextMenu = new MenuManager();
 		contextMenu.add(linkAction);
 		contextMenu.add(unLinkAction);
-		// contextMenu.add(openAction);
 		contextMenu.add(refreshAction);
 
 		Menu menu = contextMenu.createContextMenu(control);

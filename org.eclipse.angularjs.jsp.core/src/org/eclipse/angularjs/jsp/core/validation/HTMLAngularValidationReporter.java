@@ -14,7 +14,6 @@ import org.eclipse.angularjs.core.validation.ValidatorUtils;
 import org.eclipse.angularjs.jsp.org.eclipse.jst.jsp.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-//import org.eclipse.wst.html.core.internal.validation.HTMLValidationReporter;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.sse.core.internal.validate.ErrorInfo;
 import org.eclipse.wst.validation.internal.provisional.core.IReporter;

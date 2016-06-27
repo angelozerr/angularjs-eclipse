@@ -76,7 +76,7 @@ public class AngularRegionUtils {
 			}
 			if (expression != null) {
 				int expressionOffset = startOffset - startExprIndex
-						- startSymbol.length();// + 1;
+						- startSymbol.length();
 				return new AngularELRegion(expression, expressionOffset);
 			}
 		}

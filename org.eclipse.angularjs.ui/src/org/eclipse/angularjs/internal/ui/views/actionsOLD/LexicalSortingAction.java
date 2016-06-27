@@ -21,8 +21,6 @@ public class LexicalSortingAction extends Action {
 		this.sorter = new LexicalSorter();
 		super.setToolTipText(AngularUIMessages.LexicalSortingAction_tooltip);
 		super.setDescription(AngularUIMessages.LexicalSortingAction_description);
-//		super.setImageDescriptor(ImageResource
-//				.getImageDescriptor(ImageResource.IMG_ELCL_SORT));
 
 		boolean checked= AngularUIPlugin.getDefault().getPreferenceStore()
 				.getBoolean("LexicalSortingAction.isChecked");
