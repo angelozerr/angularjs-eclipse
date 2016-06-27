@@ -49,8 +49,7 @@ public class UnLinkToControllerAction extends Action {
 				IModule module = element.getModule();
 				if (module != null) {
 					try {
-						AngularLinkHelper.removeController(resource, null, module.getName(),
-								element != null ? element.getName() : null, null);
+						AngularLinkHelper.removeController(resource, null, module.getName(), element.getName(), null);
 						page.updateEnabledLinkActions(true);
 						// explorer.refreshTree(true);
 					} catch (Exception e) {
