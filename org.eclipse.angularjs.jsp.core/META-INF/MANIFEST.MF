@@ -16,14 +16,11 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  com.ibm.icu,
  org.eclipse.wst.validation,
- tern.eclipse.ide.core;bundle-version="0.2.0",
- tern.core;bundle-version="0.2.0",
- tern.eclipse;bundle-version="0.2.0",
- tern.eclipse.ide.ui;bundle-version="0.2.0",
+ tern.eclipse.ide.core,
+ tern.core,
+ tern.eclipse,
+ tern.eclipse.ide.ui,
  org.eclipse.wst.jsdt.web.core,
- org.eclipse.core.expressions,
- org.eclipse.jst.jsp.core
+ org.eclipse.core.expressions
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.angularjs.jsp.core.validation,
- org.eclipse.angularjs.jsp.org.eclipse.jst.jsp.core.internal.validation

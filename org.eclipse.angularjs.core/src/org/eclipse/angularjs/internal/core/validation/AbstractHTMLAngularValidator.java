@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.wst.sse.core.internal.provisional.text.IStructuredDocument;
-import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
 
 import tern.angular.modules.AngularModulesManager;
 import tern.angular.modules.Directive;
@@ -31,6 +30,8 @@ import tern.angular.modules.Restriction;
 public abstract class AbstractHTMLAngularValidator {
 
 	private IProject project;
+	private IFile file;
+	private IDocument document;
 
 	/**
 	 * Cache the project of the given document if project has angular nature.
@@ -39,8 +40,11 @@ public abstract class AbstractHTMLAngularValidator {
 	 */
 	public void init(IStructuredDocument doc) {
 		this.project = null;
+		this.file = null;
+		this.document = null;
 		if (doc instanceof IDocument) {
-			IFile file = DOMUtils.getFile((IDocument) doc);
+			this.document = (IDocument) doc;
+			file = DOMUtils.getFile(document);
 			IProject project = file.getProject();
 			if (AngularProject.hasAngularNature(project)) {
 				// project has angular nature, cache the project
@@ -75,5 +79,13 @@ public abstract class AbstractHTMLAngularValidator {
 			Trace.trace(Trace.SEVERE, "Error while getting angular project", e);
 		}
 		return null;
+	}
+
+	public IFile getFile() {
+		return file;
+	}
+
+	public IDocument getDocument() {
+		return document;
 	}
 }

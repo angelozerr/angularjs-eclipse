@@ -24,29 +24,13 @@
   <!--======================================================================================-->
   <!-- Workbench validation                                       						  -->
   <!--======================================================================================-->
-  <extension id="HTMLAngularValidator" name="%HTMLAngularValidator.name" point="org.eclipse.wst.validation.validatorV2">
-      <validator
-            build="true"
-            class="org.eclipse.angularjs.core.validation.HTMLAngularValidator"
-            manual="true"
-            sourceid="org.eclipse.angularjs.ui.validation.htmlsyntaxvalidator,org.eclipse.angularjs.ui.validation.HTMLAngularContentValidator"
-            version="1"
-            markerId="org.eclipse.wst.html.core.validationMarker">
-         <include>
-            <rules>
-               <contentType id="org.eclipse.wst.html.core.htmlsource"></contentType>
-               <fileext caseSensitive="false" ext="html"/>
-               <fileext caseSensitive="false" ext="xhtml"/>
-               <fileext caseSensitive="false" ext="htm"/>
-               <fileext caseSensitive="false" ext="htpl"/>
-               <fileext caseSensitive="false" ext="wml"/>
-               <fileext caseSensitive="false" ext="ejs"/>
-            </rules>
-         </include>
-         <group id="org.eclipse.wst.sse.core.structuredModelGroup"/>
-      </validator>
-   </extension>
-
+  	<extension point="org.eclipse.wst.html.core.customTagValidator">
+		<validator class="org.eclipse.angularjs.internal.core.validation.HTMLAngularTagValidator"></validator>
+	</extension>
+	<extension point="org.eclipse.wst.html.core.customAttributeValidator">
+		<validator class="org.eclipse.angularjs.internal.core.validation.HTMLAngularAttributeValidator"></validator>
+	</extension>
+	
   <!-- Protractor -->
      	   	
   <extension point="org.eclipse.debug.core.launchConfigurationTypes">

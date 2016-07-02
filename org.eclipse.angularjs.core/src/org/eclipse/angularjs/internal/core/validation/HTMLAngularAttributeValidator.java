@@ -10,15 +10,34 @@
  */
 package org.eclipse.angularjs.internal.core.validation;
 
+import java.io.IOException;
+
+import org.eclipse.angularjs.core.AngularProject;
+import org.eclipse.angularjs.core.utils.AngularScopeHelper;
+import org.eclipse.angularjs.internal.core.AngularCoreMessages;
+import org.eclipse.angularjs.internal.core.Trace;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.text.IDocument;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.wst.html.core.internal.validate.Segment;
 import org.eclipse.wst.html.core.validate.extension.CustomValidatorUtil;
 import org.eclipse.wst.html.core.validate.extension.IHTMLCustomAttributeValidator;
 import org.eclipse.wst.sse.core.internal.validate.ValidationMessage;
+import org.eclipse.wst.xml.core.internal.provisional.document.IDOMAttr;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMElement;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMNode;
 
+import tern.ITernFile;
+import tern.angular.AngularType;
 import tern.angular.modules.Directive;
 import tern.angular.modules.Restriction;
+import tern.angular.protocol.TernAngularQuery;
+import tern.angular.protocol.type.TernAngularTypeQuery;
+import tern.eclipse.ide.core.IIDETernProject;
+import tern.eclipse.ide.core.resources.TernDocumentFile;
+import tern.scriptpath.ITernScriptPath;
+import tern.server.protocol.type.ValidationTernTypeCollector;
 
 /**
  * Custom HTML angular attribute validator to:
@@ -30,7 +49,8 @@ import tern.angular.modules.Restriction;
  * 
  * <pre>
  *   <body ng-app="" /> // ng-app is not marked as error.
- *   <ng-pluralize src="" xxxx="" /> // xxxx is marked as error, because xxxx is not a valid directive parameter.
+ *   <ng-pluralize src="" xxxx=
+"" /> // xxxx is marked as error, because xxxx is not a valid directive parameter.
  * </pre>
  */
 public class HTMLAngularAttributeValidator extends AbstractHTMLAngularValidator
@@ -76,7 +96,7 @@ public class HTMLAngularAttributeValidator extends AbstractHTMLAngularValidator
 		if (restriction == Restriction.A) {
 			// - 1) attribute is an angular attribute directive like @ng-app the
 			// attribute is valid.
-			return null;
+			return validateAttributeValue(target, attrName);
 		}
 
 		// - 2) attribute is an angular parameter directive like
@@ -91,4 +111,49 @@ public class HTMLAngularAttributeValidator extends AbstractHTMLAngularValidator
 		return null;
 	}
 
+	private ValidationMessage validateAttributeValue(IDOMElement target, String attrName) {
+		AngularType type = directive.getDirectiveType();
+		switch (type) {
+		case module:
+		case controller:
+			try {
+				IFile file = getFile();
+				IDocument document = getDocument();
+				IIDETernProject ternProject = AngularProject.getTernProject(file.getProject());
+				IDOMAttr attr = (IDOMAttr) target.getAttributeNode(attrName);
+				boolean exists = isAngularElementExists(attr, file, document, ternProject, type);
+				if (!exists) {
+					Segment segment = CustomValidatorUtil.getAttributeSegment(
+							(IDOMNode) target.getAttributeNode(attrName), CustomValidatorUtil.ATTR_REGION_VALUE);
+					return new ValidationMessage(
+							NLS.bind(AngularCoreMessages.Validation_AngularElementNotFound, type.name(),
+									attr.getValue()),
+							segment.getOffset(), segment.getLength(), ValidationMessage.ERROR);
+				}
+			} catch (Exception e) {
+				Trace.trace(Trace.SEVERE, "Error while Angular validator.", e);
+			}
+			break;
+		}
+		return null;
+	}
+
+	private static boolean isAngularElementExists(IDOMAttr attr, IFile file, IDocument document,
+			IIDETernProject ternProject, final AngularType angularType) throws CoreException, IOException, Exception {
+
+		TernAngularQuery query = new TernAngularTypeQuery(angularType);
+		query.setExpression(AngularScopeHelper.getAngularValue(attr, angularType));
+
+		ITernScriptPath scriptPath = AngularScopeHelper.populateScope(attr.getOwnerElement(), file, angularType, query);
+
+		ValidationTernTypeCollector collector = new ValidationTernTypeCollector();
+
+		if (scriptPath != null) {
+			ternProject.request(query, null, scriptPath, null, null, collector);
+		} else {
+			ITernFile tf = new TernDocumentFile(file, document);
+			ternProject.request(query, null, null, attr, tf, collector);
+		}
+		return collector.isExists();
+	}
 }
