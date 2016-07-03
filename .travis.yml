@@ -1,5 +1,7 @@
 language: java
-
+jdk:
+  - oraclejdk8
+  
 install: echo "I trust Maven."
 
 # don't just run the tests, also run Findbugs and friends
