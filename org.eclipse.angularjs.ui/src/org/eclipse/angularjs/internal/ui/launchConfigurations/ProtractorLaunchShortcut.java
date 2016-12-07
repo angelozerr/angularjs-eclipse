@@ -84,11 +84,12 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 
 				ILaunchConfigurationWorkingCopy workingCopy = null;
 				// Try to find existing launch
-				configuration = getExistingLaunchConfiguration(launchType, protractorConfigFile);
-				if (configuration != null) {
-					// Get working copy
-					workingCopy = configuration.getWorkingCopy();
-				} else {
+				// XXX - user is not able to edit launch configurations, do not store them
+//				configuration = getExistingLaunchConfiguration(launchType, protractorConfigFile);
+//				if (configuration != null) {
+//					// Get working copy
+//					workingCopy = configuration.getWorkingCopy();
+//				} else {
 					// Create protractor launch working copy.
 					// debugger to use
 					INodejsDebugger debugger = getDefaultDebugger();
@@ -106,13 +107,13 @@ public class ProtractorLaunchShortcut implements ILaunchShortcut2 {
 							debugger.getId());
 					workingCopy.setAttribute(INodejsCliFileLaunchConfigurationConstants.ATTR_CLI_FILE,
 							NodejsCliFileHelper.getWorkspaceLoc(protractorCliFile));
-				}
+//				}
 				workingCopy.setAttribute(IExternalToolConstants.ATTR_LOCATION,
 						NodejsCliFileHelper.getWorkspaceLoc(protractorConfigFile));
 
 				// launch protractor
 				workingCopy.launch(mode, null);
-				workingCopy.doSave();
+				//workingCopy.doSave();
 			} catch (NodejsCliFileConfigException e) {
 				reportConfigError(resource, mode, e);
 				return;
