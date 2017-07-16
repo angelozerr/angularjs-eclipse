@@ -12,6 +12,9 @@
 		<connection>scm:git:https://github.com/angelozerr/angularjs-eclipse.git</connection>
 		<developerConnection>scm:git:https://github.com/angelozerr/angularjs-eclipse.git</developerConnection>
 	</scm>
+	<properties>
+		<url.suffix>snapshot</url.suffix>
+	</properties>
 	<build>
 		<extensions>
 			<!-- Enabling the use of FTP -->
@@ -29,7 +32,7 @@
 			<properties>
 				<!-- Properties relative to the distant host where to upload the repo -->
 				<ftp.url>ftp://ftp.online.net</ftp.url>
-				<ftp.toDir>/oss/angularjs-eclipse/${project.version}</ftp.toDir>
+				<ftp.toDir>/oss/angularjs-eclipse/${url.suffix}</ftp.toDir>
 				<!-- Relative path to the repo being uploaded -->
 				<repo.path>${project.build.directory}/repository/</repo.path>
 			</properties>
@@ -62,6 +65,9 @@
 		</profile>
 		<profile>
 			<id>release</id>
+			<properties>
+				<url.suffix>stable</url.suffix>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
